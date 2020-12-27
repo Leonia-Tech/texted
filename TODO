@@ -1,0 +1,41 @@
+0.  Finisci il TODO
+1.  Leggere un file
+2.  Modificare file
+3.  Aggiungere contenuti a partire da una riga
+4.  Salvare il file modificato
+
+- Il file viene caricato in un Buffer
+- Il programma richiede un comando all'utente
+
+i                       : insert mode
+^[                      : esci dalla insert mode
+s parola1 parola2       : trasforma la parola1 in parola2
+a parola1               : aggiungi alla fine della riga parola1
+m parola1 parola2       : aggiunge la parola2 dopo la parola1
+w                       : salva
+b                       : crea il backup del file <name-bkp.ext>
+l <num>                 : seleziona riga <num>
+p                       : stampare la riga selezionata
+f                       : full print
+q                       : esci senzam salvare
+x                       : salva ed esci
+
+
+Antonio dorme --> Antonio respira               // sostituisci
+              --> Antonio dorme profondamente   // aggiunta
+              --> Antonio non respira           // metti in mezzo
+
+==> crea formatted print
+
+funzione ed_print(buffer, numero righe)
+{
+    for(lunghezza di buffer volte)
+    {
+        leggi il carattere in posizione i;
+        if(il carattere è '\n' e (numero righe))
+            stampa \ni\t
+        else
+            stampa il carattere
+    }
+}
+se cerchi di stampare una riga oltre il file il programma crasha
