@@ -1,4 +1,4 @@
-# Texted - A CLI text editor for Linux
+# TextEd - A CLI text editor for Linux
 Per compilare texted è sufficiente decomprimere questa cartella compressa e compilare con il seguente comando:  
 `$ tar -xvf Texted.tar.gz`  
 `$ cd Texted`  
