@@ -1,12 +1,11 @@
 #ifndef INSERT_H
 #define INSERT_H
 
-#define ED_SUCCESS          0x00
-#define ED_NULL_FILE_PTR    0x01
-
-char* insert();
-char* strins(char* out, char* in, char ch);
-int save(char* Filename, char* Buffer);
-int backup(char* Filename);
+char* insert();                             // Insert mode
+int getInsertArgs(char* args);
+char* strins(char* out, char* in, char ch); // Inserisce "in" in "out" prima di "ch"
+int app_save(char* Filename, char* Buffer); // Salva il buffer nel file in append
+int save(char* Filename, char* Buffer);     // Salva il buffer nel file risrivendolo
+int backup(char* Filename);                 // Crea un backup-file del file aperto
 
 #endif

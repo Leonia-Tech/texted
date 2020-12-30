@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/insert.h"
-#include "../include/commands.h"
+#include "../include/texted.h"
 
 char* insert()
 {
@@ -28,8 +27,25 @@ char* insert()
     return Buffer;
 }
 
+int getInsertArgs(char* args)
+{
+    args[0] = getchar();
+    if(args[0] != '\n')
+    {
+        getchar();
+        if(args[0] != 'w')
+            return ED_INVALID_COMMAND;
+    }
+    
+    for(int i = 0; i < ARG_SIZE; i++)
+        if(args[i] == '\n')
+            args[i] = 0x00;
+    
+    return ED_SUCCESS;
+}
+
 // Saves the Buffer in the File and frees the Buffer
-int save(char* Filename, char* Buffer)
+int app_save(char* Filename, char* Buffer)
 {
     FILE* File;
 
@@ -39,7 +55,19 @@ int save(char* Filename, char* Buffer)
     
     fprintf(File, "%s", Buffer);
     fclose(File);
-    free(Buffer);
+    return ED_SUCCESS;
+}
+
+int save(char* Filename, char* Buffer)
+{
+    FILE* File;
+
+    File = fopen(Filename, "w");
+    if(!File)
+        return ED_NULL_FILE_PTR;
+    
+    fprintf(File, "%s", Buffer);
+    fclose(File);
     return ED_SUCCESS;
 }
 
@@ -47,6 +75,15 @@ void empty(char* arr, int size)
 {
     for(int i = 0; i < size; i++)
         arr[i] = 0;
+}
+
+int streq(char* str1, char* str2, int size)
+{
+    for(int i = 0; i < size; i++)
+        if(str1[i] != str2[i])
+            return 0;
+
+    return 1; 
 }
 
 // Inserisce "in" in "out" prima di "ch"
