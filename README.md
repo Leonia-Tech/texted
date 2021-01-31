@@ -2,7 +2,7 @@
 Per compilare texted è sufficiente decomprimere questa cartella compressa e compilare con il seguente comando:  
 `$ tar -xvf Texted.tar.gz`  
 `$ cd Texted`  
-`$ gcc bin/* main.c -o texted`  
+`$ make`  
 
 Per utilizzare il programma utilizzare la seguente sintassi  
 `$ ./texted file_name`  
