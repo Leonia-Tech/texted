@@ -6,7 +6,7 @@ IDIR = include
 ODIR = obj
 
 # All these files must be in bin/
-_OBJS = main.o
+_OBJS = texted.o
 _OBJS += edit.o
 _OBJS += insert.o
 _OBJS += print.o
