@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <texted/texted.h>
+#include <texted/insert.h>
 
 #include "texted.h"
 

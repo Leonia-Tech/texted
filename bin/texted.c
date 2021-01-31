@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <texted/edit.h>
+#include <texted/print.h>
+#include <texted/insert.h>
 #include <texted/texted.h>
 
 #include "texted.h"

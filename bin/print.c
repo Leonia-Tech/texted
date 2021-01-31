@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
-#include <texted/texted.h>
+#include <texted/insert.h>
 
 #include "texted.h"
 
