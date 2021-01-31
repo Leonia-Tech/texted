@@ -4,6 +4,8 @@
 #include <string.h>
 #include <texted/texted.h>
 
+#include "texted.h"
+
 // https://stackoverflow.com/questions/238603/how-can-i-get-a-files-size-in-c
 
 char* load(char* Filename)

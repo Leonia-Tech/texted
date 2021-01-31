@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <texted/texted.h>
 
+#include "texted.h"
+
 // Trova quante volte il caratter ch compare in str
 int strocc(char* str, char ch)
 {

@@ -3,6 +3,8 @@
 #include <string.h>
 #include <texted/texted.h>
 
+#include "texted.h"
+
 char* insert()
 {
 	int size = 100;
