@@ -1,8 +1,16 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-char* load(char* Filename);								  // Carica un file nella RAM
-int getPrintArgs(char* args);							  // Trova gli argomenti del comando p
-void ed_print(char** LineBuffer, int Lines, int LineNum); // Stampa l'intero file
+// Carica un file nella RAM
+char* load(char* Filename);
+
+// Trova gli argomenti del comando p
+int getPrintArgs(char* args);
+
+// Stampa l'intero file
+void ed_print(char** LineBuffer, int Lines, int LineNum);
+
+// Stampa la lista dei comandi
+void display_help();
 
 #endif // PRINT_H
