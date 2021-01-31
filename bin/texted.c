@@ -6,8 +6,6 @@
 #include <texted/insert.h>
 #include <texted/texted.h>
 
-#include "texted.h"
-
 int main(int argc, char* argv[])
 {
 	char* Buffer;                  // Buffer continuo
