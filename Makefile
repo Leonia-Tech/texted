@@ -16,7 +16,7 @@ OBJS = $(foreach obj, $(_OBJS), $(ODIR)/$(obj))
 DEPS = $(wildcard $(IDIR)/*)
 
 CC = gcc
-CFLAGS = -I$(IDIR)
+CFLAGS = -I$(IDIR) -Wall
 
 $(ODIR)/%.o: $(BDIR)/%.c $(DEPS)
 	@mkdir -p $(dir $@)
