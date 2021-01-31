@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
-#include "../include/texted.h"
+#include <texted/texted.h>
 
 // https://stackoverflow.com/questions/238603/how-can-i-get-a-files-size-in-c
 

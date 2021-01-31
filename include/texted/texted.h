@@ -14,8 +14,8 @@ void empty(char* arr, int size);
 int streq(char* str1, char* str2, int size);
 void display_help();
 
-#include "insert.h"
-#include "print.h"
-#include "edit.h"
+#include <texted/insert.h>
+#include <texted/print.h>
+#include <texted/edit.h>
 
 #endif

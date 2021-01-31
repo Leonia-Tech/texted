@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/texted.h"
+#include <texted/texted.h>
 
 char* insert()
 {
