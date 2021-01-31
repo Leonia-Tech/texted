@@ -123,8 +123,7 @@ int main(int argc, char* argv[])
 				break;
 			case 's': // SUBSTITUTE WORD
 			case 'm': // ADD WORD AFTER
-				for (counter = 0; (Editstr[counter] = getchar()) != '\n'; counter++)
-					;
+				for (counter = 0; (Editstr[counter] = getchar()) != '\n'; counter++);
 				Editstr[counter] = '\0';
 
 				memcpy(args, editCommandInterpreter(Editstr, &arg1, &arg2), ARG_SIZE);
@@ -142,8 +141,7 @@ int main(int argc, char* argv[])
 				getchar();
 				arg1 = (char*)malloc(ARG_SIZE);
 				empty(arg1, strlen(arg1));
-				for (counter = 0; (arg1[counter] = getchar()) != '\n'; counter++)
-					;
+				for (counter = 0; (arg1[counter] = getchar()) != '\n'; counter++);
 				arg1[counter] = '\0';
 				putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
 				arg2 = NULL;
