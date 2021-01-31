@@ -1,5 +1,5 @@
-#ifndef PRINT_H
-#define PRINT_H
+#ifndef TEXTED_PRINT_H
+#define TEXTED_PRINT_H
 
 // Carica un file nella RAM
 char* load(char* Filename);
@@ -13,4 +13,4 @@ void ed_print(char** LineBuffer, int Lines, int LineNum);
 // Stampa la lista dei comandi
 void display_help();
 
-#endif // PRINT_H
+#endif // TEXTED_PRINT_H

@@ -1,5 +1,5 @@
-#ifndef EDIT_H
-#define EDIT_H
+#ifndef TEXTED_EDIT_H
+#define TEXTED_EDIT_H
 
 // Trova quante volte il caratter ch compare in str
 int strocc(char* str, char ch);
@@ -28,4 +28,4 @@ int getLineBufferSize(char** LineBuffer, int Lines);
 // Ricomponi il Buffer diviso in righe
 char* getBuffer(char** LineBuffer, int Lines);
 
-#endif // EDIT_H
+#endif // TEXTED_EDIT_H

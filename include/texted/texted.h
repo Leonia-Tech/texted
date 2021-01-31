@@ -1,5 +1,5 @@
-#ifndef TEXTED_H
-#define TEXTED_H
+#ifndef TEXTED_TEXTED_H
+#define TEXTED_TEXTED_H
 
 #define LINE_SIZE 500
 #define ARG_SIZE 4
@@ -11,4 +11,4 @@
 #define ED_NULL_FILE_PTR 0x01
 #define ED_INVALID_COMMAND 0x02
 
-#endif // TEXTED_H
+#endif // TEXTED_TEXTED_H

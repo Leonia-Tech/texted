@@ -1,5 +1,5 @@
-#ifndef INSERT_H
-#define INSERT_H
+#ifndef TEXTED_INSERT_H
+#define TEXTED_INSERT_H
 
 // Insert mode
 char* insert();
@@ -22,4 +22,4 @@ char* strins(char* out, char* in, char ch);
 // Crea un backup-file del file aperto
 int backup(char* Filename);
 
-#endif // INSERT_H
+#endif // TEXTED_INSERT_H
