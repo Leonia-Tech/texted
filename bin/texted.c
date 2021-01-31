@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 			else if (streq(args, "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
 			{
 				app_save(Filename, Buffer);
-				printf("Added %d bytes\n", strlen(Buffer));
+				printf("Added %lu bytes\n", strlen(Buffer));
 				free(LineBuffer);
 				free(Buffer);
 				Buffer = load(Filename);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 			getchar();
 			Buffer = getBuffer(LineBuffer, LB_Size);
 			save(Filename, Buffer);
-			printf("Written %d bytes\n", strlen(Buffer));
+			printf("Written %lu bytes\n", strlen(Buffer));
 			free(Buffer);
 			if (Command == 'x')
 				break;
