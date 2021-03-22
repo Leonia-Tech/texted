@@ -1,5 +1,4 @@
-# Binary output
-/texted
-
-# Object files
-obj/
+texted
+*.o
+*.txt
+.*

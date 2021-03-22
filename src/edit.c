@@ -7,6 +7,9 @@
 // Trova quante volte il caratter ch compare in str
 int strocc(char* str, char ch)
 {
+	if(!str)
+		return 0;
+	
 	int counter = 0;
 
 	for (int i = 0; str[i] != 0; i++)
@@ -16,15 +19,22 @@ int strocc(char* str, char ch)
 	return counter;
 }
 
-char** getLineBuffer(char* Buffer, int* _Lines)
+char** getLineBuffer(char* Buffer, int* Lines)
 {
-	int Lines = strocc(Buffer, '\n') + 1;
-	char** LineBuffer = (char**)malloc(Lines * sizeof(char*));
-	char* ptr = Buffer;
+	int ln = strocc(Buffer, '\n') + 1;
+	char** LineBuffer = (char**)malloc(ln * sizeof(char*));
+	char* ptr;
 	int Length;
 
-	for (int i = 0; i < Lines; i++)
-	{
+	if(!Buffer) {
+		free(LineBuffer);
+		*Lines = 0;
+		return NULL;
+	}	
+	else
+		ptr = Buffer;
+
+	for (int i = 0; i < ln; i++) {
 		if (strchr(ptr, '\n'))
 			Length = (int)(strchr(ptr, '\n') - ptr) + 2;
 		else
@@ -35,7 +45,7 @@ char** getLineBuffer(char* Buffer, int* _Lines)
 		strncpy(LineBuffer[i], ptr, --Length);
 		ptr = &ptr[Length];
 	}
-	*_Lines = Lines;
+	*Lines = ln;
 	return LineBuffer;
 }
 
