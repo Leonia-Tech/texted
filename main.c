@@ -64,7 +64,8 @@ int main(int argc, char* argv[])
 				printf("%d\t%s", Line, getLine(LineBuffer, Line));
 			else
 			{
-				fprintf(stderr, "\n" RED "Wrong syntax for the print command\n" RESET);
+				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
+				PAUSE();
 				continue;
 			}
 
