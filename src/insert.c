@@ -93,14 +93,25 @@ char* strins(char* out, char* in, char ch)
 	int size = strlen(out) + strlen(in);
 	char* newStr = (char*)malloc(size * sizeof(char));
 	char* AfterPoint;
-	int BeforePoint = 0;
+	size_t BeforePoint = 0;
 	empty(newStr, size);
 
-	AfterPoint = strchr(out, ch);                   // Trova la prima ricorrenza di ch
-	BeforePoint = strlen(out) - strlen(AfterPoint); // Stabilisce la lunghezza di out prima del punto
-	strncpy(newStr, out, BeforePoint);              // Copia tutto quello che c'è prima del punto
-	strcat(newStr, in);                             // Aggiunge in nel punto deiderato
-	strcat(newStr, AfterPoint);                     // Aggiunge il resto
+	// Trova la prima ricorrenza di ch
+	AfterPoint = strchr(out, ch);
+
+	if(!AfterPoint) {
+		// Copia tutto quello che c'è prima del punto
+		BeforePoint = AfterPoint - out;
+		strncpy(newStr, out, BeforePoint);
+		
+		// Aggiunge in nel punto deiderato
+		strcat(newStr, in);
+
+		// Aggiunge il resto
+		strcat(newStr, AfterPoint);
+	} else {
+		return NULL;
+	}
 	return newStr;
 }
 
