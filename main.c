@@ -47,6 +47,14 @@ int main(int argc, char* argv[])
 		printf("%s > ", Filename);
 		Command = getchar();
 
+		// Handle extended ASCII Table
+		if(Command < 0) {
+			PAUSE();
+			fprintf(stderr, RED "Invalid command\n" RESET);
+			Command = '\0';
+			continue;
+		}
+
 		switch (Command)
 		{
 		case 'p': // PRINT MODE
