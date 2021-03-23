@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+
 #include <texted/edit.h>
 #include <texted/print.h>
 #include <texted/insert.h>
@@ -126,18 +128,23 @@ int main(int argc, char* argv[])
 				freeLineBuffer(LineBuffer, LB_Size);
 				exit(1);
 			}
-			PAUSE();
+			// PAUSE();
 			free(Buffer);
 			break;
 		case 'w': // SAVE
 		case 'x': // SAVE AND EXIT
 			getchar();
 			Buffer = getBuffer(LineBuffer, LB_Size);
-			save(Filename, Buffer);
-			printf("Written %lu bytes\n", strlen(Buffer));
-			free(Buffer);
-			if (Command == 'x')
-				goto loop_exit;
+			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
+				perror("Failed to write to the file");
+				free(Buffer);
+				break;
+			} else {
+				printf("Written %lu bytes\n", strlen(Buffer));
+				free(Buffer);
+				if (Command == 'x')
+					goto loop_exit;
+			}
 			break;
 		case 's': // SUBSTITUTE WORD
 		case 'm': // ADD WORD AFTER
