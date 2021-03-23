@@ -19,7 +19,6 @@ int main(int argc, char* argv[])
 	char** ExtraLineBuffer;    // Extra LineBuffer per la insert mode
 	int LB_Size, Line = 1;     // Numero di righe e Riga selezionata
 	int ELB_Size;              // Numero di righe dell'ExtraLineBuffer
-	int Status;                // Controllo degli errori
 	char Command;              // Selettore di comandi
 	char args[ARG_SIZE] = {0}; // Argomenti addizionali ad un comando
 	int counter;               // Contatore da ricordare
@@ -50,26 +49,22 @@ int main(int argc, char* argv[])
 		switch (Command)
 		{
 		case 'p': // PRINT MODE
-			Status = getPrintArgs(args);
-			if (Status != ED_SUCCESS)
-			{
-				fprintf(stderr, "Invalid command\n");
-				continue;
-			}
+			// Read arguments
+			fgets(args, 3, stdin);
 
-			if (streq(args, "", 1))
+			// Interpet arguments
+			if (streq(args, "\n", 1))
 				ed_print(LineBuffer, LB_Size, 0);
-			else if (streq(args, "n", 2))
+			else if (streq(args, "n\n", 2))
 				ed_print(LineBuffer, LB_Size, 1);
-			else if (streq(args, "l", 2))
+			else if (streq(args, "l\n", 2))
 				printf(getLine(LineBuffer, Line));
-			else if (streq(args, "ln", 3))
+			else if (streq(args, "ln\n", 3))
 				printf("%d\t%s", Line, getLine(LineBuffer, Line));
 			else
 			{
-				fprintf(stderr, "\nUnexpected error in print!\n"); // Il programma non dovrebbe main poter raggiungere questa zona
-				freeLineBuffer(LineBuffer, LB_Size);
-				exit(1);
+				fprintf(stderr, "\nWrong syntax for the print command\n");
+				continue;
 			}
 			putchar('\n');
 			break;
@@ -154,11 +149,19 @@ int main(int argc, char* argv[])
 		case 'a': // ADD WORD AT LINE END
 			getchar();
 			arg1 = (char*)malloc(ARG_SIZE);
-			empty(arg1, strlen(arg1));
-			for (counter = 0; (arg1[counter] = getchar()) != '\n'; counter++);
-			arg1[counter] = '\0';
-			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
 			arg2 = NULL;
+			empty(arg1, strlen(arg1));
+
+			do {
+				size_t s = ARG_SIZE;
+				char* nl;
+				getline(&arg1, &s, stdin);
+				nl = strchr(arg1, '\n');
+				if(nl)
+					nl[0] = '\0';
+			} while(0);
+
+			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
 			free(arg1);
 			break;
 		case 'l': // SET LINE
