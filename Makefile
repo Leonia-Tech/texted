@@ -1,6 +1,6 @@
 CC=gcc
 
-DEBUG=0
+DEBUG=1
 ifeq ($(DEBUG),1)
 	CFLAGS=-I./include -g -Wall -DDEBUG=1
 else

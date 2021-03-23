@@ -116,7 +116,8 @@ int main(int argc, char* argv[])
 				free(Buffer);
 				Buffer = load(Filename);
 				LineBuffer = getLineBuffer(Buffer, &LB_Size);
-				free(Buffer);
+				if(!Buffer)
+					free(Buffer);
 			}
 			else
 			{

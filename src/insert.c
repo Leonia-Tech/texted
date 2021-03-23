@@ -7,7 +7,7 @@
 char* insert()
 {
 	size_t size = 200;
-	const int INC = 100; // Increment
+	const size_t INC = 100; // Increment
 	char* Buffer = malloc(size * sizeof(char));
 	size_t counter = 0;
 
@@ -19,7 +19,9 @@ char* insert()
 
 		// Se il Buffer supera size espandi di INC il Buffer
 		if (counter >= size){
-			Buffer = realloc(Buffer, size + INC);
+			Buffer = realloc(Buffer, (size + INC) * sizeof(char));			//! Failes for big buffers
+			if(!Buffer)
+				return NULL;
 			empty(&Buffer[size], strlen(&Buffer[size]));
 			size += INC;
 		}
@@ -173,7 +175,7 @@ int delLine(char** LineBuffer, int Lines, int Del)
     if(--Del < 0)
         Last = 0;
     if(Last)
-        LineBuffer[Del][strlen(LineBuffer[Del]) - 1] == '\0';
+        LineBuffer[Del][strlen(LineBuffer[Del]) - 1] = '\0';
     
     return ED_SUCCESS;
 }
