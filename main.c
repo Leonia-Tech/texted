@@ -6,7 +6,8 @@
 #include <texted/insert.h>
 #include <texted/texted.h>
 
-#define PAUSE()		for(char c; (c = getchar()) != '\n';);
+#define PAUSE()		for(char c; (c = getchar()) != '\n';)
+#define MIN(_a, _b)	((_a) < (_b) ? _a : _b)
 
 int main(int argc, char* argv[])
 {
@@ -35,7 +36,7 @@ int main(int argc, char* argv[])
 	}
 
 	Buffer = load(Filename);
-	LineBuffer = getLineBuffer(Buffer, &LB_Size); //! Empty files
+	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
 	printf("Welcome in Texted - release 1.0\n");
@@ -148,9 +149,19 @@ int main(int argc, char* argv[])
 				break;
 			}
 			
-			for (counter = 0; (Editstr[counter] = getchar()) != '\n'; counter++);
-			Editstr[counter] = '\0';
+			// Read arguments
+			do {
+				size_t s = 0;
+				char* nl;
+				char* st = NULL;
+				getline(&st, &s, stdin);
+				nl = strchr(st, '\n');
+				if(nl)
+					nl[0] = '\0';
+				strncpy(Editstr, st, MIN(ED_ARG_SZ, s));
+			} while(0);
 
+			// Interpret arguments
 			do {
 				char* s = editCommandInterpreter(Editstr, &arg1, &arg2);
 				if(s)

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <errno.h>
 #include <texted/insert.h>
 #include <texted/texted.h>
 
@@ -11,17 +12,21 @@ char* load(char* Filename)
 {
 	FILE* File;
 	struct stat st;
-	stat(Filename, &st);
 	char Temp[LINE_SIZE] = {0};
-	char* Buffer;
-	
-	// Check file size
-	if(st.st_size > 0) {
-		Buffer = malloc(st.st_size * sizeof(char));
-		empty(Buffer, st.st_size);
+	char* Buffer = NULL;
+
+	if(!~stat(Filename, &st)) {
+		if(errno != ENOENT) {
+			perror("Failed to read file infos");
+			exit(-1);
+		}
+	} else {
+		// Check file size
+		if(st.st_size > 0) {
+			Buffer = malloc(st.st_size * sizeof(char));
+			empty(Buffer, st.st_size);
+		}
 	}
-	else
-		Buffer = NULL;
 
 	// Open file or create it
 	File = fopen(Filename, "r");
