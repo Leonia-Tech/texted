@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 		display_help();
 		return 0;
 	}
-
+	
 	//! Permission handling
 	Buffer = load(Filename);
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 				printf("%d\t%s", Line, getLine(LineBuffer, Line));
 			else
 			{
-				fprintf(stderr, "\nWrong syntax for the print command\n");
+				fprintf(stderr, "\n" RED "Wrong syntax for the print command\n" RESET);
 				continue;
 			}
 
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				fprintf(stderr, "\nUnexpected error in insert!\n"); // Il programma non dovrebbe main poter raggiungere questa zona
+				fprintf(stderr, "\n"RED"Unexpected error in insert!\n"RESET); // Il programma non dovrebbe main poter raggiungere questa zona
 				free(Buffer);
 				freeLineBuffer(LineBuffer, LB_Size);
 				exit(1);
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
 			getchar();
 			Buffer = getBuffer(LineBuffer, LB_Size);
 			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
-				perror("Failed to write to the file");
+				perror(RED"Failed to write to the file"RESET);
 				free(Buffer);
 				break;
 			} else {
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 
 			// Handle NULL LineBuffer
 			if(!LineBuffer){
-				fprintf(stderr, "File is empty!\n");
+				fprintf(stderr, RED "File is empty!\n" RESET);
 				PAUSE();
 				break;
 			}
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 			break;
 		default:
 			getchar();
-			fprintf(stderr, "Invalid command\n");
+			fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
 		}
 	}

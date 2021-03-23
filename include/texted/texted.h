@@ -15,6 +15,10 @@
 #define ED_BAD_LINE_FORMAT  0x03
 #define ED_BUFFER_OVERFLOW  0x04
 
+// Color definitions
+#define RED     "\033[31m"
+#define RESET   "\033[0m"
+
 // Macros
 #define PAUSE()			    for(char c; (c = getchar()) != '\n';)
 #define MIN(_a, _b)		    ((_a) < (_b) ? _a : _b)
