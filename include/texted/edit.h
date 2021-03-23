@@ -1,6 +1,9 @@
 #ifndef TEXTED_EDIT_H
 #define TEXTED_EDIT_H
 
+#define RED     "\033[31m"
+#define RESET   "\033[0m"
+
 // Trova quante volte il caratter ch compare in str
 int strocc(char* str, char ch);
 
