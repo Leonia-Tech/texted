@@ -18,8 +18,8 @@ char* insert()
 		Buffer[counter] = c;
 
 		// Se il Buffer supera size espandi di INC il Buffer
-		if (counter >= size){
-			Buffer = realloc(Buffer, (size + INC) * sizeof(char));			//! Failes for big buffers
+		if (counter >= size - 1){
+			Buffer = realloc(Buffer, (size + INC) * sizeof(char));
 			if(!Buffer)
 				return NULL;
 			empty(&Buffer[size], INC);
