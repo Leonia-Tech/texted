@@ -13,15 +13,30 @@ char* load(char* Filename)
 	struct stat st;
 	stat(Filename, &st);
 	char Temp[LINE_SIZE] = {0};
-	char* Buffer = (char*)malloc(st.st_size * sizeof(char));
-	empty(Buffer, st.st_size);
+	char* Buffer;
+	
+	// Check file size
+	if(st.st_size > 0) {
+		Buffer = malloc(st.st_size * sizeof(char));
+		empty(Buffer, st.st_size);
+	}
+	else
+		Buffer = NULL;
 
+	// Open file or create it
 	File = fopen(Filename, "r");
 	if (!File) {
 		File = fopen(Filename, "w");
 		return NULL;
 	}
 
+	// If file is empty exit with null
+	if(!Buffer) {
+		fclose(File);
+		return Buffer;
+	}
+
+	// Read the whole file
 	while (fgets(Temp, LINE_SIZE, File))
 		strcat(Buffer, Temp);
 

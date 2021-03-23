@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	}
 
 	Buffer = load(Filename);
-	LineBuffer = getLineBuffer(Buffer, &LB_Size); // ! Empty files
+	LineBuffer = getLineBuffer(Buffer, &LB_Size); //! Empty files
 	free(Buffer);
 
 	printf("Welcome in Texted - release 1.0\n");
@@ -66,7 +66,9 @@ int main(int argc, char* argv[])
 				fprintf(stderr, "\nWrong syntax for the print command\n");
 				continue;
 			}
-			putchar('\n');
+
+			if(LineBuffer)
+				putchar('\n');
 			break;
 		case 'i': // INSERT MODE
 			getInsertArgs(args);
@@ -78,12 +80,18 @@ int main(int argc, char* argv[])
 				free(Buffer);
 				continue;
 			}
+			PAUSE();
 
 			if (streq(args, "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
 			{
 				// Prepara il LineBuffer temporaneo
-				ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
-				--LB_Size;
+				if(!LineBuffer && !LB_Size) {
+					LineBuffer = getLineBuffer(Buffer, &LB_Size);
+					break;
+				} else {
+					ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
+					--LB_Size;
+				}
 
 				// Concatenazione dell'a prima stringa del Buffer temporaneo con l'ultima del LineBuffer
 				LineBuffer = realloc(LineBuffer, (LB_Size + ELB_Size) * sizeof(char*));
@@ -132,10 +140,24 @@ int main(int argc, char* argv[])
 			break;
 		case 's': // SUBSTITUTE WORD
 		case 'm': // ADD WORD AFTER
+
+			// Handle NULL LineBuffer
+			if(!LineBuffer){
+				fprintf(stderr, "File is empty!\n");
+				PAUSE();
+				break;
+			}
+			
 			for (counter = 0; (Editstr[counter] = getchar()) != '\n'; counter++);
 			Editstr[counter] = '\0';
 
-			memcpy(args, editCommandInterpreter(Editstr, &arg1, &arg2), ARG_SIZE);
+			do {
+				char* s = editCommandInterpreter(Editstr, &arg1, &arg2);
+				if(s)
+					memcpy(args, s, ARG_SIZE);
+				else
+					empty(args, ARG_SIZE);
+			} while(0);
 
 			if (Command == 's')
 				substitute(getLinePtr(LineBuffer, Line), arg1, arg2);
@@ -170,7 +192,7 @@ int main(int argc, char* argv[])
 			if (counter > 0 && counter <= LB_Size)
 				Line = counter;
 
-			getchar();
+			PAUSE();
 			break;
 		case 'q': // EXIT
 			getchar();

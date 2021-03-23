@@ -22,35 +22,52 @@ int strocc(char* str, char ch)
 char** getLineBuffer(char* Buffer, int* Lines)
 {
 	int ln = strocc(Buffer, '\n') + 1;
-	char** LineBuffer = (char**)malloc(ln * sizeof(char*));
+	char** LineBuffer;
 	char* ptr;
-	int Length;
+	size_t Length;
 
-	if(!Buffer) {
-		free(LineBuffer);
+	// Handle NULL buffer
+	if(Buffer) {
+		LineBuffer = (char**)malloc(ln * sizeof(char*));
+		empty(LineBuffer, ln);
+	} else {
 		*Lines = 0;
 		return NULL;
-	}	
-	else
-		ptr = Buffer;
+	}
 
+	// Next line
+	ptr = Buffer;
+	
 	for (int i = 0; i < ln; i++) {
 		if (strchr(ptr, '\n'))
-			Length = (int)(strchr(ptr, '\n') - ptr) + 2;
+			Length = (size_t)(strchr(ptr, '\n') - ptr) + 2;
 		else
 			Length = strlen(ptr) + 1;
 
 		LineBuffer[i] = (char*)malloc(Length * sizeof(char));
 		empty(LineBuffer[i], Length);
+
 		strncpy(LineBuffer[i], ptr, --Length);
-		ptr = &ptr[Length];
+		ptr += Length;
 	}
+
 	*Lines = ln;
 	return LineBuffer;
 }
 
-char* getLine(char** LineBuffer, int Line) { return LineBuffer[Line - 1]; }
-char** getLinePtr(char** LineBuffer, int Line) { return &LineBuffer[Line - 1]; }
+char* getLine(char** LineBuffer, int Line)
+{
+	if(!LineBuffer)
+		return "\n";
+	return LineBuffer[Line - 1];
+}
+
+char** getLinePtr(char** LineBuffer, int Line)
+{
+	if(!LineBuffer)
+		return NULL;
+	return &LineBuffer[Line - 1];
+}
 
 void freeLineBuffer(char** LineBuffer, int Lines)
 {
@@ -60,6 +77,9 @@ void freeLineBuffer(char** LineBuffer, int Lines)
 
 char* substitute(char** row, char* _old, char* _new)
 {
+	if(!row)
+		return NULL;
+	
 	char* ptr = strstr(*row, _old);
 	int size = strlen(*row) - strlen(_old) + strlen(_new);
 	char* edit = (char*)malloc(size * sizeof(char));
@@ -77,6 +97,9 @@ char* substitute(char** row, char* _old, char* _new)
 
 char* putstr(char** row, char* _before, char* _new)
 {
+	if(!row)
+		return NULL;
+	
 	char* ptr;
 	char* edit;
 	int size = strlen(*row) + strlen(_new);
@@ -125,7 +148,7 @@ char* editCommandInterpreter(char* arg, char** _str1, char** _str2)
 	arg = strchr(arg, '/');
 	arg = &arg[1];
 
-	for (i = 0; arg[i] != '/'; i++)
+	for (i = 0; arg[i] != '/' && arg[i] != '\0'; i++)
 		str2[i] = arg[i];
 	str2[i] = '\0';
 
@@ -133,7 +156,10 @@ char* editCommandInterpreter(char* arg, char** _str1, char** _str2)
 	*_str1 = str1;
 	*_str2 = str2;
 
-	return &arg[1];
+	if(arg)
+		return &arg[1];
+	else
+		return NULL;
 }
 
 int getLineBufferSize(char** LineBuffer, int Lines)
