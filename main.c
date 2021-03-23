@@ -8,9 +8,6 @@
 #include <texted/insert.h>
 #include <texted/texted.h>
 
-#define PAUSE()		for(char c; (c = getchar()) != '\n';)
-#define MIN(_a, _b)	((_a) < (_b) ? _a : _b)
-
 int main(int argc, char* argv[])
 {
 	char* Buffer;                  // Buffer continuo
@@ -41,7 +38,7 @@ int main(int argc, char* argv[])
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
-	printf("Welcome in Texted - release 1.0\n");
+	printf("Welcome in Texted - " RELEASE "\n");
 
 	// MAIN LOOP
 	while (1)

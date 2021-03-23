@@ -1,7 +1,13 @@
 CC=gcc
-CFLAGS=-I./include -g -Wall
-TARGET=texted
 
+DEBUG=0
+ifeq ($(DEBUG),1)
+	CFLAGS=-I./include -g -Wall -DDEBUG=1
+else
+	CFLAGS=-I./include -O2
+endif
+
+TARGET=texted
 OBJ=src/edit.o src/insert.o src/print.o main.o
 
 all: $(TARGET)
