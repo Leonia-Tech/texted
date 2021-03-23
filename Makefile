@@ -1,31 +1,17 @@
-# Source code folder
-BDIR = bin
-# Include files folder
-IDIR = include
-# Object files output folder
-ODIR = obj
+CC=gcc
+CFLAGS=-I./include -g -Wall
+TARGET=texted
 
-# All these files must be in bin/
-_OBJS = texted.o
-_OBJS += edit.o
-_OBJS += insert.o
-_OBJS += print.o
+OBJ=src/edit.o src/insert.o src/print.o main.o
 
-OBJS = $(foreach obj, $(_OBJS), $(ODIR)/$(obj))
+all: $(TARGET)
 
-DEPS = $(wildcard $(IDIR)/*)
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c $<
 
-CC = gcc
-CFLAGS = -I$(IDIR) -Wall
-
-$(ODIR)/%.o: $(BDIR)/%.c $(DEPS)
-	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-texted: $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS)
-
-.PHONY: clean
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm -f $(IDIR)/*~ $(ODIR)/*.o *~ texted
+	rm src/*.o
+	rm *.o texted

@@ -17,8 +17,10 @@ char* load(char* Filename)
 	empty(Buffer, st.st_size);
 
 	File = fopen(Filename, "r");
-	if (!File)
-		File = fopen(Filename, "w+");
+	if (!File) {
+		File = fopen(Filename, "w");
+		return NULL;
+	}
 
 	while (fgets(Temp, LINE_SIZE, File))
 		strcat(Buffer, Temp);

@@ -2,27 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include <texted/texted.h>
+#include <texted/insert.h>
 
 char* insert()
 {
-	int size = 100;
-	const int INC = 50; // Increment
-	char* Buffer = (char*)malloc(size * sizeof(char));
-	int counter = 0;
+	size_t size = 200;
+	const int INC = 100; // Increment
+	char* Buffer = malloc(size * sizeof(char));
+	size_t counter = 0;
+
+	empty(Buffer, strlen(Buffer));
 
 	// Chiedi caratteri finché non è premuto ESC
-	while (Buffer[counter - 2] != '\e')
-	{
-		Buffer[counter] = getchar();
+	for(char c = 0; (c = getchar()) != '\e'; ++counter) {
+		Buffer[counter] = c;
 
-		// Se il Buffer supera Size espandi di INC il Buffer
-		if (counter >= size)
-		{
-			Buffer = (char*)realloc(Buffer, size += INC);
+		// Se il Buffer supera size espandi di INC il Buffer
+		if (counter >= size){
+			Buffer = realloc(Buffer, size + INC);
+			empty(&Buffer[size], strlen(&Buffer[size]));
+			size += INC;
 		}
-		counter++;
 	}
-	Buffer[counter - 2] = '\0';
+
+	if(counter < 0)
+	{
+		free(Buffer);
+		return NULL;
+	}
 
 	return Buffer;
 }
@@ -69,12 +76,6 @@ int save(char* Filename, char* Buffer)
 	fprintf(File, "%s", Buffer);
 	fclose(File);
 	return ED_SUCCESS;
-}
-
-void empty(char* arr, int size)
-{
-	for (int i = 0; i < size; i++)
-		arr[i] = 0;
 }
 
 int streq(char* str1, char* str2, int size)
