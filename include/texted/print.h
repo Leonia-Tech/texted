@@ -10,7 +10,4 @@ int getPrintArgs(char* args);
 // Stampa l'intero file
 void ed_print(char** LineBuffer, int Lines, int LineNum);
 
-// Stampa la lista dei comandi
-void display_help();
-
 #endif // TEXTED_PRINT_H

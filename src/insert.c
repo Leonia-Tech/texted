@@ -78,9 +78,9 @@ int save(char* Filename, char* Buffer)
 	return ED_SUCCESS;
 }
 
-int streq(char* str1, char* str2, int size)
+int streq(char* str1, char* str2, size_t size)
 {
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size; i++)
 		if (str1[i] != str2[i])
 			return 0;
 
@@ -134,4 +134,46 @@ int backup(char* Filename)
 	fclose(From);
 	fclose(To);
 	return ED_SUCCESS;
+}
+
+int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
+{
+    char** NewLineBuffer;
+    int counter;
+
+    if(!NewLine || NewLine[strlen(NewLine) - 1] != '\n')
+        return ED_BAD_LINE_FORMAT;
+    
+    if(Position > *Lines)
+        return ED_BUFFER_OVERFLOW;
+    
+    NewLineBuffer = (char**)malloc(++*Lines * sizeof(char*));
+    for(counter = 0; counter < Position - 1; counter++)
+        NewLineBuffer[counter] = (*LineBuffer)[counter];
+    NewLineBuffer[counter] = NewLine;
+    for(; counter < *Lines - 1; counter++)
+        NewLineBuffer[counter+1] = (*LineBuffer)[counter];
+    
+    *LineBuffer = NewLineBuffer;
+    return ED_SUCCESS;
+}
+
+int delLine(char** LineBuffer, int Lines, int Del)
+{
+    int Last = 0;
+
+    if(Del > Lines)
+        return ED_BUFFER_OVERFLOW;
+
+    if(Del == Lines)
+        ++Last;
+    
+    free(LineBuffer[--Del]);
+    LineBuffer[Del] = NULL;
+    if(--Del < 0)
+        Last = 0;
+    if(Last)
+        LineBuffer[Del][strlen(LineBuffer[Del]) - 1] == '\0';
+    
+    return ED_SUCCESS;
 }

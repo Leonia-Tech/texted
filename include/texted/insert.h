@@ -3,9 +3,6 @@
 
 #include <string.h>
 
-// Empty a buffer with zeroes
-#define empty(_buffer, _size)   memset((_buffer), 0, (_size))
-
 // Insert mode
 char* insert();
 
@@ -16,8 +13,6 @@ int app_save(char* Filename, char* Buffer);
 
 // Salva il buffer nel file risrivendolo
 int save(char* Filename, char* Buffer);
-
-int streq(char* str1, char* str2, int size);
 
 // Inserisce "in" in "out" prima di "ch"
 char* strins(char* out, char* in, char ch);

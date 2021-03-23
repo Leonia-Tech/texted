@@ -1,6 +1,8 @@
 #ifndef TEXTED_TEXTED_H
 #define TEXTED_TEXTED_H
 
+#include <aio.h>
+
 #define LINE_SIZE           500
 #define ARG_SIZE            4
 #define ED_ARG_SZ           50
@@ -10,10 +12,14 @@
 #define ED_SUCCESS          0x00
 #define ED_NULL_FILE_PTR    0x01
 #define ED_INVALID_COMMAND  0x02
+#define ED_BAD_LINE_FORMAT  0x03
+#define ED_BUFFER_OVERFLOW  0x04
 
 // Macros
 #define PAUSE()			    for(char c; (c = getchar()) != '\n';)
 #define MIN(_a, _b)		    ((_a) < (_b) ? _a : _b)
+#define empty(_buffer, _size)   memset((_buffer), 0, (_size))
+
 
 // Version control
 #ifndef	DEBUG
@@ -22,5 +28,10 @@
 	#define RELEASE			"debug-version"
 #endif
 
+// Confronta due stringhe fino a size
+int streq(char* str1, char* str2, size_t size);
+
+// Stampa la lista dei comandi
+void display_help();
 
 #endif // TEXTED_TEXTED_H
