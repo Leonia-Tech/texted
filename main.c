@@ -34,6 +34,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 
+	//! Permission handling
 	Buffer = load(Filename);
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);

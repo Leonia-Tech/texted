@@ -11,7 +11,7 @@ char* insert()
 	char* Buffer = malloc(size * sizeof(char));
 	size_t counter = 0;
 
-	empty(Buffer, strlen(Buffer));
+	empty(Buffer, size);
 
 	// Chiedi caratteri finché non è premuto ESC
 	for(char c = 0; (c = getchar()) != '\e'; ++counter) {
@@ -22,7 +22,7 @@ char* insert()
 			Buffer = realloc(Buffer, (size + INC) * sizeof(char));			//! Failes for big buffers
 			if(!Buffer)
 				return NULL;
-			empty(&Buffer[size], strlen(&Buffer[size]));
+			empty(&Buffer[size], INC);
 			size += INC;
 		}
 	}
