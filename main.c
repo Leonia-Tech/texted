@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
-	printf("Welcome in Texted - " RELEASE "\n");
+	printf(BOLD YELLOW"Welcome in Texted - " RELEASE "\n");
 
 	// MAIN LOOP
 	while (1)
 	{
-		printf(GREEN"%s > "RESET, Filename);
+		printf(BOLD GREEN"%s > "RESET, Filename);
 		Command = getchar();
 
 		// Handle extended ASCII Table
