@@ -77,21 +77,37 @@ void freeLineBuffer(char** LineBuffer, int Lines)
 
 char* substitute(char** row, char* _old, char* _new)
 {
+	
+	char* ptr;		// Pointer to _old in row
+	char* edit;		// Temporary string
+	size_t size;	// New size
+
+	if(!(ptr = strstr(*row, _old)))
+		return NULL;
+
+	size = strlen(*row) - strlen(_old) + strlen(_new);
+	edit = (char*)malloc(size * sizeof(char));
+
 	if(!row)
 		return NULL;
-	
-	char* ptr = strstr(*row, _old);
-	int size = strlen(*row) - strlen(_old) + strlen(_new);
-	char* edit = (char*)malloc(size * sizeof(char));
 
 	empty(edit, size);
+
+	// Copy untill old
 	strncpy(edit, *row, (int)(ptr - *row));
+
+	// Add new
 	strcat(edit, _new);
-	ptr = &ptr[strlen(_old)];
+
+	// Add after old
+	ptr += strlen(_old);
 	strcat(edit, ptr);
+
+	// Move to *row and free temporary string
 	*row = realloc(*row, size);
 	strcpy(*row, edit);
 	free(edit);
+
 	return *row;
 }
 
@@ -127,39 +143,22 @@ char* putstr(char** row, char* _before, char* _new)
 	return *row;
 }
 
-char* editCommandInterpreter(char* arg, char** _str1, char** _str2)
+int getTokens(char* arg, size_t size, char** toks[2])
 {
-	int i;
-	char* str1;
-	char* str2;
+	// Syntax check
+	if(strocc(arg, '/') < 2) {
+		*toks[0] = *toks[1] = NULL;
+		return ED_WRONG_SYNTAX;
+	}		
 
-	// arg è del tipo "/.../.../..."
-	str1 = (char*)malloc(ED_ARG_SZ);
-	str2 = (char*)malloc(ED_ARG_SZ);
+	// Extract tokens
+	arg++;
+	*toks[0] = strtok(arg, "/");
 
-	empty(str1, strlen(str1));
-	empty(str2, strlen(str2));
-	arg = &arg[1];
+	for(size_t i = 1; i < size; i++)
+		*toks[i] = strtok(NULL, "/");
 
-	for (i = 0; arg[i] != '/'; i++)
-		str1[i] = arg[i];
-	str1[i] = '\0';
-
-	arg = strchr(arg, '/');
-	arg = &arg[1];
-
-	for (i = 0; arg[i] != '/' && arg[i] != '\0'; i++)
-		str2[i] = arg[i];
-	str2[i] = '\0';
-
-	arg = strchr(arg, '/');
-	*_str1 = str1;
-	*_str2 = str2;
-
-	if(arg)
-		return &arg[1];
-	else
-		return NULL;
+	return ED_SUCCESS;
 }
 
 int getLineBufferSize(char** LineBuffer, int Lines)

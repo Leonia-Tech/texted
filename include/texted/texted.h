@@ -14,6 +14,7 @@
 #define ED_INVALID_COMMAND  0x02
 #define ED_BAD_LINE_FORMAT  0x03
 #define ED_BUFFER_OVERFLOW  0x04
+#define ED_WRONG_SYNTAX		0x05
 
 // Color definitions
 #define RED     "\033[31m"

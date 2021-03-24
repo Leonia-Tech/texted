@@ -21,7 +21,8 @@ char* substitute(char** row, char* _old, char* _new);
 // Aggiungi dopo / _before = 0 ==> aggiungi infondo alla riga
 char* putstr(char** row, char* _before, char* _new);
 
-char* editCommandInterpreter(char* arg, char** _str1, char** _str2);
+// Extract tokens for the substitute function
+int getTokens(char* arg, size_t size, char** toks[2]);
 
 int getLineBufferSize(char** LineBuffer, int Lines);
 

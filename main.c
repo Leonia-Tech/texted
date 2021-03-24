@@ -12,8 +12,8 @@ int main(int argc, char* argv[])
 {
 	char* Buffer;                  // Buffer continuo
 	char Editstr[ED_ARG_SZ] = {0}; // Stringa da cui ricavare gli argomenti per le funzioni di modifica
-	char* arg1;                    // Argomenti per le funzioni di modifica
-	char* arg2;
+	char* arg1 = NULL;             // Argomenti per le funzioni di modifica
+	char* arg2 = NULL;
 	char* Filename;            // Nome del file aperto
 	char** LineBuffer;         // Buffer a righe
 	char** ExtraLineBuffer;    // Extra LineBuffer per la insert mode
@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
 	char Command;              // Selettore di comandi
 	char args[ARG_SIZE] = {0}; // Argomenti addizionali ad un comando
 	int counter;               // Contatore da ricordare
+	int status = 0;			   // Return status
 
 	// LOADING
 	if (argc <= 1)
@@ -178,20 +179,20 @@ int main(int argc, char* argv[])
 
 			// Interpret arguments
 			do {
-				char* s = editCommandInterpreter(Editstr, &arg1, &arg2);
-				if(s)
-					memcpy(args, s, ARG_SIZE);
-				else
-					empty(args, ARG_SIZE);
+				char** arg_arr[2] = { &arg1, &arg2 };
+				status = getTokens(Editstr, 2, arg_arr);
 			} while(0);
+
+			if(status) {
+				fprintf(stderr, RED"Wrong syntax for the substitute command\n"RESET);
+				Command = '\0';
+			}
 
 			if (Command == 's')
 				substitute(getLinePtr(LineBuffer, Line), arg1, arg2);
 			else if (Command == 'm')
 				putstr(getLinePtr(LineBuffer, Line), arg1, arg2);
 
-			free(arg1);
-			free(arg2);
 			empty(Editstr, strlen(Editstr));
 			break;
 		case 'a': // ADD WORD AT LINE END
