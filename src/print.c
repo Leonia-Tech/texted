@@ -96,7 +96,7 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 	for (int i = 0; i < Lines; i++)
 	{
 		if (LineNum)
-			printf("%d\t", LineNum++); // Prima stampa e poi incrementa
+			printf("%d   ", LineNum++); // Prima stampa e poi incrementa
 		printf(LineBuffer[i]);         // La riga termina con \n, tranne la finale che termina con 0x00
 	}
 }

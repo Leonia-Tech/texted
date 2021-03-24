@@ -136,8 +136,7 @@ char* putstr(char** row, const char* _before, const char* _new)
 	if(!row)
 		return NULL;
 
-	if (_before)
-	{
+	if (_before) {
 		// After realloc ptr points to a non-valid location
 		ptr = strstr(*row, _before);
 		
@@ -156,10 +155,11 @@ char* putstr(char** row, const char* _before, const char* _new)
 		// Put in row
 		strcpy(*row, edit);
 		free(edit);
-	}
-	else
+	} else {
+		(*row)[strlen(*row) - 1] = '\0';
 		strcat(*row, _new); // If before is NULL we use this function to concatenate
-
+		(*row)[strlen(*row)] = '\n';
+	}
 	return *row;
 }
 

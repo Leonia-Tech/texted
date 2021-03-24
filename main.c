@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 		{
 		case 'p': // PRINT MODE
 			// Read arguments
-			fgets(args, 3, stdin);
+			fgets(args, 4, stdin);
 
 			// Interpet arguments
 			if (streq(args, "\n", 1))
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 			else if (streq(args, "l\n", 2))
 				printf(getLine(LineBuffer, Line));
 			else if (streq(args, "ln\n", 3))
-				printf("%d\t%s", Line, getLine(LineBuffer, Line));
+				printf("%d   %s", Line, getLine(LineBuffer, Line));
 			else
 			{
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
@@ -220,8 +220,11 @@ int main(int argc, char* argv[])
 					nl[0] = '\0';
 				
 				// Check syntax
-				if(tmp[0] != '/' && strchr(tmp+1, '/'))
+				if(tmp[0] != '/' || strchr(tmp+1, '/')) {
 					status = ED_WRONG_SYNTAX;
+					free(tmp);
+					break;
+				}
 				
 				// Extract tokens
 				arg1 = strdup(tmp+1);
