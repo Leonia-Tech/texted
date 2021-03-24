@@ -5,7 +5,7 @@
 #include <texted/texted.h>
 
 // Trova quante volte il caratter ch compare in str
-int strocc(char* str, char ch)
+int strocc(const char* str, char ch)
 {
 	if(!str)
 		return 0;
@@ -75,7 +75,7 @@ void freeLineBuffer(char** LineBuffer, int Lines)
 		free(LineBuffer[i]);
 }
 
-char* substitute(char** row, char* _old, char* _new)
+char* substitute(char** row, const char* _old, const char* _new)
 {
 	
 	char* ptr;		// Pointer to _old in row
@@ -84,6 +84,9 @@ char* substitute(char** row, char* _old, char* _new)
 
 	if(!(ptr = strstr(*row, _old)))
 		return NULL;
+	
+	if(_new == NULL)
+		_new = "";
 
 	size = strlen(*row) - strlen(_old) + strlen(_new);
 	edit = (char*)malloc(size * sizeof(char));
@@ -111,48 +114,68 @@ char* substitute(char** row, char* _old, char* _new)
 	return *row;
 }
 
-char* putstr(char** row, char* _before, char* _new)
+char* putstr(char** row, const char* _before, const char* _new)
 {
-	if(!row)
+	if(!row || !_new || !_new[0])
 		return NULL;
 	
 	char* ptr;
 	char* edit;
-	int size = strlen(*row) + strlen(_new);
+	size_t size;
+	
+	// Initial check
+	if(_before) {
+		ptr = strstr(*row, _before);
+		if(!ptr)
+			return NULL;
+	}
+	
+	// Allocation of new space
+	size = strlen(*row) + strlen(_new);
 	*row = realloc(*row, ++size * sizeof(char));
-
-	if (!_new && !_new[0])
+	if(!row)
 		return NULL;
 
-	if (_before[0])
+	if (_before)
 	{
+		// After realloc ptr points to a non-valid location
 		ptr = strstr(*row, _before);
+		
 		edit = (char*)malloc(size * sizeof(char));
-
 		empty(edit, size);
 
-		strncpy(edit, *row, (int)(ptr - *row));
+		// Copy untill before
+		strncpy(edit, *row, (size_t)(ptr - *row));
+
+		// Add new
 		strcat(edit, _new);
+
+		// Copy after before
 		strcat(edit, ptr);
+
+		// Put in row
 		strcpy(*row, edit);
 		free(edit);
 	}
 	else
-		strcat(*row, _new);
+		strcat(*row, _new); // If before is NULL we use this function to concatenate
 
 	return *row;
 }
 
-int getTokens(char* arg, size_t size, char** toks[2])
+int getTokens(char* arg, size_t size, char** toks[])
 {
+	// Arguments check
+	if(size < 2 && arg && toks && arg[0])
+		return ED_FUNCTION_ERROR;
+	
 	// Syntax check
-	if(strocc(arg, '/') < 2) {
+	if(strocc(arg, '/') != size) {
 		*toks[0] = *toks[1] = NULL;
 		return ED_WRONG_SYNTAX;
 	}		
 
 	// Extract tokens
-	arg++;
 	*toks[0] = strtok(arg, "/");
 
 	for(size_t i = 1; i < size; i++)

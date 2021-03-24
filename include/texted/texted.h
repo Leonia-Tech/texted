@@ -2,11 +2,12 @@
 #define TEXTED_TEXTED_H
 
 #include <aio.h>
+#include <stddef.h>
 
 #define LINE_SIZE           500
 #define ARG_SIZE            4
 #define ED_ARG_SZ           50
-#define ADD_MODE            "\n"
+#define ADD_MODE            (NULL)
 
 // Error codes
 #define ED_SUCCESS          0x00
@@ -15,6 +16,7 @@
 #define ED_BAD_LINE_FORMAT  0x03
 #define ED_BUFFER_OVERFLOW  0x04
 #define ED_WRONG_SYNTAX		0x05
+#define ED_FUNCTION_ERROR	0x06
 
 // Color definitions
 #define RED     "\033[31m"
@@ -28,7 +30,7 @@
 
 // Version control
 #ifndef	DEBUG
-	#define	RELEASE			"release 1.1"
+	#define	RELEASE			"release 1.2"
 #else
 	#define RELEASE			"debug-version"
 #endif

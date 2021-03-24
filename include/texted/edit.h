@@ -2,7 +2,7 @@
 #define TEXTED_EDIT_H
 
 // Trova quante volte il caratter ch compare in str
-int strocc(char* str, char ch);
+int strocc(const char* str, char ch);
 
 // Dividi il Buffer in righe e restituisci il numero di righe in _Lines
 char** getLineBuffer(char* Buffer, int* _Lines);
@@ -16,13 +16,13 @@ char** getLinePtr(char** LineBuffer, int Line);
 void freeLineBuffer(char** LineBuffer, int Lines);
 
 // Sostituisci
-char* substitute(char** row, char* _old, char* _new);
+char* substitute(char** row, const char* _old, const char* _new);
 
 // Aggiungi dopo / _before = 0 ==> aggiungi infondo alla riga
-char* putstr(char** row, char* _before, char* _new);
+char* putstr(char** row, const char* _before, const char* _new);
 
 // Extract tokens for the substitute function
-int getTokens(char* arg, size_t size, char** toks[2]);
+int getTokens(char* arg, size_t size, char** toks[]);
 
 int getLineBufferSize(char** LineBuffer, int Lines);
 

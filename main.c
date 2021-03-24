@@ -180,35 +180,58 @@ int main(int argc, char* argv[])
 			// Interpret arguments
 			do {
 				char** arg_arr[2] = { &arg1, &arg2 };
-				status = getTokens(Editstr, 2, arg_arr);
+				status = getTokens(&Editstr[1], 2, arg_arr);
 			} while(0);
 
 			if(status) {
-				fprintf(stderr, RED"Wrong syntax for the substitute command\n"RESET);
+				fprintf(stderr, RED"Wrong syntax for the %s command\n"RESET,
+						Command == 's' ? "substitute (s)" : "embed (m)");
 				Command = '\0';
 			}
 
-			if (Command == 's')
-				substitute(getLinePtr(LineBuffer, Line), arg1, arg2);
-			else if (Command == 'm')
-				putstr(getLinePtr(LineBuffer, Line), arg1, arg2);
+			if (Command == 's') {
+				if(!substitute(getLinePtr(LineBuffer, Line), arg1, arg2))
+					fprintf(stderr, RED "Failed to substitute\n" RESET);
+			} else if (Command == 'm') {
+				if(!putstr(getLinePtr(LineBuffer, Line), arg1, arg2))
+					fprintf(stderr, RED "Failed to embed new token\n" RESET);
+			}
 
 			empty(Editstr, strlen(Editstr));
 			break;
 		case 'a': // ADD WORD AT LINE END
-			getchar();
-			arg1 = (char*)malloc(ARG_SIZE);
 			arg2 = NULL;
-			empty(arg1, strlen(arg1));
 
+			// Read and interpret argument
 			do {
 				size_t s = ARG_SIZE;
+				char* tmp;
 				char* nl;
-				getline(&arg1, &s, stdin);
-				nl = strchr(arg1, '\n');
+
+				tmp = malloc(s);
+				empty(tmp, s);
+				
+				// Read
+				getline(&tmp, &s, stdin);
+
+				// Delete newline if any (needed)
+				nl = strchr(tmp, '\n');
 				if(nl)
 					nl[0] = '\0';
+				
+				// Check syntax
+				if(tmp[0] != '/' && strchr(tmp+1, '/'))
+					status = ED_WRONG_SYNTAX;
+				
+				// Extract tokens
+				arg1 = strdup(tmp+1);
+				free(tmp);
+				status = ED_SUCCESS;
 			} while(0);
+
+			if(status) {
+				fprintf(stderr, RED"Wrong syntax for the append (a) command\n"RESET);
+			}
 
 			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
 			free(arg1);
