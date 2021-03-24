@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	// MAIN LOOP
 	while (1)
 	{
-		printf("%s > ", Filename);
+		printf(GREEN"%s > "RESET, Filename);
 		Command = getchar();
 
 		// Handle extended ASCII Table
@@ -231,6 +231,7 @@ int main(int argc, char* argv[])
 
 			if(status) {
 				fprintf(stderr, RED"Wrong syntax for the append (a) command\n"RESET);
+				break;
 			}
 
 			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
@@ -257,7 +258,7 @@ int main(int argc, char* argv[])
 			getchar();
 			break;
 		default:
-			getchar();
+			PAUSE();
 			fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
 		}
