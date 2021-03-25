@@ -10,4 +10,7 @@ int getPrintArgs(char* args);
 // Stampa l'intero file
 void ed_print(char** LineBuffer, int Lines, int LineNum);
 
+// Stampa i permessi del file
+void ed_print_permissions(const char* Filename);
+
 #endif // TEXTED_PRINT_H

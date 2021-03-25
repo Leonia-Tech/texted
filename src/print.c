@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <string.h>
 #include <errno.h>
+
+#include <sys/stat.h>
+
 #include <texted/insert.h>
 #include <texted/texted.h>
 

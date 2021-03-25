@@ -10,9 +10,9 @@ else
 	TARGET=texted-$(VERSION)
 endif
 
-OBJ=src/edit.o src/insert.o src/print.o main.o
+OBJ=src/edit.o src/insert.o src/print.o src/permissions.o main.o
 
-all: $(TARGET)
+all: $(TARGET) include/texted/texted.h
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<

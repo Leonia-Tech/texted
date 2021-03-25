@@ -6,6 +6,7 @@
 #include <texted/edit.h>
 #include <texted/print.h>
 #include <texted/insert.h>
+#include <texted/permissions.h>
 #include <texted/texted.h>
 
 int main(int argc, char* argv[])
@@ -275,6 +276,11 @@ int main(int argc, char* argv[])
 				Line--;
 				printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
 			}
+			break;
+
+		case '#':
+			ed_print_permissions(Filename);
+			PAUSE();
 			break;
 
 		default:
