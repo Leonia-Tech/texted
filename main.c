@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
-	printf(BOLD YELLOW"Welcome in Texted - " RELEASE "\n");
+	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE "\n", stdout);
 
 	// MAIN LOOP
 	while (1)
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 			else if (streq(args, "n\n", 2))
 				ed_print(LineBuffer, LB_Size, 1);
 			else if (streq(args, "l\n", 2))
-				printf(getLine(LineBuffer, Line));
+				fputs(getLine(LineBuffer, Line), stdout);
 			else if (streq(args, "ln\n", 3))
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
 			else
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 		
 		case 'i': // INSERT MODE
 			getInsertArgs(args);
-			printf("--INSERT MODE--\n");
+			fputs("--INSERT MODE--\n", stdout);
 
 			Buffer = insert(); // Scrivi qualcosa solo se Buffer non è vuoto.
 			if (!Buffer)
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				fprintf(stderr, "\n"RED"Unexpected error in insert!\n"RESET); // Il programma non dovrebbe main poter raggiungere questa zona
+				fputs("\n"RED"Unexpected error in insert!\n"RESET, stderr); // Il programma non dovrebbe main poter raggiungere questa zona
 				free(Buffer);
 				freeLineBuffer(LineBuffer, LB_Size);
 				exit(1);
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
 
 			// Handle NULL LineBuffer
 			if(!LineBuffer){
-				fprintf(stderr, RED "File is empty!\n" RESET);
+				fputs(RED "File is empty!\n" RESET, stderr);
 				PAUSE();
 				break;
 			}

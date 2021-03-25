@@ -203,7 +203,7 @@ int argumentParser(int del_new_line, size_t args_number, char** argument[])
 	}
 	
 	// Check syntax
-	if(tmp[0] != '/' || (args_number == 1 ? 0 : (strocc(tmp+1, '/') != args_number)))
+	if(tmp[0] != '/' || (args_number == 1 ? (strocc(tmp+1, '/') > args_number) : (strocc(tmp+1, '/') != args_number)))
 		return ED_WRONG_SYNTAX;
 	
 	// Extract token

@@ -58,14 +58,14 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 	for (int i = 0; i < Lines; i++)
 	{
 		if (LineNum)
-			printf("%d   ", LineNum++); // Prima stampa e poi incrementa
-		printf(LineBuffer[i]);         // La riga termina con \n, tranne la finale che termina con 0x00
+			printf("%d   ", LineNum++); 	  // Prima stampa e poi incrementa
+		fputs(LineBuffer[i], stdout);         // La riga termina con \n, tranne la finale che termina con 0x00
 	}
 }
 
 void display_help()
 {
-	printf(BOLD BLUE "--HELP--\n\n"
+	fputs(BOLD BLUE "--HELP--\n\n"
 
 		   "p:\t\tstampa\n"
 		   "-l\t\triga corrente\n"
@@ -87,5 +87,5 @@ void display_help()
 		   "l:\t\tsetta la riga di modifica\n\n"
 
 		   "n:\t\taggiungi riga prima della riga di mofifica\n"
-		   "d:\t\trimuovi la riga di modifica\n"RESET);
+		   "d:\t\trimuovi la riga di modifica\n"RESET, stdout);
 }
