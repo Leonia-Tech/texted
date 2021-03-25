@@ -184,25 +184,24 @@ int getTokens(char* arg, size_t size, char** toks[])
 	return ED_SUCCESS;
 }
 
-int argumentParser(char** argument)
+int argumentParser(char** argument, int del_new_line)
 {
-	size_t s = ARG_SIZE;
-	char* tmp;
+	size_t s = 0;
+	char* tmp = NULL;
 	char* nl;
-
-	tmp = malloc(s);
-	empty(tmp, s);
 	
 	// Read
 	getline(&tmp, &s, stdin);
 
 	// Delete newline if any (needed)
-	nl = strchr(tmp, '\n');
-	if(nl)
-		nl[0] = '\0';
+	if(del_new_line) {
+		nl = strchr(tmp, '\n');
+		if(nl)
+			nl[0] = '\0';
+	}
 	
 	// Check syntax
-	if(tmp[0] != '/' && strchr(tmp+1, '/'))
+	if(tmp[0] != '/' || strchr(tmp+1, '/'))
 		return ED_WRONG_SYNTAX;
 	
 	// Extract token

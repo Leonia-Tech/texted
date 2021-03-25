@@ -207,7 +207,7 @@ int main(int argc, char* argv[])
 			arg2 = NULL;
 
 			// Read and interpret argument
-			if(argumentParser(&arg1)) {
+			if(argumentParser(&arg1, 1)) {
 				fprintf(stderr, RED"Wrong syntax for the append (a) command\n"RESET);
 				break;
 			}
@@ -244,14 +244,14 @@ int main(int argc, char* argv[])
 			arg2 = NULL;
 
 			// Read and interpret argument
-			if(argumentParser(&arg1)) {
+			if(argumentParser(&arg1, 0)) {
 				fprintf(stderr, RED"Wrong syntax for the new line (n) command\n"RESET);
 				break;
 			}
 
 			if((status = addLine(&LineBuffer, &LB_Size, arg1, Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
-						"Error code: %d"RESET, status);
+						"Error code: %d\n"RESET, status);
 			break;
 		default:
 			PAUSE();

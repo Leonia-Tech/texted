@@ -25,7 +25,7 @@ char* putstr(char** row, const char* _before, const char* _new);
 int getTokens(char* arg, size_t size, char** toks[]);
 
 // Read and interpret single argument command
-int argumentParser(char** argument);    //! Improve for n arguments commands
+int argumentParser(char** argument, int del_new_line);    //! Improve for n arguments commands
 
 int getLineBufferSize(char** LineBuffer, int Lines);
 
