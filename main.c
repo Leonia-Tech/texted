@@ -169,34 +169,16 @@ int main(int argc, char* argv[])
 			}
 			
 			// Read arguments
-			//! Try to use to already written functions
 			do {
-				size_t s = 0;
-				char* nl;
-				char* st = NULL;
+				char** array[] = {&arg1, &arg2};
+				status = argumentParser(0, 2, array);
+			}while(0);
 
-				if(!~getline(&st, &s, stdin)) {
-					perror(RED "Failed to read arguments" RESET);
-					status = ED_ERRNO;
-					break;
-				}
-
-				nl = strchr(st, '\n');
-				if(nl)
-					nl[0] = '\0';
-				strncpy(Editstr, st, MIN(ED_ARG_SZ, s));
-				status = 0;
-			} while(0);
-
-			// Interpret arguments
-			if(!status) {
-				do {
-					char** arg_arr[2] = { &arg1, &arg2 };
-					status = getTokens(&Editstr[1], 2, arg_arr);
-				} while(0);
-			}
-
-			if(status) {
+			// Error handling
+			if(status == ED_ERRNO) {
+				perror(RED"Failed to read arguments"RESET);
+				Command = '\0';
+			} else if(status) {
 				fprintf(stderr, RED"Wrong syntax for the %s command\n"RESET,
 						Command == 's' ? "substitute (s)" : "embed (m)");
 				Command = '\0';
@@ -217,13 +199,21 @@ int main(int argc, char* argv[])
 			arg2 = NULL;
 
 			// Read and interpret argument
-			if(argumentParser(&arg1, 1)) {
+			do {
+				char** array[] = {&arg1};
+				status = argumentParser(1, 1, array); //! Don't free!!!
+			}while(0);
+
+			// Error Handling
+			if(status == ED_ERRNO) {
+				perror(RED "Failed to add new word at line end");
+				break;
+			} else if(status) {
 				fprintf(stderr, RED"Wrong syntax for the append (a) command\n"RESET);
 				break;
 			}
 
 			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
-			free(arg1);
 			break;
 		
 		case 'l': // SET LINE
@@ -232,7 +222,7 @@ int main(int argc, char* argv[])
 			if (counter > 0 && counter <= LB_Size)
 				Line = counter;
 			else
-				fprintf(stderr, RED"Worng line number\n"RESET);
+				fprintf(stderr, RED"Wrong line number\n"RESET);
 
 			PAUSE();
 			break;
@@ -256,11 +246,21 @@ int main(int argc, char* argv[])
 			arg2 = NULL;
 
 			// Read and interpret argument
-			if(argumentParser(&arg1, 0)) {
+			do {
+				char** array[] = {&arg1};
+				status = argumentParser(0, 1, array);
+			} while(0);
+
+			// Error Handling
+			if(status == ED_ERRNO) {
+				perror(RED "Failed to add new word at line end");
+				break;
+			} else if(status) {
 				fprintf(stderr, RED"Wrong syntax for the new line (n) command\n"RESET);
 				break;
 			}
 
+			// Add new line
 			if((status = addLine(&LineBuffer, &LB_Size, arg1, Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
 						ITALIC "Error code: %d\n"RESET, status);

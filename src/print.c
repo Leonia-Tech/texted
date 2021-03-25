@@ -17,7 +17,7 @@ char* load(char* Filename)
 
 	if(!~stat(Filename, &st)) {
 		if(errno != ENOENT) {
-			perror("Failed to read file infos");
+			perror(RED"Failed to read file infos"RESET);
 			exit(-1);
 		}
 	} else {
@@ -82,7 +82,7 @@ void display_help()
 		   "q:\t\tesci\n\n"
 
 		   "s:\t\tsosttuisci parola (ed syntax)\n"
-		   "m:\t\tinserisci parola dopo ... (ed syntax)\n"
+		   "m:\t\tinserisci parola prima di ... (ed syntax)\n"
 		   "a:\t\tinserisci a fine riga\n"
 		   "l:\t\tsetta la riga di modifica\n\n"
 

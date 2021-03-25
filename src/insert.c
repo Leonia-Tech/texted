@@ -145,6 +145,9 @@ int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
     int counter;
 	int NewLen = strlen(NewLine);
 
+	// Heap Allocation 
+	NewLine = strdup(NewLine);
+
     if(!NewLine || (NewLen && NewLine[NewLen - 1] != '\n'))
         return ED_BAD_LINE_FORMAT;
     
