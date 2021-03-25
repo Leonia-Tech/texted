@@ -32,6 +32,7 @@ char* load(char* Filename)
 	File = fopen(Filename, "r");
 	if (!File) {
 		File = fopen(Filename, "w");
+		fclose(File);
 		return NULL;
 	}
 
@@ -47,45 +48,6 @@ char* load(char* Filename)
 
 	fclose(File);
 	return Buffer;
-}
-
-int getPrintArgs(char* args) // ! for n get s error
-{
-	empty(args, ARG_SIZE);
-	args[0] = getchar();
-	if (args[0] != '\n')
-	{
-		if (args[0] == 'n') // pn
-		{
-			args[1] = getchar(); // '\n' expected
-			if (args[1] != '\n')
-			{
-				return ED_INVALID_COMMAND;
-			}
-		}
-		else if (args[0] == 'l') // pl-
-		{
-			args[1] = getchar();
-			if (args[1] == 'n') // pln
-			{
-				args[2] = getchar(); // '\n' expected
-				if (args[2] != '\n')
-				{
-					return ED_INVALID_COMMAND;
-				}
-			}
-			else if (args[1] != '\n')
-				return ED_INVALID_COMMAND;
-		} // pl
-		else
-			return ED_INVALID_COMMAND;
-	} // p
-
-	for (int i = 0; i < ARG_SIZE; i++)
-		if (args[i] == '\n')
-			args[i] = 0;
-
-	return ED_SUCCESS;
 }
 
 void ed_print(char** LineBuffer, int Lines, int LineNum)
@@ -112,7 +74,7 @@ void display_help()
 
 		   "i:\t\tinsert mode\n"
 		   "-w\t\tsalva dopo l'uscita dalla insert mode\n"
-		   "esc:\t\tesci dalla innsert mode\n\n"
+		   "esc:\t\tesci dalla insert mode\n\n"
 
 		   "w:\t\tsalva\n"
 		   "x:\t\tsalva ed esci\n"
