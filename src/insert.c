@@ -191,8 +191,9 @@ int delLine(char*** LineBuffer, int* Lines, int Del)
     if(--Del < 0) // Check if there is a line before
         Last = 0;
 	
-    if((Len = strlen((*LineBuffer)[Del])) && Last)
-        (*LineBuffer)[Del][Len - 1] = '\0';
+    if((Len = strlen((*LineBuffer)[Del])) && Last) {
+		(*LineBuffer)[Del][Len - 1] = '\0';
+	}
 
 	NewLineBuffer = malloc(--(*Lines) * sizeof(char*));
 

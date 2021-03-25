@@ -24,6 +24,9 @@ char* putstr(char** row, const char* _before, const char* _new);
 // Extract tokens for the substitute function
 int getTokens(char* arg, size_t size, char** toks[]);
 
+// Read and interpret single argument command
+int argumentParser(char** argument);    //! Improve for n arguments commands
+
 int getLineBufferSize(char** LineBuffer, int Lines);
 
 // Ricomponi il Buffer diviso in righe

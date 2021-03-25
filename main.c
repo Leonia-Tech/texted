@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
 			if(LineBuffer)
 				putchar('\n');
 			break;
+		
 		case 'i': // INSERT MODE
 			getInsertArgs(args);
 			printf("--INSERT MODE--\n");
@@ -140,6 +141,7 @@ int main(int argc, char* argv[])
 			// PAUSE();
 			free(Buffer);
 			break;
+		
 		case 'w': // SAVE
 		case 'x': // SAVE AND EXIT
 			getchar();
@@ -155,6 +157,7 @@ int main(int argc, char* argv[])
 					goto loop_exit;
 			}
 			break;
+		
 		case 's': // SUBSTITUTE WORD
 		case 'm': // ADD WORD AFTER
 
@@ -199,40 +202,12 @@ int main(int argc, char* argv[])
 
 			empty(Editstr, strlen(Editstr));
 			break;
+		
 		case 'a': // ADD WORD AT LINE END
 			arg2 = NULL;
 
 			// Read and interpret argument
-			do {
-				size_t s = ARG_SIZE;
-				char* tmp;
-				char* nl;
-
-				tmp = malloc(s);
-				empty(tmp, s);
-				
-				// Read
-				getline(&tmp, &s, stdin);
-
-				// Delete newline if any (needed)
-				nl = strchr(tmp, '\n');
-				if(nl)
-					nl[0] = '\0';
-				
-				// Check syntax
-				if(tmp[0] != '/' || strchr(tmp+1, '/')) {
-					status = ED_WRONG_SYNTAX;
-					free(tmp);
-					break;
-				}
-				
-				// Extract tokens
-				arg1 = strdup(tmp+1);
-				free(tmp);
-				status = ED_SUCCESS;
-			} while(0);
-
-			if(status) {
+			if(argumentParser(&arg1)) {
 				fprintf(stderr, RED"Wrong syntax for the append (a) command\n"RESET);
 				break;
 			}
@@ -240,6 +215,7 @@ int main(int argc, char* argv[])
 			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
 			free(arg1);
 			break;
+		
 		case 'l': // SET LINE
 			scanf("%s", Editstr);
 			counter = atoi(Editstr); // Uso counter come variabile temporanea
@@ -248,17 +224,34 @@ int main(int argc, char* argv[])
 
 			PAUSE();
 			break;
+		
 		case 'q': // EXIT
 			getchar();
 			goto loop_exit;
 			break;
+		
 		case 'b': // GET BACKUP
 			backup(Filename);
 			getchar();
 			break;
+		
 		case 'h': // PRINT HELP
 			display_help();
 			getchar();
+			break;
+		
+		case 'n': // NEW LINE
+			arg2 = NULL;
+
+			// Read and interpret argument
+			if(argumentParser(&arg1)) {
+				fprintf(stderr, RED"Wrong syntax for the new line (n) command\n"RESET);
+				break;
+			}
+
+			if((status = addLine(&LineBuffer, &LB_Size, arg1, Line)))
+				fprintf(stderr, RED"An error occured while trying to add a new line\n"
+						"Error code: %d"RESET, status);
 			break;
 		default:
 			PAUSE();

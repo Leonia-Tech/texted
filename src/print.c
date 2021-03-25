@@ -103,7 +103,7 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 
 void display_help()
 {
-	printf("--HELP--\n\n"
+	printf(BOLD BLUE "--HELP--\n\n"
 		   "p:\t\tstampa\n"
 		   "-l\t\triga corrente\n"
 		   "-n\t\tcon numeri di riga\n"
@@ -118,5 +118,6 @@ void display_help()
 		   "s:\t\tsosttuisci parola (ed syntax)\n"
 		   "m:\t\tinserisci parola dopo ... (ed syntax)\n"
 		   "a:\t\tinserisci a fine riga\n"
-		   "l:\t\tsetta la riga di modifica\n");
+		   "l:\t\tsetta la riga di modifica\n"
+		   "n:\t\taggiungi riga prima della riga di mofifica\n"RESET);
 }
