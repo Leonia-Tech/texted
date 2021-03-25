@@ -169,22 +169,32 @@ int main(int argc, char* argv[])
 			}
 			
 			// Read arguments
+			//! Try to use to already written functions
 			do {
 				size_t s = 0;
 				char* nl;
 				char* st = NULL;
-				getline(&st, &s, stdin);
+
+				if(!~getline(&st, &s, stdin)) {
+					perror(RED "Failed to read arguments" RESET);
+					status = ED_ERRNO;
+					break;
+				}
+
 				nl = strchr(st, '\n');
 				if(nl)
 					nl[0] = '\0';
 				strncpy(Editstr, st, MIN(ED_ARG_SZ, s));
+				status = 0;
 			} while(0);
 
 			// Interpret arguments
-			do {
-				char** arg_arr[2] = { &arg1, &arg2 };
-				status = getTokens(&Editstr[1], 2, arg_arr);
-			} while(0);
+			if(!status) {
+				do {
+					char** arg_arr[2] = { &arg1, &arg2 };
+					status = getTokens(&Editstr[1], 2, arg_arr);
+				} while(0);
+			}
 
 			if(status) {
 				fprintf(stderr, RED"Wrong syntax for the %s command\n"RESET,
