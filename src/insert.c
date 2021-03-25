@@ -195,7 +195,7 @@ int delLine(char*** LineBuffer, int* Lines, int Del)
 		(*LineBuffer)[Del][Len - 1] = '\0';
 	}
 
-	NewLineBuffer = malloc(--(*Lines) * sizeof(char*));
+	NewLineBuffer = malloc((*Lines - 1) * sizeof(char*));
 
 	// Copy LineBuffer to NewLineBuffer
 	for(int i = 0, n = 0; i < (*Lines); i++)
@@ -203,6 +203,7 @@ int delLine(char*** LineBuffer, int* Lines, int Del)
 			NewLineBuffer[n++] = (*LineBuffer)[i];
 	
 	*LineBuffer = NewLineBuffer;
+	(*Lines)--;
     
     return ED_SUCCESS;
 }

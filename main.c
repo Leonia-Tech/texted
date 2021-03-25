@@ -221,6 +221,8 @@ int main(int argc, char* argv[])
 			counter = atoi(Editstr); // Uso counter come variabile temporanea
 			if (counter > 0 && counter <= LB_Size)
 				Line = counter;
+			else
+				fprintf(stderr, RED"Worng line number\n"RESET);
 
 			PAUSE();
 			break;
@@ -253,6 +255,15 @@ int main(int argc, char* argv[])
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
 						"Error code: %d\n"RESET, status);
 			break;
+
+		case 'd': // DELETE LINE
+			//! Causes segmentation fault in print
+			PAUSE();
+			if(delLine(&LineBuffer, &LB_Size, Line))
+				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
+						"Error code: %d\n"RESET, Line, status);
+			break;
+
 		default:
 			PAUSE();
 			fprintf(stderr, RED "Invalid command\n" RESET);
