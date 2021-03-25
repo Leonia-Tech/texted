@@ -39,10 +39,11 @@
 
 
 // Version control
+#define VERSION				"1.3"
 #ifndef	DEBUG
-	#define	RELEASE			"release 1.2"
+	#define	RELEASE			"release "VERSION
 #else
-	#define RELEASE			"debug-version"
+	#define RELEASE			"debug-version "VERSION
 #endif
 
 // Confronta due stringhe fino a size
