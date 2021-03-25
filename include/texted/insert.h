@@ -20,4 +20,10 @@ char* strins(char* out, char* in, char ch);
 // Crea un backup-file del file aperto
 int backup(char* Filename);
 
+// Aggiunge una nuova riga prima di "Position"
+int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position);
+
+// Elimina la riga "Del"
+int delLine(char*** LineBuffer, int* Lines, int Del);
+
 #endif // TEXTED_INSERT_H

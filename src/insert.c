@@ -138,21 +138,30 @@ int backup(char* Filename)
 	return ED_SUCCESS;
 }
 
+// Adds Newline in before Position (Line count starts from 1)
 int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
 {
     char** NewLineBuffer;
     int counter;
+	int NewLen = strlen(NewLine);
 
-    if(!NewLine || NewLine[strlen(NewLine) - 1] != '\n')
+    if(!NewLine || (NewLen && NewLine[NewLen - 1] != '\n'))
         return ED_BAD_LINE_FORMAT;
     
-    if(Position > *Lines)
+    if(Position < 1 || Position > *Lines)
         return ED_BUFFER_OVERFLOW;
     
-    NewLineBuffer = (char**)malloc(++*Lines * sizeof(char*));
+	// Initializing new LineBuffer
+    NewLineBuffer = (char**)malloc(++(*Lines) * sizeof(char*));
+
+	// Copy lines before Position
     for(counter = 0; counter < Position - 1; counter++)
         NewLineBuffer[counter] = (*LineBuffer)[counter];
+	
+	// Add new line
     NewLineBuffer[counter] = NewLine;
+
+	//Copy lines after Position
     for(; counter < *Lines - 1; counter++)
         NewLineBuffer[counter+1] = (*LineBuffer)[counter];
     
@@ -160,22 +169,39 @@ int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
     return ED_SUCCESS;
 }
 
-int delLine(char** LineBuffer, int Lines, int Del)
+// Delete Line number Del (Line count starts from 1)
+int delLine(char*** LineBuffer, int* Lines, int Del)
 {
     int Last = 0;
+	int Len = 0;
+	char** NewLineBuffer;
 
-    if(Del > Lines)
+    if(Del < 1 || Del > *Lines)
         return ED_BUFFER_OVERFLOW;
 
-    if(Del == Lines)
+    if(Del == *Lines)
         ++Last;
     
-    free(LineBuffer[--Del]);
-    LineBuffer[Del] = NULL;
-    if(--Del < 0)
+	// Delete Line number Del
+    free((*LineBuffer)[--Del]);
+    (*LineBuffer)[Del] = NULL;
+
+	// If we're in the last line we need to delete the space
+	// In the line before
+    if(--Del < 0) // Check if there is a line before
         Last = 0;
-    if(Last)
-        LineBuffer[Del][strlen(LineBuffer[Del]) - 1] = '\0';
+	
+    if((Len = strlen((*LineBuffer)[Del])) && Last)
+        (*LineBuffer)[Del][Len - 1] = '\0';
+
+	NewLineBuffer = malloc(--(*Lines) * sizeof(char*));
+
+	// Copy LineBuffer to NewLineBuffer
+	for(int i = 0, n = 0; i < (*Lines); i++)
+		if((*LineBuffer)[i])
+			NewLineBuffer[n++] = (*LineBuffer)[i];
+	
+	*LineBuffer = NewLineBuffer;
     
     return ED_SUCCESS;
 }
