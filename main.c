@@ -253,15 +253,18 @@ int main(int argc, char* argv[])
 
 			if((status = addLine(&LineBuffer, &LB_Size, arg1, Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
-						"Error code: %d\n"RESET, status);
+						ITALIC "Error code: %d\n"RESET, status);
 			break;
 
 		case 'd': // DELETE LINE
-			//! Causes segmentation fault in print
 			PAUSE();
 			if(delLine(&LineBuffer, &LB_Size, Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
 						"Error code: %d\n"RESET, Line, status);
+			else {
+				Line--;
+				printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
+			}
 			break;
 
 		default:

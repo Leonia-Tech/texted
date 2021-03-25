@@ -104,20 +104,26 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 void display_help()
 {
 	printf(BOLD BLUE "--HELP--\n\n"
+
 		   "p:\t\tstampa\n"
 		   "-l\t\triga corrente\n"
 		   "-n\t\tcon numeri di riga\n"
 		   "-ln\t\t-l + -n\n\n"
+
 		   "i:\t\tinsert mode\n"
 		   "-w\t\tsalva dopo l'uscita dalla insert mode\n"
 		   "esc:\t\tesci dalla innsert mode\n\n"
+
 		   "w:\t\tsalva\n"
 		   "x:\t\tsalva ed esci\n"
 		   "b:\t\tcrea il file di backup\n"
 		   "q:\t\tesci\n\n"
+
 		   "s:\t\tsosttuisci parola (ed syntax)\n"
 		   "m:\t\tinserisci parola dopo ... (ed syntax)\n"
 		   "a:\t\tinserisci a fine riga\n"
-		   "l:\t\tsetta la riga di modifica\n"
-		   "n:\t\taggiungi riga prima della riga di mofifica\n"RESET);
+		   "l:\t\tsetta la riga di modifica\n\n"
+
+		   "n:\t\taggiungi riga prima della riga di mofifica\n"
+		   "d:\t\trimuovi la riga di modifica\n"RESET);
 }
