@@ -151,7 +151,7 @@ int finfo_free(finfo_s* fi)
 void ed_print_permissions(const char* Filename)
 {
 	finfo_s* fi = finfo(Filename);
-	printf(BOLD MAGENTA "%s\t%s %s\t%s" RESET,
+	printf(BOLD MAGENTA "%s\t%s %s\t%s\n" RESET,
 		   fi->fi_permissions,
 		   fi->fi_user,
 		   fi->fi_group,

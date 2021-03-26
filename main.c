@@ -40,8 +40,9 @@ int main(int argc, char* argv[])
 	
 	// Try to create file
 	//! Make function or procedure out of this
-	do {
-		permissions = get_user_permissions(Filename);
+	permissions = get_user_permissions(Filename);
+
+	while(permissions == -1) {
 		if(!~permissions) {
 			FILE* File = fopen(Filename, "w");
 			if(!File) {
@@ -53,8 +54,9 @@ int main(int argc, char* argv[])
 		fputs(ITALIC CYAN "New file created: " RESET, stderr);
 		fputs(Filename, stderr);
 		fputc('\n', stderr);
-		sleep(1);
-	} while(~permissions);
+		permissions = get_user_permissions(Filename);
+		usleep(1000);
+	}
 
 	if(!(permissions & RD_PERM)) {
 		fputs(RED "Failed to read the file: Permission denied!\n" RESET, stderr);
@@ -102,6 +104,7 @@ int main(int argc, char* argv[])
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
 			else if(streq(args, " -p\n", 4)) {
 				ed_print_permissions(Filename);
+				break;
 			}
 			else
 			{

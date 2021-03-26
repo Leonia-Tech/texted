@@ -1,5 +1,5 @@
 CC=gcc
-VERSION=1.3
+VERSION=1.4
 
 DEBUG=1
 ifeq ($(DEBUG),1)
