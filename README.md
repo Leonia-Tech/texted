@@ -1,6 +1,8 @@
 # INTRODUCTION
 ### What is TextEd? 
-TextEd is a simple text editor written in C, it has the basic functions and it's inspired by linux ed editor 
+TextEd is a simple text editor written in C, it has the basic functions and it's inspired by linux ed editor   
+
+![TextEd 1.4](https://i.ibb.co/4t9r685/Text-Ed-1-4.png)
 
 ### Installation 
 To compile the program follow these instructions: 
