@@ -34,6 +34,8 @@ char* load(char* Filename)
 	File = fopen(Filename, "r");
 	if (!File) {
 		File = fopen(Filename, "w");
+		if(!File)
+			return ED_NULL_FILE_PTR;
 		fclose(File);
 		return NULL;
 	}

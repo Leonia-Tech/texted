@@ -143,7 +143,7 @@ int finfo_free(finfo_s* fi)
 void ed_print_permissions(const char* Filename)
 {
 	finfo_s* fi = finfo(Filename);
-	printf(BOLD MAGENTA "%s\t%s %s\t%s\n" RESET,
+	printf(BOLD MAGENTA "%s\t%s %s\t%s" RESET,
 		   fi->fi_permissions,
 		   fi->fi_user,
 		   fi->fi_group,
@@ -202,7 +202,7 @@ int usr_info_free(usr_info_s* usr)
 // Return caller permission mask
 mode_t get_caller_permissions_mask(char* Filename)
 {
-	mode_t user_mask = 07;
+	mode_t user_mask = 0;
 	mode_t file_mask;
 	usr_info_s* user;
 	finfo_s* file;
@@ -212,11 +212,15 @@ mode_t get_caller_permissions_mask(char* Filename)
 
 	// Check if user is file user
 	if(streq(user->usr_name, file->fi_user, MIN(strlen(user->usr_name), strlen(file->fi_name))))
-		user_mask = 0777;
+		user_mask |= 0700;
 	else if(streq(user->usr_group, file->fi_group, MIN(strlen(user->usr_group), strlen(file->fi_group))))
-		user_mask = 077;
+		user_mask |= 0070;
+	else
+		user_mask |= 0007;
 	
 	file_mask = get_file_permissions(Filename);
+	if(!~file_mask)
+		return -1;
 
 	return user_mask & file_mask;
 }
@@ -229,6 +233,8 @@ usr_perm_e get_user_permissions(char* Filename)
 
 	usr_perm_e permissions = 0;
 	mode_t caller_permission_mask = get_caller_permissions_mask(Filename);
+	if(!~caller_permission_mask)
+		return -1;
 
 	if(caller_permission_mask & READ)
 		permissions |= RD_PERM;

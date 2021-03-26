@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
 	char args[ARG_SIZE] = {0}; // Argomenti addizionali ad un comando
 	int counter;               // Contatore da ricordare
 	int status = 0;			   // Return status
+	usr_perm_e permissions;
 
 	// LOADING
 	if (argc <= 1)
@@ -36,8 +37,20 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	//! Permission handling
+	permissions = get_user_permissions(Filename);
+	if(!~permissions)
+		return -1;
+
+	if(!(permissions & RD_PERM)) {
+		fputs(RED "Failed to read the file: Permission denied!\n" RESET, stderr);
+		return -1;
+	}
+
 	Buffer = load(Filename);
+	if(Buffer == (char*)0x1) {
+		fputs(RED "Unexpected error while trying to load the file\n" RESET, stderr);
+		return ED_NULL_FILE_PTR;
+	}
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
@@ -61,7 +74,7 @@ int main(int argc, char* argv[])
 		{
 		case 'p': // PRINT MODE
 			// Read arguments
-			fgets(args, 4, stdin);
+			fgets(args, 5, stdin);
 
 			// Interpet arguments
 			if (streq(args, "\n", 1))
@@ -72,6 +85,9 @@ int main(int argc, char* argv[])
 				fputs(getLine(LineBuffer, Line), stdout);
 			else if (streq(args, "ln\n", 3))
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
+			else if(streq(args, " -p\n", 4)) {
+				ed_print_permissions(Filename);
+			}
 			else
 			{
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
@@ -84,6 +100,14 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'i': // INSERT MODE
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
+
 			getInsertArgs(args);
 			fputs("--INSERT MODE--\n", stdout);
 
@@ -145,6 +169,14 @@ int main(int argc, char* argv[])
 		
 		case 'w': // SAVE
 		case 'x': // SAVE AND EXIT
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
+
 			getchar();
 			Buffer = getBuffer(LineBuffer, LB_Size);
 			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
@@ -161,6 +193,13 @@ int main(int argc, char* argv[])
 		
 		case 's': // SUBSTITUTE WORD
 		case 'm': // ADD WORD AFTER
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
 
 			// Handle NULL LineBuffer
 			if(!LineBuffer){
@@ -197,6 +236,14 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'a': // ADD WORD AT LINE END
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
+
 			arg2 = NULL;
 
 			// Read and interpret argument
@@ -244,6 +291,14 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'n': // NEW LINE
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
+
 			arg2 = NULL;
 
 			// Read and interpret argument
@@ -268,6 +323,14 @@ int main(int argc, char* argv[])
 			break;
 
 		case 'd': // DELETE LINE
+
+			// Permission handling
+			if(!(permissions & WR_PERM)) {
+				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
+				PAUSE();
+				break;
+			}
+
 			PAUSE();
 			if(delLine(&LineBuffer, &LB_Size, Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
@@ -276,11 +339,6 @@ int main(int argc, char* argv[])
 				Line--;
 				printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
 			}
-			break;
-
-		case '#':
-			ed_print_permissions(Filename);
-			PAUSE();
 			break;
 
 		default:

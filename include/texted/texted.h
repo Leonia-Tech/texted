@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #define LINE_SIZE           500
-#define ARG_SIZE            5
+#define ARG_SIZE            6
 #define ED_ARG_SZ           50
 #define ADD_MODE            (NULL)
 
