@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <texted/edit.h>
 #include <texted/print.h>
@@ -37,9 +38,22 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
-	permissions = get_user_permissions(Filename);
-	if(!~permissions)
-		return -1;
+	// Try to create file
+	do {
+		permissions = get_user_permissions(Filename);
+		if(!~permissions) {
+			FILE* File = fopen(Filename, "w");
+			if(!File) {
+				perror(RED "Failed to create file\n" RESET);
+				return ED_NULL_FILE_PTR;
+			}
+			fclose(File);
+		}
+		fputs(ITALIC CYAN "New file created: " RESET, stderr);
+		fputs(Filename, stderr);
+		fputc('\n', stderr);
+		sleep(1);
+	} while(~permissions);
 
 	if(!(permissions & RD_PERM)) {
 		fputs(RED "Failed to read the file: Permission denied!\n" RESET, stderr);

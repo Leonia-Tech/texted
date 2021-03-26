@@ -103,6 +103,14 @@ finfo_s* finfo(const char* Filename)
 	finfo_s* fi = malloc(sizeof(finfo_s));
 	char* fname = strdup(Filename);
 
+	do {
+		struct stat st;
+
+		if(!~stat(Filename, &st)) {
+			return NULL;
+		}
+	}while(0);
+
 	fi->fi_name = strdup(Filename);
 	fi->fi_permissions = get_string_permissions(get_file_permissions(Filename));
 	
@@ -209,6 +217,8 @@ mode_t get_caller_permissions_mask(char* Filename)
 
 	user = usr_info();
 	file = finfo(Filename);
+	if(!file)
+		return -1;
 
 	// Check if user is file user
 	if(streq(user->usr_name, file->fi_user, MIN(strlen(user->usr_name), strlen(file->fi_name))))
