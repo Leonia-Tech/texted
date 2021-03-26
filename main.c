@@ -39,6 +39,7 @@ int main(int argc, char* argv[])
 	}
 	
 	// Try to create file
+	//! Make function or procedure out of this
 	do {
 		permissions = get_user_permissions(Filename);
 		if(!~permissions) {

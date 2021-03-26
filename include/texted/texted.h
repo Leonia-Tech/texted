@@ -41,7 +41,7 @@
 
 
 // Version control
-#define VERSION				"1.3"
+#define VERSION				"1.4"
 #ifndef	DEBUG
 	#define	RELEASE			"release "VERSION
 #else
