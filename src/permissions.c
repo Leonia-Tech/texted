@@ -121,7 +121,7 @@ finfo_s* finfo(const char* Filename)
 	return fi;
 }
 
-void finfo_free(finfo_s* fi)
+int finfo_free(finfo_s* fi)
 {
 	if(!fi)
 		return ED_NULL_PTR;
@@ -199,7 +199,61 @@ int usr_info_free(usr_info_s* usr)
 	return ED_SUCCESS;
 }
 
-/*permission_level_e* get_caller_permissions(char* Filename)
+// Return caller permission mask
+mode_t get_caller_permissions_mask(char* Filename)
 {
-	permission_level_e* permission = malloc()
-}*/
+	mode_t user_mask = 07;
+	mode_t file_mask;
+	usr_info_s* user;
+	finfo_s* file;
+
+	user = usr_info();
+	file = finfo(Filename);
+
+	// Check if user is file user
+	if(streq(user->usr_name, file->fi_user, MIN(strlen(user->usr_name), strlen(file->fi_name))))
+		user_mask = 0777;
+	else if(streq(user->usr_group, file->fi_group, MIN(strlen(user->usr_group), strlen(file->fi_group))))
+		user_mask = 077;
+	
+	file_mask = get_file_permissions(Filename);
+
+	return user_mask & file_mask;
+}
+
+usr_perm_e get_user_permissions(char* Filename)
+{
+	const mode_t READ 		= 0444;
+	const mode_t WRITE 		= 0222;
+	const mode_t EXECUTE 	= 0111;
+
+	usr_perm_e permissions = 0;
+	mode_t caller_permission_mask = get_caller_permissions_mask(Filename);
+
+	if(caller_permission_mask & READ)
+		permissions |= RD_PERM;
+	
+	if(caller_permission_mask & WRITE)
+		permissions |= WR_PERM;
+	
+	if(caller_permission_mask & EXECUTE)
+		permissions |= EX_PERM;
+	
+	return permissions;
+}
+
+char* get_user_permission_color(char* Filename)
+{
+	usr_perm_e permissions = get_user_permissions(Filename);
+
+	if(permissions == (RD_PERM | WR_PERM | EX_PERM))
+		return RED "(!) " GREEN;
+	else if(permissions == (RD_PERM | WR_PERM))
+		return GREEN;
+	else if(permissions == WR_PERM)
+		return RED "(write only) " GREEN;
+	else if(permissions == RD_PERM)
+		return RED "(read only) " GREEN;
+	else
+		return RESET;
+}

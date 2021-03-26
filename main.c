@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	// MAIN LOOP
 	while (1)
 	{
-		printf(BOLD GREEN"%s > "RESET, Filename);
+		printf(BOLD "%s%s > "RESET, get_user_permission_color(Filename), Filename);
 		Command = getchar();
 
 		// Handle extended ASCII Table

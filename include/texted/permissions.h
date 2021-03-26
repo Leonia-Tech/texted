@@ -17,7 +17,7 @@ typedef struct {
 finfo_s* finfo(const char* Filename);
 
 // Free a finfo_s structure
-void finfo_free(finfo_s* fi);
+int finfo_free(finfo_s* fi);
 
 /* -------------------------------- */
 
@@ -37,11 +37,21 @@ int usr_info_free(usr_info_s* usr);
 
 /* -------------------------------- */
 
-enum permission_level_e {
-    ALL,
-    GRP,
-    USR
-};
+// Use bitwise and (&) to check permission availability
+typedef enum {
+    EX_PERM = 1 << 0,
+    WR_PERM = 1 << 1,
+    RD_PERM = 1 << 2
+}usr_perm_e;
+
+// Get the caller mask based on file ownership
+mode_t get_caller_permissions_mask(char* Filename);
+
+// Get the user permissions on the file based on its mask
+usr_perm_e get_user_permissions(char* Filename);
+
+// Get the color associated with the permissions
+char* get_user_permission_color(char* Filename);
 
 /* -------------------------------- */
 
