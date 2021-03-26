@@ -35,7 +35,7 @@ char* load(char* Filename)
 	if (!File) {
 		File = fopen(Filename, "w");
 		if(!File)
-			return ED_NULL_FILE_PTR;
+			return (char*) ED_NULL_FILE_PTR;
 		fclose(File);
 		return NULL;
 	}
@@ -72,12 +72,13 @@ void display_help()
 	fputs(BOLD BLUE "--HELP--\n\n"
 
 		   "p:\t\tprint\n"
-		   "-l\t\tcurrent line\n"
-		   "-n\t\twith line numbers\n"
-		   "-ln\t\t-l + -n\n\n"
+		   "+l\t\tcurrent line\n"
+		   "+n\t\twith line numbers\n"
+		   "+ln\t\t-l + -n\n"
+		   "+ -p\t\tprint permissions\n\n"
 
 		   "i:\t\tinsert mode\n"
-		   "-w\t\tsave after quitting insert mode\n"
+		   "+w\t\tsave after quitting insert mode\n"
 		   "esc:\t\texit insert mode\n\n"
 
 		   "w:\t\tsave\n"
