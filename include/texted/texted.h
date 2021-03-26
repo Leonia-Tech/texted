@@ -18,6 +18,7 @@
 #define ED_WRONG_SYNTAX		0x05
 #define ED_FUNCTION_ERROR	0x06
 #define ED_ERRNO			0x07
+#define ED_NULL_PTR			0x08
 
 // Color definitions
 #define RED     	"\x1b[31m"

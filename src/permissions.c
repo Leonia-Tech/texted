@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <stdint.h>
 
+#include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
@@ -63,18 +64,18 @@ char get_file_type(const mode_t mode)
 {
 	char* mask = "bcdp-ls";
 	char type = '\0';
-	uint8_t bit_mask = 0;
+	uint8_t bit_field = 0;
 
-	bit_mask |= S_ISBLK(mode)  << 6
-			 |  S_ISCHR(mode)  << 5
-			 |  S_ISDIR(mode)  << 4
-			 |  S_ISFIFO(mode) << 3
-			 |  S_ISREG(mode)  << 2
-			 |  S_ISLNK(mode)  << 1
-			 |  S_ISSOCK(mode) << 0;
+	bit_field |= S_ISBLK(mode)  << 6
+			  |  S_ISCHR(mode)  << 5
+			  |  S_ISDIR(mode)  << 4
+			  |  S_ISFIFO(mode) << 3
+			  |  S_ISREG(mode)  << 2
+			  |  S_ISLNK(mode)  << 1
+			  |  S_ISSOCK(mode) << 0;
 	
 	for(uint8_t b = 1, i = 0; i < 7; b <<= 1, i++) {
-		if(b & bit_mask) {
+		if(b & bit_field) {
 			type = mask[i];
 			break;
 		}
@@ -123,14 +124,21 @@ finfo_s* finfo(const char* Filename)
 
 void finfo_free(finfo_s* fi)
 {
+	if(!fi)
+		return ED_NULL_PTR;
+	
 	free(fi->fi_name);
 	free(fi->fi_permissions);
+
 	//free(fi->fi_user);
 	//free(fi->fi_group);
+
 	if(fi->fi_extension)
 		free(fi->fi_extension);
 
 	free(fi);
+
+	return ED_SUCCESS;
 }
 
 void ed_print_permissions(const char* Filename)
@@ -143,4 +151,51 @@ void ed_print_permissions(const char* Filename)
 		   fi->fi_name);
 	
 	finfo_free(fi);
+}
+
+usr_info_s* usr_info()
+{
+	usr_info_s* usr = malloc(sizeof(usr_info_s));
+	struct passwd* pw;
+	struct group* gr;
+
+	// Get uid (never fails)
+	usr->usr_uid = geteuid();
+
+	// Get username
+	pw = getpwuid(usr->usr_uid); // Don't free
+	if(!pw) {
+		perror(RED "Failed to get user info about the caller" RESET);
+		free(usr);
+		return NULL;
+	}
+	usr->usr_name = strdup(pw->pw_name);
+
+	// Get gid
+	usr->usr_gid = pw->pw_gid;
+
+	// Get group name
+	gr = getgrgid(usr->usr_gid);
+	if(!gr) {
+		perror(RED "Failed to get group info about the caller" RESET);
+		free(usr->usr_name);
+		free(usr);
+		return NULL;
+	}
+	usr->usr_group = strdup(gr->gr_name);
+
+	return usr;
+}
+
+int usr_info_free(usr_info_s* usr)
+{
+	if(!usr)
+		return ED_NULL_PTR;
+	
+	free(usr->usr_name);
+	free(usr->usr_group);
+
+	free(usr);
+
+	return ED_SUCCESS;
 }
