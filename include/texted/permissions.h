@@ -2,6 +2,7 @@
 #define TEXTED_PERMISSIONS_H
 
 #include <sys/stat.h>
+#include <stdint.h>
 
 // Informations about the file
 typedef struct {
@@ -33,6 +34,14 @@ usr_info_s* usr_info();
 
 // Free a usr_info_s structure
 int usr_info_free(usr_info_s* usr);
+
+/* -------------------------------- */
+
+enum permission_level_e {
+    ALL,
+    GRP,
+    USR
+};
 
 /* -------------------------------- */
 

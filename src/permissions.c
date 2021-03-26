@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <stdint.h>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -199,3 +198,8 @@ int usr_info_free(usr_info_s* usr)
 
 	return ED_SUCCESS;
 }
+
+/*permission_level_e* get_caller_permissions(char* Filename)
+{
+	permission_level_e* permission = malloc()
+}*/
