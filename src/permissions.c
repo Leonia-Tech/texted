@@ -122,7 +122,7 @@ finfo_s* finfo(const char* Filename)
 		fi->fi_extension = NULL;
 	}
 
-	//! Check if free can be done
+	// Shouldn't be freed (?)
 	fi->fi_user = get_file_user(Filename);
 	fi->fi_group = get_file_group(Filename);
 
@@ -137,27 +137,12 @@ int finfo_free(finfo_s* fi)
 	free(fi->fi_name);
 	free(fi->fi_permissions);
 
-	//free(fi->fi_user);
-	//free(fi->fi_group);
-
 	if(fi->fi_extension)
 		free(fi->fi_extension);
 
 	free(fi);
 
 	return ED_SUCCESS;
-}
-
-void ed_print_permissions(const char* Filename)
-{
-	finfo_s* fi = finfo(Filename);
-	printf(BOLD MAGENTA "%s\t%s %s\t%s\n" RESET,
-		   fi->fi_permissions,
-		   fi->fi_user,
-		   fi->fi_group,
-		   fi->fi_name);
-	
-	finfo_free(fi);
 }
 
 usr_info_s* usr_info()

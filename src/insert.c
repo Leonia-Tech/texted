@@ -13,11 +13,11 @@ char* insert()
 
 	empty(Buffer, size);
 
-	// Chiedi caratteri finché non è premuto ESC
+	// Ask for characters until ESC is pressed
 	for(char c = 0; (c = getchar()) != '\e'; ++counter) {
 		Buffer[counter] = c;
 
-		// Se il Buffer supera size espandi di INC il Buffer
+		// If the buffer exceeds the size, expand the buffer by INC.
 		if (counter >= size - 1){
 			Buffer = realloc(Buffer, (size + INC) * sizeof(char));
 			if(!Buffer)
@@ -80,7 +80,7 @@ int save(char* Filename, char* Buffer)
 	return ED_SUCCESS;
 }
 
-// Inserisce "in" in "out" prima di "ch"
+// Insert 'in' into 'out' before 'ch'.
 char* strins(char* out, char* in, char ch)
 {
 	size_t size;
@@ -92,18 +92,18 @@ char* strins(char* out, char* in, char ch)
 	newStr = (char*)malloc(size * sizeof(char));
 	empty(newStr, size);
 
-	// Trova la prima ricorrenza di ch
+	// Find the first occurrence of ch
 	AfterPoint = strchr(out, ch);
 
 	if(AfterPoint) {
-		// Copia tutto quello che c'è prima del punto
+		// Copy everything before the point
 		BeforePoint = AfterPoint - out;
 		strncpy(newStr, out, BeforePoint);
 		
-		// Aggiunge in nel punto deiderato
+		// Adds "in" at the desired location
 		strcat(newStr, in);
 
-		// Aggiunge il resto
+		// Adds the remaining
 		strcat(newStr, AfterPoint);
 	} else {
 		return NULL;
@@ -177,7 +177,7 @@ int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position)
 	// Add new line
     NewLineBuffer[counter] = NewLine;
 
-	//Copy lines after Position
+	// Copy lines after Position
     for(; counter < *Lines - 1; counter++)
         NewLineBuffer[counter+1] = (*LineBuffer)[counter];
     

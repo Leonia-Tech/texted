@@ -7,6 +7,7 @@
 
 #define LINE_SIZE           500
 #define ARG_SIZE            6
+#define ARGS_NUM			2
 #define ED_ARG_SZ           50
 #define ADD_MODE            (NULL)
 
@@ -54,10 +55,10 @@ typedef struct{
 	char**	args;
 }commans_s;
 
-// Confronta due stringhe fino a size
+// Compare two strings up to "size"
 int streq(char* str1, char* str2, size_t size);
 
-// Stampa la lista dei comandi
+// Print the list of commands
 void display_help();
 
 // Try to create new file if it doesn't exist

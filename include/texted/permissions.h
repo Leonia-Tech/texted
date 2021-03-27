@@ -70,7 +70,4 @@ char* get_file_user(const char* Filename);
 // Get the group of the file
 char* get_file_group(const char* Filename);
 
-// Print file info
-void ed_print_permissions(const char* Filename);
-
 #endif // TEXTED_PERMISSIONS_H

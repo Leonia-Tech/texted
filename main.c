@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 	free(Buffer);
 
 	// Initialize command handler
-	Command.args = calloc(2, sizeof(char*));
+	Command.args = calloc(ARGS_NUM, sizeof(char*));
 
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE "\n", stdout);
 
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
 			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			status = argumentParser(1, 1, &(Command.args)); //! Don't free!!!
+			status = argumentParser(1, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -365,6 +365,7 @@ int main(int argc, char* argv[])
 	}
 
 loop_exit:
+	free(Command.args);
 	freeLineBuffer(LineBuffer, LB_Size);
 	return 0;
 }

@@ -11,22 +11,22 @@ int getInsertArgs(char* args);
 // Saves the Buffer in the File and frees the Buffer
 int app_save(char* Filename, char* Buffer);
 
-// Salva il buffer nel file risrivendolo
+//  Saves the buffer in the file by rewriting it
 int save(char* Filename, char* Buffer);
 
-// Inserisce "in" in "out" prima di "ch"
+// Insert "in" into "out" before "ch".
 char* strins(char* out, char* in, char ch);
 
-// Genera il nome del file di backup
+// Generates the backup file name
 char* genBackupName(char* Filename);
 
-// Crea un backup-file del file aperto
+//  Creates a backup file of the open file
 int backup(char* Filename);
 
-// Aggiunge una nuova riga prima di "Position"
+// Adds a new line before "Position".
 int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position);
 
-// Elimina la riga "Del"
+// Delete the "Del" line
 int delLine(char*** LineBuffer, size_t* Lines, int Del);
 
 #endif // TEXTED_INSERT_H

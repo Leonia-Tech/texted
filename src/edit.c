@@ -4,7 +4,7 @@
 #include <texted/insert.h>
 #include <texted/texted.h>
 
-// Trova quante volte il caratter ch compare in str
+// Find how many times the character ch appears in str
 int strocc(const char* str, char ch)
 {
 	if(!str)
