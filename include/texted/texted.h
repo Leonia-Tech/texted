@@ -36,8 +36,8 @@
 #define UNDERLINE	"\x1b[3m"
 
 // Macros
-#define PAUSE()			    for(char c; (c = getchar()) != '\n';)
-#define MIN(_a, _b)		    ((_a) < (_b) ? _a : _b)
+#define PAUSE()			   		for(char c; (c = getchar()) != '\n';)
+#define MIN(_a, _b)		    	((_a) < (_b) ? _a : _b)
 #define empty(_buffer, _size)   memset((_buffer), 0, (_size))
 
 
@@ -48,6 +48,11 @@
 #else
 	#define RELEASE			"debug-version "VERSION
 #endif
+
+typedef struct{
+	char 	command;
+	char**	args;
+}commans_s;
 
 // Confronta due stringhe fino a size
 int streq(char* str1, char* str2, size_t size);

@@ -13,15 +13,13 @@ int main(int argc, char* argv[])
 {
 	char* Buffer;                  // Continuous buffer
 	char Editstr[ED_ARG_SZ] = {0}; // String from which arguments for editing functions are taken
-	char* arg1 = NULL;             // Arguments for editing functions
-	char* arg2 = NULL;
 	char* Filename;            	   // Name of open file
 	char** LineBuffer;        	   // Array of lines
 	char** ExtraLineBuffer;    	   // Extra LineBuffer for the insert mode
 	size_t LB_Size;			   	   // Number of rows
 	size_t ELB_Size;               // Number of lines in the ExtraLineBuffer
 	int Line = 1;			 	   // Selected row
-	char Command;             	   // Command selector
+	commans_s Command;			   // Command
 	int counter;            	   // Global counter
 	int status = 0;			 	   // Return status
 	usr_perm_e permissions;		   // Operations we can perform on this file
@@ -48,6 +46,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
+	// Load the file in the LineBuffer
 	Buffer = load(Filename);
 	if(Buffer == (char*)0x1) {
 		fputs(RED "Unexpected error while trying to load the file\n" RESET, stderr);
@@ -56,55 +55,58 @@ int main(int argc, char* argv[])
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
 
+	// Initialize command handler
+	Command.args = calloc(2, sizeof(char*));
+
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE "\n", stdout);
 
 	// MAIN LOOP
 	while (1)
 	{
 		printf(BOLD "%s%s > "RESET, get_user_permission_color(Filename), Filename);
-		Command = getchar();
+		Command.command = getchar();
 
 		// Handle extended ASCII Table
-		if(Command < 0) {
+		if(Command.command < 0) {
 			PAUSE();
 			fprintf(stderr, RED "Invalid command\n" RESET);
-			Command = '\0';
+			Command.command = '\0';
 			continue;
 		}
 
-		switch (Command)
+		switch (Command.command)
 		{
 		case 'p': // PRINT MODE
 			// Read arguments
-			arg1 = malloc(ARG_SIZE);
-			fgets(arg1, ARG_SIZE - 1, stdin);
+			Command.args[0] = malloc(ARG_SIZE);
+			fgets(Command.args[0], ARG_SIZE - 1, stdin);
 
 			// Interpet arguments
-			if (streq(arg1, "\n", 1)) {
+			if (streq(Command.args[0], "\n", 1)) {
 				ed_print(LineBuffer, LB_Size, 0);
-			} else if (streq(arg1, "n\n", 2)) {
+			} else if (streq(Command.args[0], "n\n", 2)) {
 				ed_print(LineBuffer, LB_Size, 1);
-			} else if (streq(arg1, "l\n", 2)) {
+			} else if (streq(Command.args[0], "l\n", 2)) {
 				fputs(getLine(LineBuffer, Line), stdout);
 
 				// Newline coherence
 				if(Line != LB_Size)
 					goto exit_print;
-			} else if (streq(arg1, "ln\n", 3)) {
+			} else if (streq(Command.args[0], "ln\n", 3)) {
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
 
 				// Newline coherence
 				if(Line != LB_Size)
 					goto exit_print;
 			}
-			else if(streq(arg1, " -p\n", 4)) {
+			else if(streq(Command.args[0], " -p\n", 4)) {
 				ed_print_permissions(Filename);
 				goto exit_print;
 			}
 			else
 			{
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
-				if(!(strlen(arg1) < ARG_SIZE))
+				if(!(strlen(Command.args[0]) < ARG_SIZE))
 					PAUSE();
 				goto exit_print;
 			}
@@ -113,7 +115,7 @@ int main(int argc, char* argv[])
 				putchar('\n');
 		
 		exit_print:
-			free(arg1);
+			free(Command.args[0]);
 			break;
 		
 		case 'i': // INSERT MODE
@@ -125,9 +127,9 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			arg1 = malloc(ARG_SIZE);
+			Command.args[0] = malloc(ARG_SIZE);
 
-			getInsertArgs(arg1);
+			getInsertArgs(Command.args[0]);
 			fputs("--INSERT MODE--\n", stdout);
 
 			Buffer = insert(); // Scrivi qualcosa solo se Buffer non è vuoto.
@@ -138,12 +140,12 @@ int main(int argc, char* argv[])
 			}
 			PAUSE();
 
-			if (streq(arg1, "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
+			if (streq(Command.args[0], "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
 			{
 				// Prepara il LineBuffer temporaneo
 				if(!LineBuffer && !LB_Size) {
 					LineBuffer = getLineBuffer(Buffer, &LB_Size);
-					free(arg1);
+					free(Command.args[0]);
 					break;
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
@@ -165,7 +167,7 @@ int main(int argc, char* argv[])
 				freeLineBuffer(ExtraLineBuffer, ELB_Size);
 				LB_Size += ELB_Size;
 			}
-			else if (streq(arg1, "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
+			else if (streq(Command.args[0], "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
 			{
 				app_save(Filename, Buffer);
 				printf("Added %lu bytes\n", strlen(Buffer));
@@ -185,7 +187,7 @@ int main(int argc, char* argv[])
 			}
 			
 			free(Buffer);
-			free(arg1);
+			free(Command.args[0]);
 			break;
 		
 		case 'w': // SAVE
@@ -207,7 +209,7 @@ int main(int argc, char* argv[])
 			} else {
 				printf("Written %lu bytes\n", strlen(Buffer));
 				free(Buffer);
-				if (Command == 'x')
+				if (Command.command == 'x')
 					goto loop_exit;
 			}
 			break;
@@ -230,26 +232,23 @@ int main(int argc, char* argv[])
 			}
 			
 			// Read arguments
-			do {
-				char** array[] = {&arg1, &arg2};
-				status = argumentParser(0, 2, array);
-			}while(0);
+			status = argumentParser(0, 2, &(Command.args));
 
 			// Error handling
 			if(status == ED_ERRNO) {
 				perror(RED"Failed to read arguments"RESET);
-				Command = '\0';
+				Command.command = '\0';
 			} else if(status) {
 				fprintf(stderr, RED"Wrong syntax for the %s command\n"RESET,
-						Command == 's' ? "substitute (s)" : "embed (m)");
-				Command = '\0';
+						Command.command == 's' ? "substitute (s)" : "embed (m)");
+				Command.command = '\0';
 			}
 
-			if (Command == 's') {
-				if(!substitute(getLinePtr(LineBuffer, Line), arg1, arg2))
+			if (Command.command == 's') {
+				if(!substitute(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
 					fprintf(stderr, RED "Failed to substitute\n" RESET);
-			} else if (Command == 'm') {
-				if(!putstr(getLinePtr(LineBuffer, Line), arg1, arg2))
+			} else if (Command.command == 'm') {
+				if(!putstr(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
 					fprintf(stderr, RED "Failed to embed new token\n" RESET);
 			}
 
@@ -265,13 +264,10 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			arg2 = NULL;
+			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			do {
-				char** array[] = {&arg1};
-				status = argumentParser(1, 1, array); //! Don't free!!!
-			}while(0);
+			status = argumentParser(1, 1, &(Command.args)); //! Don't free!!!
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -282,7 +278,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, arg1);
+			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, Command.args[0]);
 			break;
 		
 		case 'l': // SET LINE
@@ -321,13 +317,10 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			arg2 = NULL;
+			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			do {
-				char** array[] = {&arg1};
-				status = argumentParser(0, 1, array);
-			} while(0);
+			status = argumentParser(0, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -339,7 +332,7 @@ int main(int argc, char* argv[])
 			}
 
 			// Add new line
-			if((status = addLine(&LineBuffer, &LB_Size, arg1, Line)))
+			if((status = addLine(&LineBuffer, &LB_Size, Command.args[0], Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
 						ITALIC "Error code: %d\n"RESET, status);
 			break;
@@ -364,7 +357,7 @@ int main(int argc, char* argv[])
 			break;
 
 		default:
-			if(Command != '\n')
+			if(Command.command != '\n')
 				PAUSE();
 			fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
