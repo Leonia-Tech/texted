@@ -7,24 +7,24 @@
 #include <texted/edit.h>
 #include <texted/print.h>
 #include <texted/insert.h>
-#include <texted/permissions.h>
 #include <texted/texted.h>
 
 int main(int argc, char* argv[])
 {
-	char* Buffer;                  // Buffer continuo
-	char Editstr[ED_ARG_SZ] = {0}; // Stringa da cui ricavare gli argomenti per le funzioni di modifica
-	char* arg1 = NULL;             // Argomenti per le funzioni di modifica
+	char* Buffer;                  // Continuous buffer
+	char Editstr[ED_ARG_SZ] = {0}; // String from which arguments for editing functions are taken
+	char* arg1 = NULL;             // Arguments for editing functions
 	char* arg2 = NULL;
-	char* Filename;            // Nome del file aperto
-	char** LineBuffer;         // Buffer a righe
-	char** ExtraLineBuffer;    // Extra LineBuffer per la insert mode
-	int LB_Size, Line = 1;     // Numero di righe e Riga selezionata
-	int ELB_Size;              // Numero di righe dell'ExtraLineBuffer
-	char Command;              // Selettore di comandi
-	int counter;               // Contatore da ricordare
-	int status = 0;			   // Return status
-	usr_perm_e permissions;
+	char* Filename;            	   // Name of open file
+	char** LineBuffer;        	   // Array of lines
+	char** ExtraLineBuffer;    	   // Extra LineBuffer for the insert mode
+	int LB_Size;			   	   // Number of rows
+	int ELB_Size;              	   // Number of lines in the ExtraLineBuffer
+	int Line = 1;			 	   // Selected row
+	char Command;             	   // Command selector
+	int counter;            	   // Global counter
+	int status = 0;			 	   // Return status
+	usr_perm_e permissions;		   // Operations we can perform on this file
 
 	// LOADING
 	if (argc <= 1)
@@ -40,21 +40,8 @@ int main(int argc, char* argv[])
 	// Try to create file
 	//! Make function or procedure out of this
 	permissions = get_user_permissions(Filename);
-
-	while(permissions == -1) {
-		if(!~permissions) {
-			FILE* File = fopen(Filename, "w");
-			if(!File) {
-				perror(RED "Failed to create file\n" RESET);
-				return ED_NULL_FILE_PTR;
-			}
-			fclose(File);
-		}
-		fputs(ITALIC CYAN "New file created: " RESET, stderr);
-		fputs(Filename, stderr);
-		fputc('\n', stderr);
-		permissions = get_user_permissions(Filename);
-		usleep(1000);
+	if((status = createFile(Filename, permissions))) {
+		return status;
 	}
 
 	if(!(permissions & RD_PERM)) {

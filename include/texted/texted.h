@@ -3,6 +3,7 @@
 
 #include <aio.h>
 #include <stddef.h>
+#include <texted/permissions.h>
 
 #define LINE_SIZE           500
 #define ARG_SIZE            6
@@ -53,5 +54,8 @@ int streq(char* str1, char* str2, size_t size);
 
 // Stampa la lista dei comandi
 void display_help();
+
+// Try to create new file if it doesn't exist
+int createFile(char* Filename, usr_perm_e permissions);
 
 #endif // TEXTED_TEXTED_H

@@ -80,15 +80,6 @@ int save(char* Filename, char* Buffer)
 	return ED_SUCCESS;
 }
 
-int streq(char* str1, char* str2, size_t size)
-{
-	for (size_t i = 0; i < size; i++)
-		if (str1[i] != str2[i])
-			return 0;
-
-	return 1;
-}
-
 // Inserisce "in" in "out" prima di "ch"
 char* strins(char* out, char* in, char ch)
 {

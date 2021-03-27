@@ -66,31 +66,3 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 		fputs(LineBuffer[i], stdout);         // Line ends with \n, except the last one which ends with 0x00
 	}
 }
-
-void display_help()
-{
-	fputs(BOLD BLUE "--HELP--\n\n"
-
-		   "p:\t\tprint\n"
-		   "+l\t\tcurrent line\n"
-		   "+n\t\twith line numbers\n"
-		   "+ln\t\t-l + -n\n"
-		   "+ -p\t\tprint permissions\n\n"
-
-		   "i:\t\tinsert mode\n"
-		   "+w\t\tsave after quitting insert mode\n"
-		   "esc:\t\texit insert mode\n\n"
-
-		   "w:\t\tsave\n"
-		   "x:\t\tsave and exit\n"
-		   "b:\t\tgenerate backup file\n"
-		   "q:\t\tquit\n\n"
-
-		   "s:\t\tsubstitute word (ed syntax)\n"
-		   "m:\t\tadd word before ... (ed syntax)\n"
-		   "a:\t\tappend at the end of the edit line\n"
-		   "l:\t\tset edit line\n\n"
-
-		   "n:\t\tadd a new line before the edit line\n"
-		   "d:\t\tremove the edit line\n"RESET, stdout);
-}
