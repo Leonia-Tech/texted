@@ -303,6 +303,7 @@ int main(int argc, char* argv[])
 		
 		case 'b': // GET BACKUP
 			backup(Filename);
+			printf(ITALIC CYAN "Backup file generated: %s\n", genBackupName(Filename));
 			getchar();
 			break;
 		

@@ -83,16 +83,19 @@ int save(char* Filename, char* Buffer)
 // Inserisce "in" in "out" prima di "ch"
 char* strins(char* out, char* in, char ch)
 {
-	int size = strlen(out) + strlen(in);
-	char* newStr = (char*)malloc(size * sizeof(char));
+	size_t size;
+	char* newStr;
 	char* AfterPoint;
 	size_t BeforePoint = 0;
+
+	size = strlen(out) + strlen(in) + 1;
+	newStr = (char*)malloc(size * sizeof(char));
 	empty(newStr, size);
 
 	// Trova la prima ricorrenza di ch
 	AfterPoint = strchr(out, ch);
 
-	if(!AfterPoint) {
+	if(AfterPoint) {
 		// Copia tutto quello che c'è prima del punto
 		BeforePoint = AfterPoint - out;
 		strncpy(newStr, out, BeforePoint);
@@ -105,19 +108,37 @@ char* strins(char* out, char* in, char ch)
 	} else {
 		return NULL;
 	}
+
 	return newStr;
+}
+
+char* genBackupName(char* Filename)
+{
+	char* BackupName;
+
+	BackupName = strins(Filename, "-bkp", '.');
+	if(!BackupName) {
+		BackupName = malloc(strlen(Filename) + 5);
+		strcpy(BackupName, Filename);
+		strcat(BackupName, "-bkp");
+	}
+
+	return BackupName;
 }
 
 int backup(char* Filename)
 {
 	FILE* From, *To;
 	char Buffer[LINE_SIZE];
+	char* BackupName;
+
+	BackupName = genBackupName(Filename);
 
 	From = fopen(Filename, "r");
 	if (!From)
 		return ED_NULL_FILE_PTR;
-
-	To = fopen(strins(Filename, "-bkp", '.'), "w");
+	
+	To = fopen(BackupName, "w");
 	if (!To)
 		return ED_NULL_FILE_PTR;
 
@@ -126,6 +147,7 @@ int backup(char* Filename)
 
 	fclose(From);
 	fclose(To);
+	free(BackupName);
 	return ED_SUCCESS;
 }
 

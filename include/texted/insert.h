@@ -17,6 +17,9 @@ int save(char* Filename, char* Buffer);
 // Inserisce "in" in "out" prima di "ch"
 char* strins(char* out, char* in, char ch);
 
+// Genera il nome del file di backup
+char* genBackupName(char* Filename);
+
 // Crea un backup-file del file aperto
 int backup(char* Filename);
 
