@@ -54,13 +54,34 @@ void display_help()
 		   "d:\t\tremove the edit line\n"RESET, stdout);
 }
 
-int streq(char* str1, char* str2, size_t size)
+int argumentParser(int del_new_line, size_t args_number, char** argument[])
 {
-	for (size_t i = 0; i < size; i++)
-		if (str1[i] != str2[i])
-			return 0;
+	size_t s = 0;
+	char* tmp = NULL;
+	char* nl;
+	
+	// Read
+	if(!~getline(&tmp, &s, stdin)){
+		return ED_ERRNO;
+	}
 
-	return 1;
+	// Delete newline if any (needed)
+	if(del_new_line) {
+		nl = strchr(tmp, '\n');
+		if(nl)
+			nl[0] = '\0';
+	}
+	
+	// Check syntax
+	if(tmp[0] != '/' || (args_number == 1 ? (strocc(tmp+1, '/') > args_number) : (strocc(tmp+1, '/') != args_number)))
+		return ED_WRONG_SYNTAX;
+	
+	// Extract token
+	(*argument)[0] = strtok(tmp+1, "/");
+	for(size_t i = 1; i < args_number; ++i)
+		(*argument)[i] = strtok(NULL, "/");
+	
+	return ED_SUCCESS;
 }
 
 int lineBufferIntegrity(char** LineBuffer, size_t LB_Size)

@@ -55,14 +55,14 @@ typedef struct{
 	char**	args;
 }commans_s;
 
-// Compare two strings up to "size"
-int streq(char* str1, char* str2, size_t size);
-
 // Print the list of commands
 void display_help();
 
 // Try to create new file if it doesn't exist
 int createFile(char* Filename, usr_perm_e permissions);
+
+// Read and interpret single argument command
+int argumentParser(int del_new_line, size_t args_number, char** argument[]);
 
 #ifdef DEBUG
 	int lineBufferIntegrity(char** LineBuffer, size_t Size);
