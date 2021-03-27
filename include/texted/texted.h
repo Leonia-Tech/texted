@@ -58,4 +58,8 @@ void display_help();
 // Try to create new file if it doesn't exist
 int createFile(char* Filename, usr_perm_e permissions);
 
+#ifdef DEBUG
+	int lineBufferIntegrity(char** LineBuffer, size_t Size);
+#endif
+
 #endif // TEXTED_TEXTED_H

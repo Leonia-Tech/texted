@@ -19,7 +19,7 @@ int strocc(const char* str, char ch)
 	return counter;
 }
 
-char** getLineBuffer(char* Buffer, int* Lines)
+char** getLineBuffer(char* Buffer, size_t* Lines)
 {
 	int ln = strocc(Buffer, '\n') + 1;
 	char** LineBuffer;
@@ -55,21 +55,21 @@ char** getLineBuffer(char* Buffer, int* Lines)
 	return LineBuffer;
 }
 
-char* getLine(char** LineBuffer, int Line)
+char* getLine(char** LineBuffer, size_t Line)
 {
 	if(!LineBuffer)
 		return "\n";
 	return LineBuffer[Line - 1];
 }
 
-char** getLinePtr(char** LineBuffer, int Line)
+char** getLinePtr(char** LineBuffer, size_t Line)
 {
 	if(!LineBuffer)
 		return NULL;
 	return &LineBuffer[Line - 1];
 }
 
-void freeLineBuffer(char** LineBuffer, int Lines)
+void freeLineBuffer(char** LineBuffer, size_t Lines)
 {
 	for (int i = 0; i < Lines; i++)
 		free(LineBuffer[i]);
@@ -121,7 +121,8 @@ char* putstr(char** row, const char* _before, const char* _new)
 	
 	char* ptr;
 	char* edit;
-	size_t size;
+	size_t size = strlen(*row) + 1;
+	size_t new_size = strlen(_new) + 1;
 	
 	// Initial check
 	if(_before) {
@@ -131,8 +132,10 @@ char* putstr(char** row, const char* _before, const char* _new)
 	}
 	
 	// Allocation of new space
-	size = strlen(*row) + strlen(_new);
-	*row = realloc(*row, ++size * sizeof(char));
+	*row = realloc(*row, (size + new_size - 1) * sizeof(char));
+	empty(*row + size, new_size - 1);
+	size += new_size - 1;
+
 	if(!row)
 		return NULL;
 
@@ -158,7 +161,7 @@ char* putstr(char** row, const char* _before, const char* _new)
 	} else {
 		(*row)[strlen(*row) - 1] = '\0';
 		strcat(*row, _new); // If before is NULL we use this function to concatenate
-		(*row)[strlen(*row)] = '\n';
+		strcat(*row, "\n");
 	}
 	return *row;
 }
@@ -214,7 +217,7 @@ int argumentParser(int del_new_line, size_t args_number, char** argument[])
 	return ED_SUCCESS;
 }
 
-int getLineBufferSize(char** LineBuffer, int Lines)
+int getLineBufferSize(char** LineBuffer, size_t Lines)
 {
 	int counter = 0;
 	for (int i = 0; i < Lines; i++)
@@ -223,7 +226,7 @@ int getLineBufferSize(char** LineBuffer, int Lines)
 	return counter;
 }
 
-char* getBuffer(char** LineBuffer, int Lines)
+char* getBuffer(char** LineBuffer, size_t Lines)
 {
 	int size = getLineBufferSize(LineBuffer, Lines) + 1;
 	char* Buffer = (char*)malloc(size * sizeof(char));
