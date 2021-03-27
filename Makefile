@@ -4,12 +4,11 @@ VERSION=1.4
 DEBUG=1
 ifeq ($(DEBUG),1)
 	CFLAGS=-I./include -g -Wall -DDEBUG=1
-	TARGET=texted
 else
 	CFLAGS=-I./include -O2
-	TARGET=texted-$(VERSION)
 endif
 
+TARGET=texted
 OBJ=src/edit.o src/insert.o src/print.o src/permissions.o main.o
 
 all: $(TARGET) include/texted/texted.h
@@ -22,7 +21,7 @@ $(TARGET): $(OBJ)
 
 clean:
 	rm src/*.o
-	rm *.o $(TARGET) || rm texted
+	rm *.o $(TARGET)
 
 install:
 	sudo install $(TARGET) /usr/bin

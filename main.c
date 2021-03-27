@@ -22,7 +22,6 @@ int main(int argc, char* argv[])
 	int LB_Size, Line = 1;     // Numero di righe e Riga selezionata
 	int ELB_Size;              // Numero di righe dell'ExtraLineBuffer
 	char Command;              // Selettore di comandi
-	char args[ARG_SIZE] = {0}; // Argomenti addizionali ad un comando
 	int counter;               // Contatore da ricordare
 	int status = 0;			   // Return status
 	usr_perm_e permissions;
@@ -91,30 +90,44 @@ int main(int argc, char* argv[])
 		{
 		case 'p': // PRINT MODE
 			// Read arguments
-			fgets(args, 5, stdin);
+			arg1 = malloc(ARG_SIZE);
+			fgets(arg1, ARG_SIZE - 1, stdin);
 
 			// Interpet arguments
-			if (streq(args, "\n", 1))
+			if (streq(arg1, "\n", 1)) {
 				ed_print(LineBuffer, LB_Size, 0);
-			else if (streq(args, "n\n", 2))
+			} else if (streq(arg1, "n\n", 2)) {
 				ed_print(LineBuffer, LB_Size, 1);
-			else if (streq(args, "l\n", 2))
+			} else if (streq(arg1, "l\n", 2)) {
 				fputs(getLine(LineBuffer, Line), stdout);
-			else if (streq(args, "ln\n", 3))
+
+				// Newline coherence
+				if(Line != LB_Size)
+					goto exit_print;
+			} else if (streq(arg1, "ln\n", 3)) {
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
-			else if(streq(args, " -p\n", 4)) {
+
+				// Newline coherence
+				if(Line != LB_Size)
+					goto exit_print;
+			}
+			else if(streq(arg1, " -p\n", 4)) {
 				ed_print_permissions(Filename);
-				break;
+				goto exit_print;
 			}
 			else
 			{
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
 				PAUSE();
-				continue;
+				free(arg1);
+				goto exit_print;
 			}
 
 			if(LineBuffer)
 				putchar('\n');
+		
+		exit_print:
+			free(arg1);
 			break;
 		
 		case 'i': // INSERT MODE
@@ -126,7 +139,9 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			getInsertArgs(args);
+			arg1 = malloc(ARG_SIZE);
+
+			getInsertArgs(arg1);
 			fputs("--INSERT MODE--\n", stdout);
 
 			Buffer = insert(); // Scrivi qualcosa solo se Buffer non è vuoto.
@@ -137,11 +152,12 @@ int main(int argc, char* argv[])
 			}
 			PAUSE();
 
-			if (streq(args, "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
+			if (streq(arg1, "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
 			{
 				// Prepara il LineBuffer temporaneo
 				if(!LineBuffer && !LB_Size) {
 					LineBuffer = getLineBuffer(Buffer, &LB_Size);
+					free(arg1);
 					break;
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
@@ -163,7 +179,7 @@ int main(int argc, char* argv[])
 				freeLineBuffer(ExtraLineBuffer, ELB_Size);
 				LB_Size += ELB_Size;
 			}
-			else if (streq(args, "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
+			else if (streq(arg1, "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
 			{
 				app_save(Filename, Buffer);
 				printf("Added %lu bytes\n", strlen(Buffer));
@@ -181,8 +197,9 @@ int main(int argc, char* argv[])
 				freeLineBuffer(LineBuffer, LB_Size);
 				exit(1);
 			}
-			// PAUSE();
+			
 			free(Buffer);
+			free(arg1);
 			break;
 		
 		case 'w': // SAVE
