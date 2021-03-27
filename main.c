@@ -7,6 +7,7 @@
 #include <texted/edit.h>
 #include <texted/print.h>
 #include <texted/insert.h>
+#include <texted/fileio.h>
 #include <texted/texted.h>
 
 int main(int argc, char* argv[])

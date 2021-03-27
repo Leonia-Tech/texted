@@ -9,6 +9,7 @@
 #include <grp.h>
 
 #include <texted/permissions.h>
+#include <texted/edit.h>
 #include <texted/texted.h>
 
 mode_t get_file_permissions(const char* Filename)

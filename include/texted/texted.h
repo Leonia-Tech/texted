@@ -3,6 +3,8 @@
 
 #include <aio.h>
 #include <stddef.h>
+#include <string.h>
+
 #include <texted/permissions.h>
 
 #define LINE_SIZE           500

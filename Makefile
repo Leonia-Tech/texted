@@ -9,7 +9,7 @@ else
 endif
 
 TARGET=texted
-OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o main.o
+OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.c main.o
 
 all: $(TARGET)
 

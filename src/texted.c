@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
+
+#include <texted/edit.h>
 #include <texted/texted.h>
 
 int createFile(char* Filename, usr_perm_e permissions)

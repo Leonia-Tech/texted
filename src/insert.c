@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <texted/texted.h>
 #include <texted/insert.h>
 
@@ -53,33 +52,6 @@ int getInsertArgs(char* args)
 	return ED_SUCCESS;
 }
 
-// Saves the Buffer in the File and frees the Buffer
-int app_save(char* Filename, char* Buffer)
-{
-	FILE* File;
-
-	File = fopen(Filename, "a");
-	if (!File)
-		return ED_NULL_FILE_PTR;
-
-	fprintf(File, "%s", Buffer);
-	fclose(File);
-	return ED_SUCCESS;
-}
-
-int save(char* Filename, char* Buffer)
-{
-	FILE* File;
-
-	File = fopen(Filename, "w");
-	if (!File)
-		return ED_NULL_FILE_PTR;
-
-	fprintf(File, "%s", Buffer);
-	fclose(File);
-	return ED_SUCCESS;
-}
-
 // Insert 'in' into 'out' before 'ch'.
 char* strins(char* out, char* in, char ch)
 {
@@ -110,45 +82,6 @@ char* strins(char* out, char* in, char ch)
 	}
 
 	return newStr;
-}
-
-char* genBackupName(char* Filename)
-{
-	char* BackupName;
-
-	BackupName = strins(Filename, "-bkp", '.');
-	if(!BackupName) {
-		BackupName = malloc(strlen(Filename) + 5);
-		strcpy(BackupName, Filename);
-		strcat(BackupName, "-bkp");
-	}
-
-	return BackupName;
-}
-
-int backup(char* Filename)
-{
-	FILE* From, *To;
-	char Buffer[LINE_SIZE];
-	char* BackupName;
-
-	BackupName = genBackupName(Filename);
-
-	From = fopen(Filename, "r");
-	if (!From)
-		return ED_NULL_FILE_PTR;
-	
-	To = fopen(BackupName, "w");
-	if (!To)
-		return ED_NULL_FILE_PTR;
-
-	while (fgets(Buffer, LINE_SIZE, From))
-		fprintf(To, "%s", Buffer);
-
-	fclose(From);
-	fclose(To);
-	free(BackupName);
-	return ED_SUCCESS;
 }
 
 // Adds Newline in before Position (Line count starts from 1)
