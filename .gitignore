@@ -2,5 +2,6 @@ texted-*
 *.o
 *.txt
 .*
+~*
 texted
 !texted/

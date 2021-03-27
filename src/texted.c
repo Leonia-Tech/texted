@@ -63,9 +63,9 @@ int streq(char* str1, char* str2, size_t size)
 	return 1;
 }
 
-int lineBufferIntegrity(char** LineBuffer, size_t Size)
+int lineBufferIntegrity(char** LineBuffer, size_t LB_Size)
 {
-	for(size_t i = 0; i < Size; i++)
+	for(size_t i = 0; i < LB_Size; i++)
 		if(LineBuffer[i] == NULL)
 			return 0;
 	

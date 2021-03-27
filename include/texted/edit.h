@@ -1,19 +1,21 @@
 #ifndef TEXTED_EDIT_H
 #define TEXTED_EDIT_H
 
+#include <aio.h>
+
 // Trova quante volte il caratter ch compare in str
 int strocc(const char* str, char ch);
 
 // Dividi il Buffer in righe e restituisci il numero di righe in _Lines
-char** getLineBuffer(char* Buffer, int* _Lines);
+char** getLineBuffer(char* Buffer, size_t* _Lines);
 
 // Restituisce la linea specificata
-char* getLine(char** LineBuffer, int Line);
+char* getLine(char** LineBuffer, size_t Line);
 
 // Restitusice un puntatore alla riga specificata
-char** getLinePtr(char** LineBuffer, int Line);
+char** getLinePtr(char** LineBuffer, size_t Line);
 
-void freeLineBuffer(char** LineBuffer, int Lines);
+void freeLineBuffer(char** LineBuffer, size_t Lines);
 
 // Sostituisci
 char* substitute(char** row, const char* _old, const char* _new);

@@ -18,8 +18,8 @@ int main(int argc, char* argv[])
 	char* Filename;            	   // Name of open file
 	char** LineBuffer;        	   // Array of lines
 	char** ExtraLineBuffer;    	   // Extra LineBuffer for the insert mode
-	int LB_Size;			   	   // Number of rows
-	int ELB_Size;              	   // Number of lines in the ExtraLineBuffer
+	size_t LB_Size;			   	   // Number of rows
+	size_t ELB_Size;               // Number of lines in the ExtraLineBuffer
 	int Line = 1;			 	   // Selected row
 	char Command;             	   // Command selector
 	int counter;            	   // Global counter
@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
 	}
 	
 	// Try to create file
-	//! Make function or procedure out of this
 	permissions = get_user_permissions(Filename);
 	if((status = createFile(Filename, permissions))) {
 		return status;
@@ -105,8 +104,8 @@ int main(int argc, char* argv[])
 			else
 			{
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
-				PAUSE();
-				free(arg1);
+				if(!(strlen(arg1) < ARG_SIZE))
+					PAUSE();
 				goto exit_print;
 			}
 
@@ -364,7 +363,8 @@ int main(int argc, char* argv[])
 			break;
 
 		default:
-			PAUSE();
+			if(Command != '\n')
+				PAUSE();
 			fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
 		}

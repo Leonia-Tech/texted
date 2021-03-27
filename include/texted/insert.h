@@ -21,9 +21,9 @@ char* strins(char* out, char* in, char ch);
 int backup(char* Filename);
 
 // Aggiunge una nuova riga prima di "Position"
-int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position);
+int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position);
 
 // Elimina la riga "Del"
-int delLine(char*** LineBuffer, int* Lines, int Del);
+int delLine(char*** LineBuffer, size_t* Lines, int Del);
 
 #endif // TEXTED_INSERT_H

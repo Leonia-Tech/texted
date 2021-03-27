@@ -130,7 +130,7 @@ int backup(char* Filename)
 }
 
 // Adds Newline in before Position (Line count starts from 1)
-int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
+int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position)
 {
     char** NewLineBuffer;
     int counter;
@@ -164,7 +164,7 @@ int addLine(char*** LineBuffer, int* Lines, char* NewLine, int Position)
 }
 
 // Delete Line number Del (Line count starts from 1)
-int delLine(char*** LineBuffer, int* Lines, int Del)
+int delLine(char*** LineBuffer, size_t* Lines, int Del)
 {
     int Last = 0;
 	int Len = 0;
