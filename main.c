@@ -12,17 +12,17 @@
 
 int main(int argc, char* argv[])
 {
-	char* Buffer;                  // Continuous buffer
-	char* Filename;            	   // Name of open file
-	char** LineBuffer;        	   // Array of lines
-	char** ExtraLineBuffer;    	   // Extra LineBuffer for the insert mode
-	size_t LB_Size;			   	   // Number of rows
-	size_t ELB_Size;               // Number of lines in the ExtraLineBuffer
-	int Line = 1;			 	   // Selected row
-	commans_s Command;			   // Command
-	int counter;            	   // Global counter
-	int status = 0;			 	   // Return status
-	usr_perm_e permissions;		   // Operations we can perform on this file
+	char* Buffer;					// Continuous buffer
+	char* Filename;					// Name of open file
+	char** LineBuffer;				// Array of lines
+	char** ExtraLineBuffer;			// Extra LineBuffer for the insert mode
+	size_t LB_Size;					// Number of rows
+	size_t ELB_Size;				// Number of lines in the ExtraLineBuffer
+	int Line = 1;					// Selected row
+	commans_s Command;				// Command
+	int counter;					// Global counter
+	int status = 0;					// Return status
+	usr_perm_e permissions;			// Operations we can perform on this file
 
 	// LOADING
 	if (argc <= 1)
