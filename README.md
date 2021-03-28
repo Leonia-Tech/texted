@@ -19,18 +19,19 @@ To compile the program follow these instructions:
 3. Execute the program 
 
     ``` bash 
-        $ ./texted <file_name> 
+        $ ./texted [file_name] 
     ```
 ## BASIC FUNCTIONALITY
 
 ### In the editor 
 After have executed the program with the desired file name you will be into the program 
 
- ` Welcome in Texted - debug-version 1.3 `
-   
-    your_file_name.txt > 
+```
+Welcome in Texted - debug-version 1.3
+your_file_name.txt > 
+```
         
-here you can write commands that you can use for printing, modifying, saving the file and exit the program    
+Here you can write commands that you can use for printing, modifying, saving the file and exit the program    
 
 Here follows a list of commands  grouped by category: 
 
