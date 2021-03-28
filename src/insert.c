@@ -129,12 +129,13 @@ int delLine(char*** LineBuffer, size_t* Lines, int Del)
     free((*LineBuffer)[--Del]);
     (*LineBuffer)[Del] = NULL;
 
-	// If we're in the last line we need to delete the space
-	// In the line before
-    if(--Del < 0) // Check if there is a line before
+	// Check if there is a line before
+	if(--Del < 0)
         Last = 0;
 	
-    if((Len = strlen((*LineBuffer)[Del])) && Last) {
+	// If we're in the last line and there is a line before
+	// Delete the newline in the line before
+    if(Last && (Len = strlen((*LineBuffer)[Del]))) {
 		(*LineBuffer)[Del][Len - 1] = '\0';
 	}
 

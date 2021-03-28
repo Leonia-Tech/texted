@@ -147,6 +147,7 @@ int main(int argc, char* argv[])
 				// Set up the temporary LineBuffer
 				if(!LineBuffer && !LB_Size) {
 					LineBuffer = getLineBuffer(Buffer, &LB_Size);
+					ExtraLineBuffer = NULL;
 					free(Command.args[0]);
 					PAUSE();
 					break;
@@ -370,8 +371,17 @@ int main(int argc, char* argv[])
 				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
 						"Error code: %d\n"RESET, Line, status);
 			else {
-				Line--;
-				printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
+				if(Line != 1) {
+					Line--;
+					printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
+				}
+				else
+					printf(CYAN ITALIC "Line 2 became line 1\n" RESET, Line);
+
+				if(LB_Size == 0) {
+					free(LineBuffer);
+					LineBuffer = NULL;
+				}
 			}
 			break;
 
