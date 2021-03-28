@@ -26,12 +26,6 @@ char* insert()
 		}
 	}
 
-	if(counter < 0)
-	{
-		free(Buffer);
-		return NULL;
-	}
-
 	return Buffer;
 }
 

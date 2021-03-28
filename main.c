@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
 	}
 	LineBuffer = getLineBuffer(Buffer, &LB_Size);
 	free(Buffer);
+	Buffer = NULL;
 
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
@@ -132,21 +133,19 @@ int main(int argc, char* argv[])
 			}
 
 			Command.args[0] = malloc(ARG_SIZE);
+			fgets(Command.args[0], ARG_SIZE - 1, stdin);
 
-			getInsertArgs(Command.args[0]);
-			fputs("--INSERT MODE--\n", stdout);
-
-			Buffer = insert(); // Scrivi qualcosa solo se Buffer non è vuoto.
-			if (!Buffer)
+			if (streq(Command.args[0], "\n", 1)) // Start writing from the next to the last line.
 			{
-				free(Buffer);
-				continue;
-			}
-			PAUSE();
+				fputs("--INSERT MODE--\n", stdout);
+				Buffer = insert(); // Only write something if Buffer is not empty.
+				if(!Buffer) {
+					fputs(RED "Not enough memory\n" RESET, stderr);
+					free(Command.args[0]);
+					break;
+				}
 
-			if (streq(Command.args[0], "", 1)) // Inizia a scrivere dalla riga successiva all'ultima.
-			{
-				// Prepara il LineBuffer temporaneo
+				// Set up the temporary LineBuffer
 				if(!LineBuffer && !LB_Size) {
 					LineBuffer = getLineBuffer(Buffer, &LB_Size);
 					free(Command.args[0]);
@@ -156,13 +155,13 @@ int main(int argc, char* argv[])
 					--LB_Size;
 				}
 
-				// Concatenazione dell'a prima stringa del Buffer temporaneo con l'ultima del LineBuffer
+				// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
 				LineBuffer = realloc(LineBuffer, (LB_Size + ELB_Size) * sizeof(char*));
 				LineBuffer[LB_Size] = realloc(LineBuffer[LB_Size],
 											  strlen(LineBuffer[LB_Size]) + strlen(ExtraLineBuffer[0]) + 1);
 				strcat(LineBuffer[LB_Size], ExtraLineBuffer[0]);
 
-				// Altre stringhe
+				// Other strings
 				for (int i = 1; i < ELB_Size; i++) {
 					LineBuffer[LB_Size + i] = strdup(ExtraLineBuffer[i]);
 					strcpy(LineBuffer[LB_Size + i], ExtraLineBuffer[i]);
@@ -171,26 +170,35 @@ int main(int argc, char* argv[])
 				freeLineBuffer(ExtraLineBuffer, ELB_Size);
 				LB_Size += ELB_Size;
 			}
-			else if (streq(Command.args[0], "w", 2)) // Inizia a scrivere dalla fine dell'ultima riga.
+			else if (streq(Command.args[0], "w\n", 2)) // Start writing from the end of the last line.
 			{
+				fputs("--INSERT MODE--\n", stdout);
+				Buffer = insert(); // Only write something if Buffer is not empty.
+				if(!Buffer) {
+					fputs(RED "Not enough memory\n" RESET, stderr);
+					free(Command.args[0]);
+					break;
+				}
+
 				app_save(Filename, Buffer);
 				printf("Added %lu bytes\n", strlen(Buffer));
 				freeLineBuffer(LineBuffer, LB_Size);
 				free(Buffer);
+
 				Buffer = load(Filename);
 				LineBuffer = getLineBuffer(Buffer, &LB_Size);
-				if(!Buffer)
-					free(Buffer);
 			}
 			else
 			{
-				fputs("\n"RED"Unexpected error in insert!\n"RESET, stderr); // Il programma non dovrebbe main poter raggiungere questa zona
-				free(Buffer);
-				freeLineBuffer(LineBuffer, LB_Size);
-				exit(1);
+				fputs(RED"Wrong syntax for the insert (i) command\n"RESET, stderr);
 			}
+
+			PAUSE();
 			
-			free(Buffer);
+			if(!Buffer) {
+				free(Buffer);
+				Buffer = NULL;
+			}
 			free(Command.args[0]);
 			break;
 		
@@ -209,10 +217,12 @@ int main(int argc, char* argv[])
 			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
 				perror(RED"Failed to write to the file"RESET);
 				free(Buffer);
+				Buffer = NULL;
 				break;
 			} else {
 				printf("Written %lu bytes\n", strlen(Buffer));
 				free(Buffer);
+				Buffer = NULL;
 				if (Command.command == 'x')
 					goto loop_exit;
 			}
