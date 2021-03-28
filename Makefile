@@ -8,6 +8,10 @@ else
 	CFLAGS=-I./include -O2
 endif
 
+ifeq ($(ANDROID), 1)
+	CFLAGS+= -DANDROID
+endif
+
 TARGET=texted
 OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.c main.o
 

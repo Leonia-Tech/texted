@@ -1,8 +1,12 @@
 #ifndef TEXTED_TEXTED_H
 #define TEXTED_TEXTED_H
 
-#include <aio.h>
-#include <stddef.h>
+#ifndef ANDROID
+    #include <aio.h>
+	#include <stddef.h>
+#else
+    #include <stdio.h>
+#endif
 #include <string.h>
 
 #include <texted/permissions.h>

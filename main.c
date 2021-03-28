@@ -376,7 +376,7 @@ int main(int argc, char* argv[])
 					printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
 				}
 				else
-					printf(CYAN ITALIC "Line 2 became line 1\n" RESET, Line);
+					fputs(CYAN ITALIC "Line 2 became line 1\n" RESET, stdout);
 
 				if(LB_Size == 0) {
 					free(LineBuffer);
