@@ -2,30 +2,33 @@
 #include <unistd.h>
 
 #include <texted/edit.h>
+#include <texted/fileio.h>
 #include <texted/texted.h>
 
 int createFile(char* Filename, usr_perm_e permissions)
 {
 	const int ITERATIONS = 5;
 	const int MICROSECONDS = 10000;
+	int status = ED_SUCCESS;
 
-	for(int i = 0; i < ITERATIONS && permissions == -1; i++) {
-		if(!~permissions) {
-			FILE* File = fopen(Filename, "w");
-			if(!File) {
-				perror(RED "Failed to create file\n" RESET);
-				return ED_NULL_FILE_PTR;
-			}
+	for(int i = 0; i < ITERATIONS && !~permissions; i++) {
+
+		FILE* File = fopen(TMP_PATH, "w");
+		if(!File) {
+			perror(RED "Failed to create file\n" RESET);
+			clr_temp();
+			status = ED_NULL_FILE_PTR;
+			usleep(MICROSECONDS);
+		} else {
+			set_temp();
 			fclose(File);
 		}
-		fputs(ITALIC CYAN "New file created: " RESET, stderr);
-		fputs(Filename, stderr);
-		fputc('\n', stderr);
-		permissions = get_user_permissions(Filename);
-		usleep(MICROSECONDS);
+		permissions = get_user_permissions(TMP_PATH);
+		if(~permissions)
+			status = ED_SUCCESS;
 	}
 
-    return ED_SUCCESS;
+    return status;
 }
 
 void display_help()

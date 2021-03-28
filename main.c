@@ -64,7 +64,10 @@ int main(int argc, char* argv[])
 	// MAIN LOOP
 	while (1)
 	{
-		printf(BOLD "%s%s > "RESET, get_user_permission_color(Filename), Filename);
+		printf(BOLD "%s%s > "RESET,
+			   get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
+			   Filename);
+		
 		Command.command = getchar();
 
 		// Handle extended ASCII Table
@@ -299,8 +302,10 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'b': // GET BACKUP
-			backup(Filename);
-			printf(ITALIC CYAN "Backup file generated: %s\n", genBackupName(Filename));
+			if(backup(Filename))
+				printf(ITALIC CYAN "Backup file generated: %s\n", genBackupName(Filename));
+			else
+				fprintf(stderr, RED "Failed to create a backup of %s: No such file or directory\n", Filename);
 			getchar();
 			break;
 		
@@ -366,6 +371,7 @@ int main(int argc, char* argv[])
 	}
 
 loop_exit:
+	remove(TMP_PATH);
 	free(Command.args);
 	freeLineBuffer(LineBuffer, LB_Size);
 	return 0;

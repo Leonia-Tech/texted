@@ -6,12 +6,24 @@
 #include <texted/insert.h>
 #include <texted/texted.h>
 
+volatile int temp = 0;
+
+void set_temp() { temp = 1; }
+void clr_temp() { temp = 0; }
+int get_temp()  { return temp; }
+
+// If temp is set read from /tmp
+// Else read from filename
+
 char* load(char* Filename)
 {
 	FILE* File;
 	struct stat st;
 	char Temp[LINE_SIZE] = {0};
 	char* Buffer = NULL;
+
+	if(get_temp())
+		Filename = TMP_PATH;
 
 	if(!~stat(Filename, &st)) {
 		if(errno != ENOENT) {
@@ -29,7 +41,7 @@ char* load(char* Filename)
 	// Open file or create it
 	File = fopen(Filename, "r");
 	if (!File) {
-		File = fopen(Filename, "w");
+		File = fopen(TMP_PATH, "w");
 		if(!File) // Errno is set
 			return NULL;
 		fclose(File);
@@ -62,6 +74,8 @@ int app_save(char* Filename, char* Buffer)
 
 	fprintf(File, "%s", Buffer);
 	fclose(File);
+
+	clr_temp();
 	return ED_SUCCESS;
 }
 
@@ -75,6 +89,14 @@ int save(char* Filename, char* Buffer)
 
 	fprintf(File, "%s", Buffer);
 	fclose(File);
+
+	if(get_temp()) {
+		fputs(ITALIC CYAN "New file created: " RESET, stderr);
+		fputs(Filename, stderr);
+		fputc('\n', stderr);
+		clr_temp();
+	}
+
 	return ED_SUCCESS;
 }
 
@@ -97,6 +119,9 @@ int backup(char* Filename)
 	FILE* From, *To;
 	char Buffer[LINE_SIZE];
 	char* BackupName;
+
+	if(get_temp())
+		return ED_NULL_FILE_PTR;
 
 	BackupName = genBackupName(Filename);
 

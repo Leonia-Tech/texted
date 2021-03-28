@@ -10,7 +10,12 @@ int save(char* Filename, char* Buffer);
 // Generates the backup file name
 char* genBackupName(char* Filename);
 
-//  Creates a backup file of the open file
+// Creates a backup file of the open file
 int backup(char* Filename);
+
+// "temp" indicates if the file is created just temporarely
+void set_temp();
+void clr_temp();
+int get_temp();
 
 #endif

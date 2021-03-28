@@ -5,6 +5,7 @@
 
 #include <texted/permissions.h>
 #include <texted/insert.h>
+#include <texted/fileio.h>
 #include <texted/texted.h>
 
 void ed_print(char** LineBuffer, int Lines, int LineNum)
@@ -20,9 +21,20 @@ void ed_print(char** LineBuffer, int Lines, int LineNum)
 	}
 }
 
-void ed_print_permissions(const char* Filename)
+int ed_print_permissions(const char* Filename)
 {
-	finfo_s* fi = finfo(Filename);
+	finfo_s* fi;
+
+	if(get_temp())
+		fi = finfo(TMP_PATH);
+	else
+		fi = finfo(Filename);
+	
+	if(!fi) {
+		perror(RED "Failed to read file infos" RESET);
+		return ED_NULL_FILE_PTR;
+	}
+
 	printf(BOLD MAGENTA "%s\t%s %s\t%s\n" RESET,
 		   fi->fi_permissions,
 		   fi->fi_user,
@@ -30,4 +42,5 @@ void ed_print_permissions(const char* Filename)
 		   fi->fi_name);
 	
 	finfo_free(fi);
+	return ED_SUCCESS;
 }

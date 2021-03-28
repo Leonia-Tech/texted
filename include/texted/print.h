@@ -8,6 +8,6 @@ char* load(char* Filename);
 void ed_print(char** LineBuffer, int Lines, int LineNum);
 
 // Print file permissions
-void ed_print_permissions(const char* Filename);
+int ed_print_permissions(const char* Filename);
 
 #endif // TEXTED_PRINT_H

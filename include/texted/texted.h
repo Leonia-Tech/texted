@@ -12,6 +12,7 @@
 #define ARGS_NUM			2
 #define ED_ARG_SZ           50
 #define ADD_MODE            (NULL)
+#define	TMP_PATH			"/tmp/xie6Bei3"
 
 // Error codes
 #define ED_SUCCESS          0x00
