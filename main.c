@@ -13,7 +13,6 @@
 int main(int argc, char* argv[])
 {
 	char* Buffer;                  // Continuous buffer
-	char Editstr[ED_ARG_SZ] = {0}; // String from which arguments for editing functions are taken
 	char* Filename;            	   // Name of open file
 	char** LineBuffer;        	   // Array of lines
 	char** ExtraLineBuffer;    	   // Extra LineBuffer for the insert mode
@@ -149,6 +148,7 @@ int main(int argc, char* argv[])
 				if(!LineBuffer && !LB_Size) {
 					LineBuffer = getLineBuffer(Buffer, &LB_Size);
 					free(Command.args[0]);
+					PAUSE();
 					break;
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
@@ -266,7 +266,6 @@ int main(int argc, char* argv[])
 					fprintf(stderr, RED "Failed to embed new token\n" RESET);
 			}
 
-			empty(Editstr, strlen(Editstr));
 			break;
 		
 		case 'a': // ADD WORD AT LINE END
@@ -296,14 +295,18 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'l': // SET LINE
-			scanf("%s", Editstr);
-			counter = atoi(Editstr); // Uso counter come variabile temporanea
+			Command.args[0] = malloc(ARG_SIZE);
+			fgets(Command.args[0], ARG_SIZE, stdin);
+
+			// "counter" as temporary variable
+			counter = atoi(Command.args[0]);
 			if (counter > 0 && counter <= LB_Size)
 				Line = counter;
 			else
 				fprintf(stderr, RED"Wrong line number\n"RESET);
 
-			PAUSE();
+			if(!strchr(Command.args[0], '\n'))
+				PAUSE();
 			break;
 		
 		case 'q': // EXIT

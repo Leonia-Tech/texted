@@ -83,8 +83,11 @@ int argumentParser(int del_new_line, size_t args_number, char** argument[])
 	
 	// Extract token
 	(*argument)[0] = strtok(tmp+1, "/");
-	for(size_t i = 1; i < args_number - 1; ++i)
+	for(size_t i = 1; i < args_number; ++i) {
 		(*argument)[i] = strtok(NULL, "/");
+		if((*argument)[i][0] == '\n')
+			(*argument)[i] = "";
+	}
 	
 	return ED_SUCCESS;
 }
