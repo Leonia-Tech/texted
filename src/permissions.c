@@ -115,7 +115,7 @@ finfo_s* finfo(const char* Filename)
 	fi->fi_name = strdup(Filename);
 	fi->fi_permissions = get_string_permissions(get_file_permissions(Filename));
 	
-	if(strchr(Filename, '.')) {
+	if(strchr(Filename + 1, '.')) {
 		tmp = strtok(fname, ".");
 		tmp = strtok(NULL, ".");
 		fi->fi_extension = strdup(tmp);

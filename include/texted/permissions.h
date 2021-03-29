@@ -41,7 +41,9 @@ int usr_info_free(usr_info_s* usr);
 typedef enum {
     EX_PERM = 1 << 0,
     WR_PERM = 1 << 1,
-    RD_PERM = 1 << 2
+    RD_PERM = 1 << 2,
+
+    ERR_PERM = -1
 }usr_perm_e;
 
 // Get the caller mask based on file ownership

@@ -11,7 +11,7 @@ int createFile(char* Filename, usr_perm_e permissions)
 	const int MICROSECONDS = 10000;
 	int status = ED_SUCCESS;
 
-	for(int i = 0; i < ITERATIONS && !~permissions; i++) {
+	for(int i = 0; i < ITERATIONS && permissions == ERR_PERM; i++) {
 
 		FILE* File = fopen(TMP_PATH, "w");
 		if(!File) {
