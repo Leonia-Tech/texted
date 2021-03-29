@@ -12,15 +12,15 @@
 
 int main(int argc, char* argv[])
 {
-	char* Buffer;					// Continuous buffer
-	char* Filename;					// Name of open file
-	LineBuffer_s* LineBuffer;		// Array of lines
-	LineBuffer_s* ExtraLineBuffer;	// Array of lines
-	int Line = 1;					// Selected row
-	commans_s Command;				// Command
-	int counter;					// Global counter
-	int status = 0;					// Return status
-	usr_perm_e permissions;			// Operations we can perform on this file
+	char* Buffer;							// Continuous buffer
+	char* Filename;							// Name of open file
+	LineBuffer_s* LineBuffer;				// Array of lines
+	LineBuffer_s* ExtraLineBuffer = NULL;	// Array of lines
+	int Line = 1;							// Selected row
+	commans_s Command;						// Command
+	int counter;							// Global counter
+	int status = 0;							// Return status
+	usr_perm_e permissions;					// Operations we can perform on this file
 
 	// LOADING
 	if (argc <= 1)
@@ -145,19 +145,18 @@ int main(int argc, char* argv[])
 				// Set up the temporary LineBuffer
 				if(!LineBuffer->LineBuffer && !LineBuffer->LB_Size) {
 					LineBuffer = getLineBuffer(Buffer);
-					ExtraLineBuffer = NULL;
 					free(Command.args[0]);
 					PAUSE();
 					break;
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer);
-					--(LineBuffer->LB_Size);
 				}
 
 				LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
 
 				LineBuffer->LB_Size += ExtraLineBuffer->LB_Size;
 				freeLineBuffer(ExtraLineBuffer);
+				ExtraLineBuffer = NULL;
 			}
 			else if (streq(Command.args[0], "w\n", 2)) // Start writing from the end of the last line.
 			{

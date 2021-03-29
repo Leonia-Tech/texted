@@ -37,6 +37,8 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 		return NULL;
 	}
 
+	--(lb1->LB_Size);
+
 	// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
 	lb1->LineBuffer = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
 	(lb1->LineBuffer)[lb1->LB_Size] = realloc((lb1->LineBuffer)[lb1->LB_Size],

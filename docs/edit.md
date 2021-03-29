@@ -71,11 +71,3 @@ char* putstr(char** row, const char* _before, const char* _new);
 ``` 
 
 Add before "_before"If "_before" is null, then add at the end of the line
-
-## --------------------------------------------------
-
-```C
-int getTokens(char* arg, size_t size, char** toks[]);
-``` 
-
-Extract tokens for the substitute function
