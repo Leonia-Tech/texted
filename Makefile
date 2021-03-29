@@ -1,5 +1,5 @@
 CC=gcc
-VERSION=1.4
+VERSION=1.4.1
 
 DEBUG=1
 ifeq ($(DEBUG),1)
@@ -29,6 +29,11 @@ clean:
 
 install:
 	sudo install $(TARGET) /usr/bin
+	sudo mkdir /usr/local/man/man1
+	sudo cp docs/texted.1 /usr/local/man/man1
+	sudo gzip /usr/local/man/man1/texted.1
+	sudo mandb
 
 remove:
 	sudo rm /usr/bin/$(TARGET)
+	sudo rm -rf /usr/local/man/man1
