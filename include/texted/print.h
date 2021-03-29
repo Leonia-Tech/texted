@@ -5,7 +5,7 @@
 char* load(char* Filename);
 
 // Print the whole file
-void ed_print(char** LineBuffer, int Lines, int LineNum);
+void ed_print(LineBuffer_s* linebuff, int LineNum);
 
 // Print file permissions
 int ed_print_permissions(const char* Filename);

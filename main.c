@@ -14,10 +14,8 @@ int main(int argc, char* argv[])
 {
 	char* Buffer;					// Continuous buffer
 	char* Filename;					// Name of open file
-	char** LineBuffer;				// Array of lines
-	char** ExtraLineBuffer;			// Extra LineBuffer for the insert mode
-	size_t LB_Size;					// Number of rows
-	size_t ELB_Size;				// Number of lines in the ExtraLineBuffer
+	LineBuffer_s* LineBuffer;		// Array of lines
+	LineBuffer_s* ExtraLineBuffer;	// Array of lines
 	int Line = 1;					// Selected row
 	commans_s Command;				// Command
 	int counter;					// Global counter
@@ -52,7 +50,7 @@ int main(int argc, char* argv[])
 		fputs(RED "Unexpected error while trying to load the file\n" RESET, stderr);
 		return ED_NULL_FILE_PTR;
 	}
-	LineBuffer = getLineBuffer(Buffer, &LB_Size);
+	LineBuffer = getLineBuffer(Buffer);
 	free(Buffer);
 	Buffer = NULL;
 
@@ -87,20 +85,20 @@ int main(int argc, char* argv[])
 
 			// Interpet arguments
 			if (streq(Command.args[0], "\n", 1)) {
-				ed_print(LineBuffer, LB_Size, 0);
+				ed_print(LineBuffer, 0);
 			} else if (streq(Command.args[0], "n\n", 2)) {
-				ed_print(LineBuffer, LB_Size, 1);
+				ed_print(LineBuffer, 1);
 			} else if (streq(Command.args[0], "l\n", 2)) {
 				fputs(getLine(LineBuffer, Line), stdout);
 
 				// Newline coherence
-				if(Line != LB_Size)
+				if(Line != LineBuffer->LB_Size)
 					goto exit_print;
 			} else if (streq(Command.args[0], "ln\n", 3)) {
 				printf("%d   %s", Line, getLine(LineBuffer, Line));
 
 				// Newline coherence
-				if(Line != LB_Size)
+				if(Line != LineBuffer->LB_Size)
 					goto exit_print;
 			}
 			else if(streq(Command.args[0], " -p\n", 4)) {
@@ -115,7 +113,7 @@ int main(int argc, char* argv[])
 				goto exit_print;
 			}
 
-			if(LineBuffer)
+			if(LineBuffer->LineBuffer)
 				putchar('\n');
 		
 		exit_print:
@@ -145,31 +143,32 @@ int main(int argc, char* argv[])
 				}
 
 				// Set up the temporary LineBuffer
-				if(!LineBuffer && !LB_Size) {
-					LineBuffer = getLineBuffer(Buffer, &LB_Size);
+				if(!LineBuffer->LineBuffer && !LineBuffer->LB_Size) {
+					LineBuffer = getLineBuffer(Buffer);
 					ExtraLineBuffer = NULL;
 					free(Command.args[0]);
 					PAUSE();
 					break;
 				} else {
-					ExtraLineBuffer = getLineBuffer(Buffer, &ELB_Size);
-					--LB_Size;
+					ExtraLineBuffer = getLineBuffer(Buffer);
+					--(LineBuffer->LB_Size);
 				}
 
 				// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
-				LineBuffer = realloc(LineBuffer, (LB_Size + ELB_Size) * sizeof(char*));
-				LineBuffer[LB_Size] = realloc(LineBuffer[LB_Size],
-											  strlen(LineBuffer[LB_Size]) + strlen(ExtraLineBuffer[0]) + 1);
-				strcat(LineBuffer[LB_Size], ExtraLineBuffer[0]);
+				LineBuffer->LineBuffer = realloc(LineBuffer, (LineBuffer->LB_Size + ExtraLineBuffer->LB_Size) * sizeof(char*));
+				(LineBuffer->LineBuffer)[LineBuffer->LB_Size] = realloc((LineBuffer->LineBuffer)[LineBuffer->LB_Size],
+											              strlen((LineBuffer->LineBuffer)[LineBuffer->LB_Size])  + 
+														  strlen((ExtraLineBuffer->LineBuffer)[0]) + 1);
+				strcat((LineBuffer->LineBuffer)[LineBuffer->LB_Size], (ExtraLineBuffer->LineBuffer)[0]);
 
 				// Other strings
-				for (int i = 1; i < ELB_Size; i++) {
-					LineBuffer[LB_Size + i] = strdup(ExtraLineBuffer[i]);
-					strcpy(LineBuffer[LB_Size + i], ExtraLineBuffer[i]);
+				for (int i = 1; i < ExtraLineBuffer->LB_Size; i++) {
+					(LineBuffer->LineBuffer)[LineBuffer->LB_Size + i] = strdup((ExtraLineBuffer->LineBuffer)[i]);
+					strcpy((LineBuffer->LineBuffer)[LineBuffer->LB_Size + i], (ExtraLineBuffer->LineBuffer)[i]);
 				}
 
-				freeLineBuffer(ExtraLineBuffer, ELB_Size);
-				LB_Size += ELB_Size;
+				LineBuffer->LB_Size += ExtraLineBuffer->LB_Size;
+				freeLineBuffer(ExtraLineBuffer);
 			}
 			else if (streq(Command.args[0], "w\n", 2)) // Start writing from the end of the last line.
 			{
@@ -183,11 +182,11 @@ int main(int argc, char* argv[])
 
 				app_save(Filename, Buffer);
 				printf("Added %lu bytes\n", strlen(Buffer));
-				freeLineBuffer(LineBuffer, LB_Size);
+				freeLineBuffer(LineBuffer);
 				free(Buffer);
 
 				Buffer = load(Filename);
-				LineBuffer = getLineBuffer(Buffer, &LB_Size);
+				LineBuffer = getLineBuffer(Buffer);
 			}
 			else
 			{
@@ -214,7 +213,7 @@ int main(int argc, char* argv[])
 			}
 
 			getchar();
-			Buffer = getBuffer(LineBuffer, LB_Size);
+			Buffer = getBuffer(LineBuffer);
 			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
 				perror(RED"Failed to write to the file"RESET);
 				free(Buffer);
@@ -301,7 +300,7 @@ int main(int argc, char* argv[])
 
 			// "counter" as temporary variable
 			counter = atoi(Command.args[0]);
-			if (counter > 0 && counter <= LB_Size)
+			if (counter > 0 && counter <= LineBuffer->LB_Size)
 				Line = counter;
 			else
 				fprintf(stderr, RED"Wrong line number\n"RESET);
@@ -352,7 +351,7 @@ int main(int argc, char* argv[])
 			}
 
 			// Add new line
-			if((status = addLine(&LineBuffer, &LB_Size, Command.args[0], Line)))
+			if((status = addLine(&(LineBuffer->LineBuffer), &(LineBuffer->LB_Size), Command.args[0], Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
 						ITALIC "Error code: %d\n"RESET, status);
 			break;
@@ -367,7 +366,7 @@ int main(int argc, char* argv[])
 			}
 
 			PAUSE();
-			if(delLine(&LineBuffer, &LB_Size, Line))
+			if(delLine(&(LineBuffer->LineBuffer), &(LineBuffer->LB_Size), Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
 						"Error code: %d\n"RESET, Line, status);
 			else {
@@ -378,7 +377,7 @@ int main(int argc, char* argv[])
 				else
 					fputs(CYAN ITALIC "Line 2 became line 1\n" RESET, stdout);
 
-				if(LB_Size == 0) {
+				if(LineBuffer->LB_Size == 0) {
 					free(LineBuffer);
 					LineBuffer = NULL;
 				}
@@ -396,6 +395,6 @@ int main(int argc, char* argv[])
 loop_exit:
 	remove(TMP_PATH);
 	free(Command.args);
-	freeLineBuffer(LineBuffer, LB_Size);
+	freeLineBuffer(LineBuffer);
 	return 0;
 }

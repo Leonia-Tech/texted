@@ -4,20 +4,21 @@
 #include <sys/stat.h>
 
 #include <texted/permissions.h>
+#include <texted/edit.h>
 #include <texted/insert.h>
 #include <texted/fileio.h>
 #include <texted/texted.h>
 
-void ed_print(char** LineBuffer, int Lines, int LineNum)
+void ed_print(LineBuffer_s* linebuff, int LineNum)
 {
 	if (LineNum)
 		LineNum = 1;
 
-	for (int i = 0; i < Lines; i++)
+	for (int i = 0; i < linebuff->LB_Size; i++)
 	{
 		if (LineNum)
-			printf("%d   ", LineNum++); 	  // First prints the line, than increments the number
-		fputs(LineBuffer[i], stdout);         // Line ends with \n, except the last one which ends with 0x00
+			printf("%d   ", LineNum++); 	  			// First prints the line, than increments the number
+		fputs((linebuff->LineBuffer)[i], stdout);         // Line ends with \n, except the last one which ends with 0x00
 	}
 }
 

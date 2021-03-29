@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <texted/insert.h>
+#include <texted/edit.h>
 #include <texted/texted.h>
 
 // Find how many times the character ch appears in str
@@ -28,60 +29,64 @@ int streq(char* str1, char* str2, size_t size)
 	return 1;
 }
 
-char** getLineBuffer(char* Buffer, size_t* Lines)
+LineBuffer_s* getLineBuffer(char* Buffer)
 {
-	int ln = strocc(Buffer, '\n') + 1;
-	char** LineBuffer;
+	LineBuffer_s* linebuff = malloc(sizeof(LineBuffer_s));
 	char* ptr;
-	size_t Length;
+	size_t Length = 0;
+
+	linebuff->LB_Size = strocc(Buffer, '\n') + 1;
 
 	// Handle NULL buffer
 	if(Buffer) {
-		LineBuffer = (char**)malloc(ln * sizeof(char*));
-		empty(LineBuffer, ln);
+		linebuff->LineBuffer = (char**)malloc(linebuff->LB_Size * sizeof(char*));
+		empty(linebuff->LineBuffer, linebuff->LB_Size);
 	} else {
-		*Lines = 0;
-		return NULL;
+		linebuff->LB_Size = 0;
+		linebuff->LineBuffer = NULL;
+
+		return linebuff;
 	}
 
 	// Next line
 	ptr = Buffer;
 	
-	for (int i = 0; i < ln; i++) {
+	for (int i = 0; i < linebuff->LB_Size; i++) {
 		if (strchr(ptr, '\n'))
 			Length = (size_t)(strchr(ptr, '\n') - ptr) + 2;
 		else
 			Length = strlen(ptr) + 1;
 
-		LineBuffer[i] = (char*)malloc(Length * sizeof(char));
-		empty(LineBuffer[i], Length);
+		(linebuff->LineBuffer)[i] = (char*)malloc(Length * sizeof(char));
+		empty((linebuff->LineBuffer)[i], Length);
 
-		strncpy(LineBuffer[i], ptr, --Length);
+		strncpy((linebuff->LineBuffer)[i], ptr, --Length);
 		ptr += Length;
 	}
 
-	*Lines = ln;
-	return LineBuffer;
+	return linebuff;
 }
 
-char* getLine(char** LineBuffer, size_t Line)
+char* getLine(LineBuffer_s* linebuff, size_t Line)
 {
-	if(!LineBuffer)
+	if(!linebuff->LineBuffer)
 		return "\n";
-	return LineBuffer[Line - 1];
+	return linebuff->LineBuffer[Line - 1];
 }
 
-char** getLinePtr(char** LineBuffer, size_t Line)
+char** getLinePtr(LineBuffer_s* linebuff, size_t Line)
 {
-	if(!LineBuffer)
+	if(!linebuff->LineBuffer)
 		return NULL;
-	return &LineBuffer[Line - 1];
+	return &(linebuff->LineBuffer[Line - 1]);
 }
 
-void freeLineBuffer(char** LineBuffer, size_t Lines)
+void freeLineBuffer(LineBuffer_s* linebuff)
 {
-	for (int i = 0; i < Lines; i++)
-		free(LineBuffer[i]);
+	for (int i = 0; i < linebuff->LB_Size; i++)
+		free(linebuff->LineBuffer[i]);
+	
+	free(linebuff);
 }
 
 char* substitute(char** row, const char* _old, const char* _new)
@@ -175,44 +180,23 @@ char* putstr(char** row, const char* _before, const char* _new)
 	return *row;
 }
 
-int getTokens(char* arg, size_t size, char** toks[])
+int getLineBufferSize(LineBuffer_s* linebuff)
 {
-	// Arguments check
-	if(size < 2 && arg && toks && arg[0])
-		return ED_FUNCTION_ERROR;
-	
-	// Syntax check
-	if(strocc(arg, '/') != size) {
-		*toks[0] = *toks[1] = NULL;
-		return ED_WRONG_SYNTAX;
-	}		
-
-	// Extract tokens
-	*toks[0] = strtok(arg, "/");
-
-	for(size_t i = 1; i < size; i++)
-		*toks[i] = strtok(NULL, "/");
-
-	return ED_SUCCESS;
-}
-
-int getLineBufferSize(char** LineBuffer, size_t Lines)
-{
-	int counter = Lines; // Null-terminator characters
-	for (int i = 0; i < Lines; i++)
-		counter += strlen(LineBuffer[i]);
+	int counter = linebuff->LB_Size; // Null-terminator characters
+	for (int i = 0; i < linebuff->LB_Size; i++)
+		counter += strlen((linebuff->LineBuffer)[i]);
 
 	return counter;
 }
 
-char* getBuffer(char** LineBuffer, size_t Lines)
+char* getBuffer(LineBuffer_s* linebuff)
 {
-	int size = getLineBufferSize(LineBuffer, Lines) + 1;
+	int size = getLineBufferSize(linebuff) + 1;
 	char* Buffer = (char*)malloc(size * sizeof(char));
 
 	empty(Buffer, strlen(Buffer));
-	for (int i = 0; i < Lines; i++)
-		strcat(Buffer, LineBuffer[i]);
+	for (int i = 0; i < linebuff->LB_Size; i++)
+		strcat(Buffer, linebuff->LineBuffer[i]);
 
 	return Buffer;
 }

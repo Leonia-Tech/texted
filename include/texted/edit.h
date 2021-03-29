@@ -19,23 +19,28 @@ int streq(char* str1, char* str2, size_t size);
 
 /* ------------------------------------------------- */
 
+typedef struct{
+    char** LineBuffer;
+    size_t LB_Size;
+}LineBuffer_s;
+
 // Divide "Buffer" into lines and return the number of lines inside "_Lines"
-char** getLineBuffer(char* Buffer, size_t* _Lines);
+LineBuffer_s* getLineBuffer(char* Buffer);
 
 // Recompose buffer devided into rows
-char* getBuffer(char** LineBuffer, int Lines);
+char* getBuffer(LineBuffer_s* linebuff);
 
 // Return the "Line"-th line address
-char* getLine(char** LineBuffer, size_t Line);
+char* getLine(LineBuffer_s* linebuff, size_t Line);
 
 // Return a "LineBuffer" pointer to the "Line"-th line
-char** getLinePtr(char** LineBuffer, size_t Line);
+char** getLinePtr(LineBuffer_s* linebuff, size_t Line);
 
 // Frees a dynamically allocated line buffer
-void freeLineBuffer(char** LineBuffer, size_t Lines);
+void freeLineBuffer(LineBuffer_s* linebuff);
 
 // Get "LineBuffer" size in bytes
-int getLineBufferSize(char** LineBuffer, int Lines);
+int getLineBufferSize(LineBuffer_s* linebuff);
 
 /* ------------------------------------------------- */
 
