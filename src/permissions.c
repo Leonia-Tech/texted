@@ -62,7 +62,8 @@ char* get_file_group(const char* Filename)
 
 char get_file_type(const mode_t mode)
 {
-	char* mask = "bcdp-ls";
+	char* mask = "sl-pdcb";
+	const size_t MASK_SIZE = 7;
 	char type = '\0';
 	uint8_t bit_field = 0;
 
@@ -74,7 +75,7 @@ char get_file_type(const mode_t mode)
 			  |  S_ISLNK(mode)  << 1
 			  |  S_ISSOCK(mode) << 0;
 	
-	for(uint8_t b = 1, i = 0; i < 7; b <<= 1, i++) {
+	for(uint8_t b = 1, i = 0; i < MASK_SIZE; b <<= 1, i++) {
 		if(b & bit_field) {
 			type = mask[i];
 			break;
