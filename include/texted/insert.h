@@ -1,10 +1,14 @@
 #ifndef TEXTED_INSERT_H
 #define TEXTED_INSERT_H
 
+#include <texted/edit.h>
 #include <string.h>
 
 // Insert mode
 char* insert();
+
+// Concatenate a LineBuffer to another
+LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2);
 
 // Insert 
 int getInsertArgs(char* args);

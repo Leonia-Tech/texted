@@ -81,12 +81,18 @@ char** getLinePtr(LineBuffer_s* linebuff, size_t Line)
 	return &(linebuff->LineBuffer[Line - 1]);
 }
 
-void freeLineBuffer(LineBuffer_s* linebuff)
+int freeLineBuffer(LineBuffer_s* linebuff)
 {
-	for (int i = 0; i < linebuff->LB_Size; i++)
-		free(linebuff->LineBuffer[i]);
+	if(!linebuff)
+		return ED_NULL_PTR;
+	
+	if(linebuff->LineBuffer) {
+		for (int i = 0; i < linebuff->LB_Size; i++)
+			free(linebuff->LineBuffer[i]);
+	}
 	
 	free(linebuff);
+	return ED_SUCCESS;
 }
 
 char* substitute(char** row, const char* _old, const char* _new)

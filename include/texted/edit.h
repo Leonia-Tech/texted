@@ -37,7 +37,7 @@ char* getLine(LineBuffer_s* linebuff, size_t Line);
 char** getLinePtr(LineBuffer_s* linebuff, size_t Line);
 
 // Frees a dynamically allocated line buffer
-void freeLineBuffer(LineBuffer_s* linebuff);
+int freeLineBuffer(LineBuffer_s* linebuff);
 
 // Get "LineBuffer" size in bytes
 int getLineBufferSize(LineBuffer_s* linebuff);

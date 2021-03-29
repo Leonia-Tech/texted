@@ -154,18 +154,7 @@ int main(int argc, char* argv[])
 					--(LineBuffer->LB_Size);
 				}
 
-				// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
-				LineBuffer->LineBuffer = realloc(LineBuffer, (LineBuffer->LB_Size + ExtraLineBuffer->LB_Size) * sizeof(char*));
-				(LineBuffer->LineBuffer)[LineBuffer->LB_Size] = realloc((LineBuffer->LineBuffer)[LineBuffer->LB_Size],
-											              strlen((LineBuffer->LineBuffer)[LineBuffer->LB_Size])  + 
-														  strlen((ExtraLineBuffer->LineBuffer)[0]) + 1);
-				strcat((LineBuffer->LineBuffer)[LineBuffer->LB_Size], (ExtraLineBuffer->LineBuffer)[0]);
-
-				// Other strings
-				for (int i = 1; i < ExtraLineBuffer->LB_Size; i++) {
-					(LineBuffer->LineBuffer)[LineBuffer->LB_Size + i] = strdup((ExtraLineBuffer->LineBuffer)[i]);
-					strcpy((LineBuffer->LineBuffer)[LineBuffer->LB_Size + i], (ExtraLineBuffer->LineBuffer)[i]);
-				}
+				LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
 
 				LineBuffer->LB_Size += ExtraLineBuffer->LB_Size;
 				freeLineBuffer(ExtraLineBuffer);

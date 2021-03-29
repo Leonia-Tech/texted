@@ -38,7 +38,7 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	}
 
 	// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
-	lb1->LineBuffer = realloc(lb1, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
+	lb1->LineBuffer = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
 	(lb1->LineBuffer)[lb1->LB_Size] = realloc((lb1->LineBuffer)[lb1->LB_Size],
 												strlen((lb1->LineBuffer)[lb1->LB_Size])  + 
 												strlen((lb2->LineBuffer)[0]) + 1);
@@ -49,6 +49,8 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 		(lb1->LineBuffer)[lb1->LB_Size + i] = strdup((lb2->LineBuffer)[i]);
 		strcpy((lb1->LineBuffer)[lb1->LB_Size + i], (lb2->LineBuffer)[i]);
 	}
+
+	return lb1;
 }
 
 int getInsertArgs(char* args)
