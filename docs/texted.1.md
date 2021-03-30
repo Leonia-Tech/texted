@@ -26,12 +26,12 @@ texted - ed-like CLI text editor
 : Something  went wrong when trying to open the file
 
 # AUTHOR
-Written by Giovanni Zaccaria, Sebastiano Barezzi, Francesco Gianfranco, Alberto Bella and Andrea Minasi
+Written by Giovanni Zaccaria, Sebastiano Barezzi, Francesco Pallara, Alberto Bella and Andrea Minasi
 
 # REPORTING BUGS
 It's recommended not to open files bigger than 500K: we still didn't do any tests on those.
 
-Reporting any bug to <https://github.com/Leonia-Tech/TextEd/issues/>
+Reporting any bug to <https://github.com/Leonia-Tech/TextEd/issues/>\
 In alternative write to giozaccaria02@gmail.com
 
 # COPYRIGHT
