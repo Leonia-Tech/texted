@@ -1,6 +1,7 @@
 #ifndef TEXTED_INSERT_H
 #define TEXTED_INSERT_H
 
+// aio.h in edit.h
 #include <texted/edit.h>
 #include <string.h>
 
@@ -17,9 +18,9 @@ int getInsertArgs(char* args);
 char* strins(char* out, char* in, char ch);
 
 // Adds a new line before "Position".
-int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position);
+int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position);
 
 // Delete the "Del" line
-int delLine(char*** LineBuffer, size_t* Lines, int Del);
+int delLine(char*** LineBuffer, size_t* Lines, size_t Del);
 
 #endif // TEXTED_INSERT_H

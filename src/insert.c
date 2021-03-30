@@ -47,7 +47,7 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	strcat((lb1->LineBuffer)[lb1->LB_Size], (lb2->LineBuffer)[0]);
 
 	// Other strings
-	for (int i = 1; i < lb2->LB_Size; i++) {
+	for (size_t i = 1; i < lb2->LB_Size; i++) {
 		(lb1->LineBuffer)[lb1->LB_Size + i] = strdup((lb2->LineBuffer)[i]);
 		strcpy((lb1->LineBuffer)[lb1->LB_Size + i], (lb2->LineBuffer)[i]);
 	}
@@ -105,10 +105,10 @@ char* strins(char* out, char* in, char ch)
 }
 
 // Adds Newline in before Position (Line count starts from 1)
-int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position)
+int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position)
 {
     char** NewLineBuffer;
-    int counter;
+    size_t counter;
 	int NewLen = strlen(NewLine);
 
 	// Heap Allocation 
@@ -139,10 +139,11 @@ int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, int Position)
 }
 
 // Delete Line number Del (Line count starts from 1)
-int delLine(char*** LineBuffer, size_t* Lines, int Del)
+int delLine(char*** LineBuffer, size_t* Lines, size_t Del)
 {
     int Last = 0;
 	int Len = 0;
+	const size_t UNDERFLOW = (size_t)(-1);
 	char** NewLineBuffer;
 
     if(Del < 1 || Del > *Lines)
@@ -156,7 +157,7 @@ int delLine(char*** LineBuffer, size_t* Lines, int Del)
     (*LineBuffer)[Del] = NULL;
 
 	// Check if there is a line before
-	if(--Del < 0)
+	if(--Del == UNDERFLOW)
         Last = 0;
 	
 	// If we're in the last line and there is a line before
@@ -168,7 +169,7 @@ int delLine(char*** LineBuffer, size_t* Lines, int Del)
 	NewLineBuffer = malloc((*Lines - 1) * sizeof(char*));
 
 	// Copy LineBuffer to NewLineBuffer
-	for(int i = 0, n = 0; i < (*Lines); i++)
+	for(size_t i = 0, n = 0; i < (*Lines); i++)
 		if((*LineBuffer)[i])
 			NewLineBuffer[n++] = (*LineBuffer)[i];
 	

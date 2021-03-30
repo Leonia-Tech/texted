@@ -3,7 +3,7 @@ VERSION=1.4.1
 
 DEBUG=1
 ifeq ($(DEBUG),1)
-	CFLAGS=-I./include -g -Wall -DDEBUG=1
+	CFLAGS=-I./include -g -Wall -Wextra -DDEBUG=1
 else
 	CFLAGS=-I./include -O2
 endif
