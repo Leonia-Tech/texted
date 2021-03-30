@@ -123,7 +123,8 @@ char* substitute(char** row, const char* _old, const char* _new)
 
 	// Add after old
 	ptr += strlen(_old);
-	strcat(edit, ptr);
+	if(ptr[0])
+		strcat(edit, ptr);
 
 	// Move to *row and free temporary string
 	*row = realloc(*row, size);

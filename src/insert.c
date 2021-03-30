@@ -141,22 +141,22 @@ int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position)
 }
 
 // Delete Line number Del (Line count starts from 1)
-int delLine(char*** LineBuffer, size_t* Lines, size_t Del)
+int delLine(LineBuffer_s* LineBuffer, size_t Del)
 {
     int Last = 0;
 	int Len = 0;
 	const size_t UNDERFLOW = (size_t)(-1);
 	char** NewLineBuffer;
 
-    if(Del < 1 || Del > *Lines)
+    if(Del < 1 || Del > LineBuffer->LB_Size)
         return ED_BUFFER_OVERFLOW;
 
-    if(Del == *Lines)
+    if(Del == LineBuffer->LB_Size)
         ++Last;
     
 	// Delete Line number Del
-    free((*LineBuffer)[--Del]);
-    (*LineBuffer)[Del] = NULL;
+    free((LineBuffer->LineBuffer)[--Del]);
+    (LineBuffer->LineBuffer)[Del] = NULL;
 
 	// Check if there is a line before
 	if(--Del == UNDERFLOW)
@@ -164,19 +164,19 @@ int delLine(char*** LineBuffer, size_t* Lines, size_t Del)
 	
 	// If we're in the last line and there is a line before
 	// Delete the newline in the line before
-    if(Last && (Len = strlen((*LineBuffer)[Del]))) {
-		(*LineBuffer)[Del][Len - 1] = '\0';
+    if(Last && (Len = strlen((LineBuffer->LineBuffer)[Del]))) {
+		(LineBuffer->LineBuffer)[Del][Len - 1] = '\0';
 	}
 
-	NewLineBuffer = malloc((*Lines - 1) * sizeof(char*));
+	NewLineBuffer = malloc((LineBuffer->LB_Size - 1) * sizeof(char*));
 
 	// Copy LineBuffer to NewLineBuffer
-	for(size_t i = 0, n = 0; i < (*Lines); i++)
-		if((*LineBuffer)[i])
-			NewLineBuffer[n++] = (*LineBuffer)[i];
+	for(size_t i = 0, n = 0; i < LineBuffer->LB_Size; i++)
+		if((LineBuffer->LineBuffer)[i])
+			NewLineBuffer[n++] = (LineBuffer->LineBuffer)[i];
 	
-	*LineBuffer = NewLineBuffer;
-	(*Lines)--;
+	LineBuffer->LineBuffer = NewLineBuffer;
+	LineBuffer->LB_Size--;
     
     return ED_SUCCESS;
 }

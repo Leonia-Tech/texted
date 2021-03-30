@@ -23,6 +23,6 @@ char* strins(char* out, char* in, char ch);
 int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position);
 
 // Delete the "Del" line
-int delLine(char*** LineBuffer, size_t* Lines, size_t Del);
+int delLine(LineBuffer_s* LineBuffer, size_t Del);
 
 #endif // TEXTED_INSERT_H

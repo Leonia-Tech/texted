@@ -357,7 +357,7 @@ int main(int argc, char* argv[])
 			}
 
 			PAUSE();
-			if(delLine(&(LineBuffer->LineBuffer), &(LineBuffer->LB_Size), Line))
+			if(delLine(LineBuffer, Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %lu\n"
 						"Error code: %d\n"RESET, Line, status);
 			else {
