@@ -132,58 +132,60 @@ int main(int argc, char* argv[])
 			Command.args[0] = malloc(ARG_SIZE);
 			fgets(Command.args[0], ARG_SIZE - 1, stdin);
 
-			if (streq(Command.args[0], "\n", 1)) // Start writing from the next to the last line.
+			if (streq(Command.args[0], "\n", 1)) // Write in RAM
 			{
+				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
-				Buffer = insert(); // Only write something if Buffer is not empty.
+				Buffer = insert();
 				if(!Buffer) {
 					fputs(RED "Not enough memory\n" RESET, stderr);
 					free(Command.args[0]);
 					break;
 				}
 
-				// Set up the temporary LineBuffer
+				// Make LineBuffer from Buffer
 				if(!LineBuffer->LineBuffer && !LineBuffer->LB_Size) {
 					LineBuffer = getLineBuffer(Buffer);
-					free(Command.args[0]);
-					PAUSE();
-					break;
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer);
+
+					// If LineBuffer isn't void, concatenate the new text
+					LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
+					
+					freeLineBuffer(ExtraLineBuffer);
+					ExtraLineBuffer = NULL;
 				}
-
-				LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
-
-				LineBuffer->LB_Size += ExtraLineBuffer->LB_Size;
-				freeLineBuffer(ExtraLineBuffer);
-				ExtraLineBuffer = NULL;
 			}
-			else if (streq(Command.args[0], "w\n", 2)) // Start writing from the end of the last line.
+			else if (streq(Command.args[0], "w\n", 2)) // Write directly to file
 			{
+				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
-				Buffer = insert(); // Only write something if Buffer is not empty.
+				Buffer = insert();
 				if(!Buffer) {
 					fputs(RED "Not enough memory\n" RESET, stderr);
 					free(Command.args[0]);
 					break;
 				}
 
+				// Append to file
 				app_save(Filename, Buffer);
 				printf("Added %lu bytes\n", strlen(Buffer));
 				freeLineBuffer(LineBuffer);
 				free(Buffer);
 
+				// Reload LineBuffer
 				Buffer = load(Filename);
 				LineBuffer = getLineBuffer(Buffer);
 			}
 			else
 			{
+				Buffer = NULL;
 				fputs(RED"Wrong syntax for the insert (i) command\n"RESET, stderr);
 			}
 
 			PAUSE();
 			
-			if(!Buffer) {
+			if(Buffer) {
 				free(Buffer);
 				Buffer = NULL;
 			}
@@ -200,7 +202,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			getchar();
+			PAUSE();
 			Buffer = getBuffer(LineBuffer);
 			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
 				perror(RED"Failed to write to the file"RESET);

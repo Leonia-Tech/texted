@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <sys/stat.h>
-
-#include <texted/permissions.h>
-#include <texted/edit.h>
 #include <texted/insert.h>
 #include <texted/fileio.h>
 #include <texted/texted.h>

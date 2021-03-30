@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <texted/texted.h>
-#include <texted/edit.h>
 #include <texted/insert.h>
 
+// Only write something if Buffer is not empty.
 char* insert()
 {
 	size_t size = 200;
@@ -51,6 +51,8 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 		(lb1->LineBuffer)[lb1->LB_Size + i] = strdup((lb2->LineBuffer)[i]);
 		strcpy((lb1->LineBuffer)[lb1->LB_Size + i], (lb2->LineBuffer)[i]);
 	}
+
+	lb1->LB_Size += lb2->LB_Size;
 
 	return lb1;
 }

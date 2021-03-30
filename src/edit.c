@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <texted/insert.h>
-#include <texted/edit.h>
 #include <texted/texted.h>
 
 // Find how many times the character ch appears in str
