@@ -11,6 +11,8 @@
 #include <texted/fileio.h>
 #include <texted/texted.h>
 
+#include <credits/credits.h>
+
 int main(int argc, char* argv[])
 {
 	char* Buffer = NULL;					// Continuous buffer
@@ -24,14 +26,15 @@ int main(int argc, char* argv[])
 	usr_perm_e permissions;					// Operations we can perform on this file
 
 	// LOADING
-	if (argc <= 1)
+	if (argc <= 1) {
 		Filename = "a.txt";
-	else if (!streq(argv[1], "--help", 7) && !streq(argv[1], "-h", 3))
-		Filename = argv[1];
-	else
-	{
+	} else if(streq(argv[1], "--help", 7) || streq(argv[1], "-h", 3)) {
 		display_help();
 		return 0;
+	} else if(streq(argv[1], "--credits", 9)) {
+		return credits();
+	} else {
+		Filename = argv[1];
 	}
 	
 	// Try to create file
@@ -56,7 +59,7 @@ int main(int argc, char* argv[])
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE "\n", stdout);
 
 	// MAIN LOOP
-	while (1)
+	for(;;)
 	{
 		printf(BOLD "%s%s > "RESET,
 			   get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
@@ -109,7 +112,7 @@ int main(int argc, char* argv[])
 				goto exit_print;
 			}
 
-			if(LineBuffer->LineBuffer)
+			if((LineBuffer) && (LineBuffer->LineBuffer))
 				putchar('\n');
 		
 		exit_print:
@@ -140,7 +143,7 @@ int main(int argc, char* argv[])
 				}
 
 				// Make LineBuffer from Buffer
-				if(!LineBuffer->LineBuffer && !LineBuffer->LB_Size) {
+				if(!LineBuffer) {
 					LineBuffer = getLineBuffer(Buffer);
 				} else {
 					ExtraLineBuffer = getLineBuffer(Buffer);
@@ -293,6 +296,8 @@ int main(int argc, char* argv[])
 
 			if(!strchr(Command.args[0], '\n'))
 				PAUSE();
+			
+			free(Command.args[0]);
 			break;
 		
 		case 'q': // EXIT

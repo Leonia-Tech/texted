@@ -9,6 +9,9 @@ void ed_print(LineBuffer_s* linebuff, int LineNum)
 {
 	if (LineNum)
 		LineNum = 1;
+	
+	if(!linebuff || !linebuff->LineBuffer[0])
+		return;
 
 	for (size_t i = 0; i < linebuff->LB_Size; i++)
 	{
