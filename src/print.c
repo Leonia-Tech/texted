@@ -10,7 +10,7 @@ void ed_print(LineBuffer_s* linebuff, int LineNum)
 	if (LineNum)
 		LineNum = 1;
 
-	for (int i = 0; i < linebuff->LB_Size; i++)
+	for (size_t i = 0; i < linebuff->LB_Size; i++)
 	{
 		if (LineNum)
 			printf("%d   ", LineNum++); 	  			// First prints the line, than increments the number

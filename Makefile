@@ -3,7 +3,7 @@ VERSION=1.4.1
 
 DEBUG=1
 ifeq ($(DEBUG),1)
-	CFLAGS=-I./include -g -Wall -Wextra -DDEBUG=1
+	CFLAGS=-I./include -g -Wall -Wextra -Wpedantic -DDEBUG=1
 else
 	CFLAGS=-I./include -O2
 endif
@@ -13,7 +13,7 @@ ifeq ($(ANDROID), 1)
 endif
 
 TARGET=texted
-OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.c main.o
+OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o main.o
 
 all: $(TARGET)
 

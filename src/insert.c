@@ -14,7 +14,7 @@ char* insert()
 	empty(Buffer, size);
 
 	// Ask for characters until ESC is pressed
-	for(char c = 0; (c = getchar()) != '\e'; ++counter) {
+	for(char c = 0; (c = getchar()) != ESC; ++counter) {
 		Buffer[counter] = c;
 
 		// If the buffer exceeds the size, expand the buffer by INC.

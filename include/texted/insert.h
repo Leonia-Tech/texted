@@ -5,6 +5,8 @@
 #include <texted/edit.h>
 #include <string.h>
 
+#define ESC     (char)(0x1b)
+
 // Insert mode
 char* insert();
 

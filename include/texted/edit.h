@@ -12,7 +12,7 @@
 #endif
 
 // Find how many times the character "ch" appears in "str"
-int strocc(const char* str, char ch);
+unsigned int strocc(const char* str, char ch);
 
 // Compare two strings up to "size"
 int streq(char* str1, char* str2, size_t size);
@@ -40,7 +40,7 @@ char** getLinePtr(LineBuffer_s* linebuff, size_t Line);
 int freeLineBuffer(LineBuffer_s* linebuff);
 
 // Get "LineBuffer" size in bytes
-int getLineBufferSize(LineBuffer_s* linebuff);
+size_t getLineBufferSize(LineBuffer_s* linebuff);
 
 /* ------------------------------------------------- */
 

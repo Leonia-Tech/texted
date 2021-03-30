@@ -70,8 +70,8 @@ typedef struct{
 // Print the list of commands
 void display_help();
 
-// Try to create new file if it doesn't exist
-int createFile(char* Filename, usr_perm_e permissions);
+// Try to create new file
+int createFile();
 
 // Read and interpret single argument command
 int argumentParser(int del_new_line, size_t args_number, char** argument[]);

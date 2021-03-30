@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include <texted/edit.h>
 #include <texted/print.h>
@@ -16,9 +17,9 @@ int main(int argc, char* argv[])
 	char* Filename;							// Name of open file
 	LineBuffer_s* LineBuffer;				// Array of lines
 	LineBuffer_s* ExtraLineBuffer = NULL;	// Array of lines
-	int Line = 1;							// Selected row
+	size_t Line = 1;							// Selected row
 	commans_s Command;						// Command
-	int counter;							// Global counter
+	size_t counter;							// Global counter
 	int status = 0;							// Return status
 	usr_perm_e permissions;					// Operations we can perform on this file
 
@@ -35,7 +36,9 @@ int main(int argc, char* argv[])
 	
 	// Try to create file
 	permissions = get_user_permissions(Filename);
-	if((status = createFile(Filename, permissions))) {
+	if(permissions == ERR_PERM &&
+	   (status = createFile(Filename, permissions)))
+	{
 		return status;
 	}
 
@@ -95,7 +98,7 @@ int main(int argc, char* argv[])
 				if(Line != LineBuffer->LB_Size)
 					goto exit_print;
 			} else if (streq(Command.args[0], "ln\n", 3)) {
-				printf("%d   %s", Line, getLine(LineBuffer, Line));
+				printf("%lu   %s", Line, getLine(LineBuffer, Line));
 
 				// Newline coherence
 				if(Line != LineBuffer->LB_Size)
@@ -289,8 +292,8 @@ int main(int argc, char* argv[])
 			fgets(Command.args[0], ARG_SIZE, stdin);
 
 			// "counter" as temporary variable
-			counter = atoi(Command.args[0]);
-			if (counter > 0 && counter <= LineBuffer->LB_Size)
+			counter = strtoul(Command.args[0], NULL, 10);
+			if (counter != 0 && counter < ULONG_MAX && counter <= LineBuffer->LB_Size)
 				Line = counter;
 			else
 				fprintf(stderr, RED"Wrong line number\n"RESET);
@@ -357,12 +360,12 @@ int main(int argc, char* argv[])
 
 			PAUSE();
 			if(delLine(&(LineBuffer->LineBuffer), &(LineBuffer->LB_Size), Line))
-				fprintf(stderr, RED"An error occured while trying to remove line no. %d\n"
+				fprintf(stderr, RED"An error occured while trying to remove line no. %lu\n"
 						"Error code: %d\n"RESET, Line, status);
 			else {
 				if(Line != 1) {
 					Line--;
-					printf(CYAN ITALIC "New working line set to %d\n" RESET, Line);
+					printf(CYAN ITALIC "New working line set to %lu\n" RESET, Line);
 				}
 				else
 					fputs(CYAN ITALIC "Line 2 became line 1\n" RESET, stdout);

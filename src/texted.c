@@ -5,10 +5,11 @@
 #include <texted/fileio.h>
 #include <texted/texted.h>
 
-int createFile(char* Filename, usr_perm_e permissions)
+int createFile()
 {
 	const int ITERATIONS = 5;
 	const int MICROSECONDS = 10000;
+	usr_perm_e permissions = ERR_PERM;
 	int status = ED_SUCCESS;
 
 	for(int i = 0; i < ITERATIONS && permissions == ERR_PERM; i++) {

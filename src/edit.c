@@ -5,14 +5,14 @@
 #include <texted/texted.h>
 
 // Find how many times the character ch appears in str
-int strocc(const char* str, char ch)
+unsigned int strocc(const char* str, char ch)
 {
 	if(!str)
 		return 0;
 	
-	int counter = 0;
+	unsigned int counter = 0;
 
-	for (int i = 0; str[i] != 0; i++)
+	for (unsigned int i = 0; str[i] != 0; i++)
 		if (str[i] == ch)
 			counter++;
 
@@ -50,7 +50,7 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 	// Next line
 	ptr = Buffer;
 	
-	for (int i = 0; i < linebuff->LB_Size; i++) {
+	for (size_t i = 0; i < linebuff->LB_Size; i++) {
 		if (strchr(ptr, '\n'))
 			Length = (size_t)(strchr(ptr, '\n') - ptr) + 2;
 		else
@@ -86,7 +86,7 @@ int freeLineBuffer(LineBuffer_s* linebuff)
 		return ED_NULL_PTR;
 	
 	if(linebuff->LineBuffer) {
-		for (int i = 0; i < linebuff->LB_Size; i++)
+		for (size_t i = 0; i < linebuff->LB_Size; i++)
 			free(linebuff->LineBuffer[i]);
 	}
 	
@@ -185,10 +185,10 @@ char* putstr(char** row, const char* _before, const char* _new)
 	return *row;
 }
 
-int getLineBufferSize(LineBuffer_s* linebuff)
+size_t getLineBufferSize(LineBuffer_s* linebuff)
 {
-	int counter = linebuff->LB_Size; // Null-terminator characters
-	for (int i = 0; i < linebuff->LB_Size; i++)
+	size_t counter = linebuff->LB_Size; // Null-terminator characters
+	for (size_t i = 0; i < linebuff->LB_Size; i++)
 		counter += strlen((linebuff->LineBuffer)[i]);
 
 	return counter;
@@ -196,11 +196,11 @@ int getLineBufferSize(LineBuffer_s* linebuff)
 
 char* getBuffer(LineBuffer_s* linebuff)
 {
-	int size = getLineBufferSize(linebuff) + 1;
+	size_t size = getLineBufferSize(linebuff) + 1;
 	char* Buffer = (char*)malloc(size * sizeof(char));
 
 	empty(Buffer, strlen(Buffer));
-	for (int i = 0; i < linebuff->LB_Size; i++)
+	for (size_t i = 0; i < linebuff->LB_Size; i++)
 		strcat(Buffer, linebuff->LineBuffer[i]);
 
 	return Buffer;
