@@ -15,7 +15,7 @@ int get_temp()  { return temp; }
 // If temp is set read from /tmp
 // Else read from filename
 
-char* load(char* Filename)
+char* loadFile(char* Filename)
 {
 	FILE* File;
 	struct stat st;
@@ -140,4 +140,19 @@ int backup(char* Filename)
 	fclose(To);
 	free(BackupName);
 	return ED_SUCCESS;
+}
+
+LineBuffer_s* LbLoadFile(char* Filename)
+{
+	char* Buffer;
+	LineBuffer_s* LineBuffer;
+
+	Buffer = loadFile(Filename);
+	if(!Buffer)
+		return NULL;
+	
+	LineBuffer = getLineBuffer(Buffer);
+
+	free(Buffer);
+	return LineBuffer;
 }

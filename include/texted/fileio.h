@@ -1,6 +1,14 @@
 #ifndef TEXTED_FILEIO_H
 #define TEXTED_FILEIO_H
 
+#include <texted/edit.h>
+
+// Load a file into RAM
+char* loadFile(char* Filename);
+
+// Load a File into a LineBuffer
+LineBuffer_s* LbLoadFile(char* Filename);
+
 // Saves the Buffer in the File and frees the Buffer
 int app_save(char* Filename, char* Buffer);
 

@@ -3,7 +3,7 @@
 ## LOAD FUNCTION
 
 ```C
-char* load(char* Filename);
+char* loadFile(char* Filename);
 ```
 Load a file into RAM
 

@@ -13,11 +13,11 @@
 
 int main(int argc, char* argv[])
 {
-	char* Buffer;							// Continuous buffer
+	char* Buffer = NULL;					// Continuous buffer
 	char* Filename;							// Name of open file
 	LineBuffer_s* LineBuffer;				// Array of lines
 	LineBuffer_s* ExtraLineBuffer = NULL;	// Array of lines
-	size_t Line = 1;							// Selected row
+	size_t Line = 1;						// Selected row
 	commans_s Command;						// Command
 	size_t counter;							// Global counter
 	int status = 0;							// Return status
@@ -48,14 +48,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Load the file in the LineBuffer
-	Buffer = load(Filename);
-	if(Buffer == (char*)0x1) {
-		fputs(RED "Unexpected error while trying to load the file\n" RESET, stderr);
-		return ED_NULL_FILE_PTR;
-	}
-	LineBuffer = getLineBuffer(Buffer);
-	free(Buffer);
-	Buffer = NULL;
+	LineBuffer = LbLoadFile(Filename);
 
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
@@ -175,10 +168,10 @@ int main(int argc, char* argv[])
 				printf("Added %lu bytes\n", strlen(Buffer));
 				freeLineBuffer(LineBuffer);
 				free(Buffer);
+				Buffer = NULL;
 
 				// Reload LineBuffer
-				Buffer = load(Filename);
-				LineBuffer = getLineBuffer(Buffer);
+				LineBuffer = LbLoadFile(Filename);
 			}
 			else
 			{
