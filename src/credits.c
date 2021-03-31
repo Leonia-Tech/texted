@@ -9,6 +9,7 @@
 #include <pthread.h>
 
 #include <credits/credits.h>
+#include <texted/texted.h>
 
 /* 
     Credits for 100th commit 
@@ -36,7 +37,7 @@ int credits(){
     pthread_t quit;
 
     char* creds[10] = {"**************************************************************************\n",
-                       "*\t\t\t\tTexted 1.5\t\t\t\t *\n",
+                       "*\t\t\t\tTexted " VERSION "\t\t\t\t *\n",
                        "* Developed by:\t\t\t\t\t\t\t\t *\n",
                        "* Giovanni Zaccaria\tC code and installer\t\t\t\t *\n",
                        "* Sebastiano Barezzi    C code and installer\t\t\t\t *\n",

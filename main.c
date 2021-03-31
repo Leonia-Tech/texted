@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
 
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
+	Command.raw_command = malloc(ED_ARG_SZ);
 
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE RESET"\n", stdout);
 
@@ -76,7 +77,11 @@ int main(int argc, char* argv[])
 			   get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
 			   Filename);
 		
-		Command.command = getchar();
+		fgets(Command.raw_command, ED_ARG_SZ, stdin);
+		if(!strchr(Command.raw_command, '\n'))
+			PAUSE();
+		
+		Command.command = Command.raw_command[0];
 
 		// Handle extended ASCII Table
 		if(Command.command < 0) {
@@ -90,8 +95,7 @@ int main(int argc, char* argv[])
 		{
 		case 'p': // PRINT MODE
 			// Read arguments
-			Command.args[0] = malloc(ARG_SIZE);
-			fgets(Command.args[0], ARG_SIZE - 1, stdin);
+			Command.args[0] = strdup(Command.raw_command + 1);
 
 			// Interpet arguments
 			if (streq(Command.args[0], "\n", 1)) {
@@ -102,24 +106,20 @@ int main(int argc, char* argv[])
 				fputs(getLine(LineBuffer, Line), stdout);
 
 				// Newline coherence
-				if(Line != LineBuffer->LB_Size)
+				if(LineBuffer && Line != LineBuffer->LB_Size)
 					goto exit_print;
 			} else if (streq(Command.args[0], "ln\n", 3)) {
-				printf("%lu   %s", Line, getLine(LineBuffer, Line));
+				if(LineBuffer)
+					printf("%lu   %s", Line, getLine(LineBuffer, Line));
 
 				// Newline coherence
-				if(Line != LineBuffer->LB_Size)
+				if(LineBuffer && Line != LineBuffer->LB_Size)
 					goto exit_print;
-			}
-			else if(streq(Command.args[0], " -p\n", 4)) {
+			} else if(streq(Command.args[0], " -p\n", 4)) {
 				ed_print_permissions(Filename);
 				goto exit_print;
-			}
-			else
-			{
+			} else {
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
-				if(!(strlen(Command.args[0]) < ARG_SIZE))
-					PAUSE();
 				goto exit_print;
 			}
 
@@ -127,8 +127,6 @@ int main(int argc, char* argv[])
 				putchar('\n');
 		
 		exit_print:
-			if(!strchr(Command.args[0], '\n'))
-				PAUSE();
 			free(Command.args[0]);
 			break;
 		
@@ -137,12 +135,10 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
-			Command.args[0] = malloc(ARG_SIZE);
-			fgets(Command.args[0], ARG_SIZE - 1, stdin);
+			Command.args[0] = strdup(Command.raw_command + 1);
 
 			if (streq(Command.args[0], "\n", 1)) // Write in RAM
 			{
@@ -200,11 +196,9 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
-			PAUSE();
 			Buffer = getBuffer(LineBuffer);
 
 			status = save(Filename, Buffer);
@@ -231,19 +225,17 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
 			// Handle NULL LineBuffer
 			if(!LineBuffer){
 				fputs(RED "File is empty!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 			
 			// Read arguments
-			status = argumentParser(0, 2, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 0, 2, &(Command.args));
 
 			// Error handling
 			if(status == ED_ERRNO) {
@@ -270,14 +262,13 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
 			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			status = argumentParser(1, 1, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 1, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -293,8 +284,7 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'l': // SET LINE
-			Command.args[0] = malloc(ARG_SIZE);
-			fgets(Command.args[0], ARG_SIZE, stdin);
+			Command.args[0] = strdup(Command.raw_command + 1);
 
 			// "counter" as temporary variable
 			counter = strtoul(Command.args[0], NULL, 10);
@@ -302,15 +292,11 @@ int main(int argc, char* argv[])
 				Line = counter;
 			else
 				fprintf(stderr, RED"Wrong line number\n"RESET);
-
-			if(!strchr(Command.args[0], '\n'))
-				PAUSE();
 			
 			free(Command.args[0]);
 			break;
 		
 		case 'q': // EXIT
-			getchar();
 			goto loop_exit;
 			break;
 		
@@ -319,13 +305,11 @@ int main(int argc, char* argv[])
 				printf(ITALIC CYAN "Backup file generated: %s\n" RESET, genBackupName(Filename));
 			else
 				fprintf(stderr, RED "Failed to create a backup of %s: No such file or directory\n", Filename);
-			PAUSE();
 			break;
 		
 		case 'h': // PRINT HELP
 			//! Control non-sensical arguments
 			display_help();
-			PAUSE();
 			break;
 		
 		case 'n': // NEW LINE
@@ -333,14 +317,13 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
 			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			status = argumentParser(0, 1, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 0, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -362,7 +345,6 @@ int main(int argc, char* argv[])
 			// Permission handling
 			if(!(permissions & WR_PERM)) {
 				fputs(RED "You don't have write permissions on this file!\n" RESET, stderr);
-				PAUSE();
 				break;
 			}
 
@@ -388,6 +370,7 @@ int main(int argc, char* argv[])
 
 loop_exit:
 	remove(TMP_PATH);
+	free(Command.raw_command);
 	free(Command.args);
 	freeLineBuffer(LineBuffer);
 	return 0;

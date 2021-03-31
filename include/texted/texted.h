@@ -63,6 +63,7 @@
 #endif
 
 typedef struct{
+	char*	raw_command;
 	char 	command;
 	char**	args;
 }commans_s;
@@ -74,7 +75,7 @@ void display_help();
 int createFile();
 
 // Read and interpret single argument command
-int argumentParser(int del_new_line, size_t args_number, char** argument[]);
+int argumentParser(char* raw_arg, int del_new_line, size_t args_number, char** argument[]);
 
 #ifdef DEBUG
 	int lineBufferIntegrity(char** LineBuffer, size_t Size);

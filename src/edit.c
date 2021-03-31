@@ -67,9 +67,9 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 char* getLine(LineBuffer_s* linebuff, size_t Line)
 {
 	if(!linebuff)
-		return "\n";
+		return "";
 	if(!linebuff->LineBuffer)
-		return "\n";
+		return "";
 	return linebuff->LineBuffer[Line - 1];
 }
 
@@ -142,8 +142,12 @@ int putstr(char** row, const char* _before, const char* _new)
 	
 	char* ptr;
 	char* edit;
-	size_t size = strlen(*row) + 1;
-	size_t new_size = strlen(_new) + 1;
+	char last;
+	size_t size;
+	size_t new_size;
+
+	size = strlen(*row) + 1;
+	new_size = strlen(_new) + 1;
 	
 	// Initial check
 	if(_before) {
@@ -180,9 +184,15 @@ int putstr(char** row, const char* _before, const char* _new)
 		strcpy(*row, edit);
 		free(edit);
 	} else {
-		(*row)[strlen(*row) - 1] = '\0';
-		strcat(*row, _new); // If before is NULL we use this function to concatenate
-		strcat(*row, "\n");
+		size -= new_size;
+		last = (*row)[size - 1];
+		(*row)[size - 1] *= (('\n' - last) != 0);
+
+		// If before is NULL we use this function to concatenate
+		strcat(*row, _new);
+
+		if(last == '\n')
+			strcat(*row, "\n");
 	}
 	return ED_SUCCESS;
 }

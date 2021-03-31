@@ -271,5 +271,5 @@ char* get_user_permission_color(char* Filename)
 	else if(permissions == RD_PERM)
 		return RED "(read only) " GREEN;
 	else
-		return RESET;
+		return RED "(deleted!) ";
 }

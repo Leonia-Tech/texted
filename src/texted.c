@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <texted/edit.h>
@@ -60,16 +61,12 @@ void display_help()
 		   "d:\t\tremove the edit line\n"RESET, stdout);
 }
 
-int argumentParser(int del_new_line, size_t args_number, char** argument[])
+int argumentParser(char* raw_arg, int del_new_line, size_t args_number, char** argument[])
 {
-	size_t s = 0;
-	char* tmp = NULL;
+	char* tmp;
 	char* nl;
 	
-	// Read
-	if(!~getline(&tmp, &s, stdin)){
-		return ED_ERRNO;
-	}
+	tmp = strdup(raw_arg);
 
 	// Delete newline if any (needed)
 	if(del_new_line) {
