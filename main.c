@@ -298,7 +298,7 @@ int main(int argc, char* argv[])
 
 			// "counter" as temporary variable
 			counter = strtoul(Command.args[0], NULL, 10);
-			if (counter != 0 && counter < ULONG_MAX && counter <= LineBuffer->LB_Size)
+			if (counter != 0 && counter < ULONG_MAX && LineBuffer && counter <= LineBuffer->LB_Size)
 				Line = counter;
 			else
 				fprintf(stderr, RED"Wrong line number\n"RESET);
@@ -318,8 +318,11 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'h': // PRINT HELP
-			//! Control non-sensical arguments
-			display_help();
+			if(!Command.raw_command[1])
+				display_help();
+			else
+				fputs(RED "Wrong syntax for the help (h) command.\n"
+						  "Type h for help\n" RESET, stderr);
 			break;
 		
 		case 'n': // NEW LINE
