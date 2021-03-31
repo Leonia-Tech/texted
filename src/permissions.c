@@ -101,9 +101,7 @@ char* get_string_permissions(const mode_t mode)
 
 finfo_s* finfo(const char* Filename)
 {
-	char* tmp;
 	finfo_s* fi = malloc(sizeof(finfo_s));
-	char* fname = strdup(Filename);
 
 	do {
 		struct stat st;
@@ -116,19 +114,34 @@ finfo_s* finfo(const char* Filename)
 	fi->fi_name = strdup(Filename);
 	fi->fi_permissions = get_string_permissions(get_file_permissions(Filename));
 	
-	if(strchr(Filename + 1, '.')) {
-		tmp = strtok(fname, ".");
-		tmp = strtok(NULL, ".");
-		fi->fi_extension = strdup(tmp);
-	} else {
-		fi->fi_extension = NULL;
-	}
+	fi->fi_extension = get_extension(Filename);
 
 	// Shouldn't be freed (?)
 	fi->fi_user = get_file_user(Filename);
 	fi->fi_group = get_file_group(Filename);
 
 	return fi;
+}
+
+char* get_extension(const char* Filename)
+{
+	char* fname = strdup(Filename);
+	char* tmp;
+
+	if(strchr(Filename + 1, '.')) {
+		tmp = strtok(fname, ".");
+		tmp = strtok(NULL, ".");
+		tmp = strdup(tmp);
+	} else {
+		tmp = NULL;
+	}
+
+	free(fname);
+
+	if(tmp)
+		return tmp;
+	else
+		return NULL;
 }
 
 int finfo_free(finfo_s* fi)

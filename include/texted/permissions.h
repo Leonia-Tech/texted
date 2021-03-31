@@ -32,6 +32,8 @@ typedef struct {
 // Initialize a usr_info_s structure
 usr_info_s* usr_info();
 
+char* get_extension(const char* Filename);
+
 // Free a usr_info_s structure
 int usr_info_free(usr_info_s* usr);
 

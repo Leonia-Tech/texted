@@ -127,6 +127,8 @@ int main(int argc, char* argv[])
 				putchar('\n');
 		
 		exit_print:
+			if(!strchr(Command.args[0], '\n'))
+				PAUSE();
 			free(Command.args[0]);
 			break;
 		
