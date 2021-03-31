@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <limits.h>
 
+#include <readline/readline.h>
+#include <readline/history.h>
+
 #include <texted/edit.h>
 #include <texted/print.h>
 #include <texted/insert.h>
@@ -16,6 +19,7 @@
 int main(int argc, char* argv[])
 {
 	char* Buffer = NULL;					// Continuous buffer
+	char* Prompt = NULL;
 	char* Filename;							// Name of open file
 	LineBuffer_s* LineBuffer;				// Array of lines
 	size_t Line = 1;						// Selected row
@@ -68,18 +72,20 @@ int main(int argc, char* argv[])
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
 	Command.raw_command = malloc(ED_ARG_SZ);
 
+	//Initialize Prompt
+	Prompt = malloc(strlen(Filename) + 30);
+
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE RESET"\n", stdout);
 
 	// MAIN LOOP
 	for(;;)
 	{
-		printf(BOLD "%s%s > "RESET,
-			   get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
-			   Filename);
+		sprintf(Prompt, BOLD "%s%s > "RESET,
+			    get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
+			    Filename);
 		
-		fgets(Command.raw_command, ED_ARG_SZ, stdin);
-		if(!strchr(Command.raw_command, '\n'))
-			PAUSE();
+		Command.raw_command = readline(Prompt);
+		add_history(Command.raw_command);
 		
 		Command.command = Command.raw_command[0];
 
@@ -98,24 +104,24 @@ int main(int argc, char* argv[])
 			Command.args[0] = strdup(Command.raw_command + 1);
 
 			// Interpet arguments
-			if (streq(Command.args[0], "\n", 1)) {
+			if (streq(Command.args[0], "", 1)) {
 				ed_print(LineBuffer, 0);
-			} else if (streq(Command.args[0], "n\n", 2)) {
+			} else if (streq(Command.args[0], "n", 2)) {
 				ed_print(LineBuffer, 1);
-			} else if (streq(Command.args[0], "l\n", 2)) {
+			} else if (streq(Command.args[0], "l", 2)) {
 				fputs(getLine(LineBuffer, Line), stdout);
 
 				// Newline coherence
 				if(LineBuffer && Line != LineBuffer->LB_Size)
 					goto exit_print;
-			} else if (streq(Command.args[0], "ln\n", 3)) {
+			} else if (streq(Command.args[0], "ln", 3)) {
 				if(LineBuffer)
 					printf("%lu   %s", Line, getLine(LineBuffer, Line));
 
 				// Newline coherence
 				if(LineBuffer && Line != LineBuffer->LB_Size)
 					goto exit_print;
-			} else if(streq(Command.args[0], " -p\n", 4)) {
+			} else if(streq(Command.args[0], " -p", 4)) {
 				ed_print_permissions(Filename);
 				goto exit_print;
 			} else {
@@ -140,7 +146,7 @@ int main(int argc, char* argv[])
 
 			Command.args[0] = strdup(Command.raw_command + 1);
 
-			if (streq(Command.args[0], "\n", 1)) // Write in RAM
+			if (streq(Command.args[0], "", 1)) // Write in RAM
 			{
 				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
@@ -156,7 +162,7 @@ int main(int argc, char* argv[])
 					LineBuffer = concatenateBuffer(LineBuffer, Buffer);
 				
 			}
-			else if (streq(Command.args[0], "w\n", 2)) // Write directly to file
+			else if (streq(Command.args[0], "w", 2)) // Write directly to file
 			{
 				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
@@ -370,6 +376,7 @@ int main(int argc, char* argv[])
 
 loop_exit:
 	remove(TMP_PATH);
+	free(Prompt);
 	free(Command.raw_command);
 	free(Command.args);
 	freeLineBuffer(LineBuffer);
