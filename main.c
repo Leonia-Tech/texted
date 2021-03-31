@@ -213,12 +213,16 @@ int main(int argc, char* argv[])
 					perror(RED"Failed to write to the file"RESET);
 				else
 					fputs(RED"Failed to write to the file\n"RESET, stderr);
-				free(Buffer);
+				
+				if(Buffer)
+					free(Buffer);
 				Buffer = NULL;
 				break;
 			} else {
-				printf("Written %lu bytes\n", strlen(Buffer));
-				free(Buffer);
+				printf("Written %lu bytes\n", Buffer ? strlen(Buffer) : 0U);
+
+				if(Buffer)
+					free(Buffer);
 				Buffer = NULL;
 				if (Command.command == 'x')
 					goto loop_exit;
@@ -365,11 +369,14 @@ int main(int argc, char* argv[])
 
 			}
 			break;
+		
+		case '!':
+			system(Command.raw_command + 1);
+			break;
 
 		default:
-			if(Command.command != '\n')
-				PAUSE();
-			fprintf(stderr, RED "Invalid command\n" RESET);
+			if(Command.command)
+				fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
 		}
 	}

@@ -77,23 +77,6 @@ LineBuffer_s* concatenateBuffer(LineBuffer_s* LineBuffer, char* Buffer)
 	return LineBuffer;
 }
 
-int getInsertArgs(char* args)
-{
-	args[0] = getchar();
-	if (args[0] != '\n')
-	{
-		getchar();
-		if (args[0] != 'w')
-			return ED_INVALID_COMMAND;
-	}
-
-	for (int i = 0; i < ARG_SIZE; i++)
-		if (args[i] == '\n')
-			args[i] = 0x00;
-
-	return ED_SUCCESS;
-}
-
 // Insert 'in' into 'out' before 'ch'.
 char* strins(char* out, char* in, char ch)
 {

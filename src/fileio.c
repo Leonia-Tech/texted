@@ -86,14 +86,12 @@ int save(char* Filename, char* Buffer)
 {
 	FILE* File;
 
-	if(!Buffer)
-		return ED_NULL_PTR;
-
 	File = fopen(Filename, "w");
 	if (!File)
 		return ED_NULL_FILE_PTR;
 
-	fprintf(File, "%s", Buffer);
+	if(Buffer)
+		fputs(Buffer, File);
 	fclose(File);
 
 	if(get_temp()) {

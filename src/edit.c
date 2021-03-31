@@ -184,6 +184,8 @@ int putstr(char** row, const char* _before, const char* _new)
 		strcpy(*row, edit);
 		free(edit);
 	} else {
+		
+		// Remove newline if any
 		size -= new_size;
 		last = (*row)[size - 1];
 		(*row)[size - 1] *= (('\n' - last) != 0);
