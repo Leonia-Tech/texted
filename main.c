@@ -365,22 +365,14 @@ int main(int argc, char* argv[])
 			}
 
 			PAUSE();
-			if(delLine(LineBuffer, Line))
+			if(delLine(&LineBuffer, Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %lu\n"
 						"Error code: %d\n"RESET, Line, status);
 			else {
-				if(Line != 1) {
-					Line--;
-					printf(CYAN ITALIC "New working line set to %lu\n" RESET, Line);
-				}
-				else
-					fputs(CYAN ITALIC "Line 2 became was shifted to line 1\n" RESET, stdout);
+				// branchless if(Line != 1) Line--;
+				Line -= (Line > 1);
+				printf(CYAN ITALIC "New working line set to %lu\n" RESET, Line);
 
-				//! Embed in delLine()
-				if(LineBuffer->LB_Size == 0) {
-					free(LineBuffer);
-					LineBuffer = NULL;
-				}
 			}
 			break;
 

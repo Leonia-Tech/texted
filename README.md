@@ -28,6 +28,8 @@ To compile the program follow these instructions:
     ```
 *Note: If you don't have mpv installed some functionalities may not work as intended. The programm should still be perfectly usable, though.*
 
+*Note: You must have ncurses library in order to compile this software*
+
 ### Remove
 To remove the app keep the `Makefile` and run:
     ```bash

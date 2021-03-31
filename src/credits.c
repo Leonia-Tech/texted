@@ -21,6 +21,8 @@ void* quit_routine()
 
     pid = mplay(AUDIO_PATH);
 
+    raw();
+    noecho();
     for(char c = 0; (c = getch()) && c != 'q';);
     endwin();
 
