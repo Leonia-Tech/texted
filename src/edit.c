@@ -98,14 +98,14 @@ int freeLineBuffer(LineBuffer_s* linebuff)
 	return ED_SUCCESS;
 }
 
-char* substitute(char** row, const char* _old, const char* _new)
+int substitute(char** row, const char* _old, const char* _new)
 {
 	char* ptr;		// Pointer to _old in row
 	char* edit;		// Temporary string
 	size_t size;	// New size
 
-	if(!(ptr = strstr(*row, _old)))
-		return NULL;
+	if(!row || !(ptr = strstr(*row, _old)))
+		return ED_WRONG_SYNTAX;
 	
 	if(_new == NULL)
 		_new = "";
@@ -114,7 +114,7 @@ char* substitute(char** row, const char* _old, const char* _new)
 	edit = (char*)malloc(size * sizeof(char));
 
 	if(!row)
-		return NULL;
+		return ED_NULL_PTR;
 
 	empty(edit, size);
 
@@ -134,7 +134,7 @@ char* substitute(char** row, const char* _old, const char* _new)
 	strcpy(*row, edit);
 	free(edit);
 
-	return *row;
+	return ED_SUCCESS;
 }
 
 int putstr(char** row, const char* _before, const char* _new)

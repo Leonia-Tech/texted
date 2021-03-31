@@ -261,7 +261,7 @@ int main(int argc, char* argv[])
 			}
 
 			if (Command.command == 's') {
-				if(!substitute(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
+				if(substitute(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
 					fprintf(stderr, RED "Failed to substitute\n" RESET);
 			} else if (Command.command == 'm') {
 				if(putstr(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))

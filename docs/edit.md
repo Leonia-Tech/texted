@@ -59,7 +59,7 @@ Get "LineBuffer" size in bytes
 ## SUBSTITUDE FUNCTIONS
 
 ``` C 
-char* substitute(char** row, const char* _old, const char* _new);
+int substitute(char** row, const char* _old, const char* _new);
 ``` 
 
 Subtitute "_old" with "_new" 
