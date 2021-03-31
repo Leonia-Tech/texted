@@ -13,6 +13,9 @@ char* insert();
 // Concatenate a LineBuffer to another
 LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2);
 
+// Concatenate a Buffer to a LineBuffer
+LineBuffer_s* concatenateBuffer(LineBuffer_s* LineBuffer, char* Buffer);
+
 // Insert 
 int getInsertArgs(char* args);
 

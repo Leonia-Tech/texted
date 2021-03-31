@@ -37,14 +37,12 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 	linebuff->LB_Size = strocc(Buffer, '\n') + 1;
 
 	// Handle NULL buffer
-	if(Buffer) {
+	if(Buffer && Buffer[0]) {
 		linebuff->LineBuffer = (char**)malloc(linebuff->LB_Size * sizeof(char*));
 		empty(linebuff->LineBuffer, linebuff->LB_Size);
 	} else {
-		linebuff->LB_Size = 0;
-		linebuff->LineBuffer = NULL;
-
-		return linebuff;
+		free(linebuff);
+		return NULL;
 	}
 
 	// Next line

@@ -62,6 +62,21 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	return lb1;
 }
 
+LineBuffer_s* concatenateBuffer(LineBuffer_s* LineBuffer, char* Buffer)
+{
+	LineBuffer_s* ExtraLineBuffer;
+
+	ExtraLineBuffer = getLineBuffer(Buffer);
+	if(!ExtraLineBuffer)
+		return NULL;
+
+	// If LineBuffer isn't void, concatenate the new text
+	LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
+	
+	freeLineBuffer(ExtraLineBuffer);
+	return LineBuffer;
+}
+
 int getInsertArgs(char* args)
 {
 	args[0] = getchar();

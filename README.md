@@ -4,30 +4,43 @@ TextEd is a simple text editor written in C, it has the basic functions and it's
 
 ![TextEd 1.4](https://i.ibb.co/4t9r685/Text-Ed-1-4.png)
 
-### Installation 
+### Install
 To compile the program follow these instructions: 
 
  1. Git the repository with git clone command: 
-
-        $ git clone https://github.com/Leonia-Tech/TextEd 
+    ```bash
+    $ git clone https://github.com/Leonia-Tech/TextEd
+    ```
 
 2. Change directory and compile it
     ```bash
-      $ make
-     ```
+    $ make DEBUG=0
+    ```
+
+3. Install the program
+    ```bash
+    $ make install
+    ```
 
 3. Execute the program 
-
     ``` bash 
-        $ ./texted [file_name] 
+    $ texted [FILE] 
     ```
+*Note: If you don't have mpv installed some functionalities may not work as intended. The programm should still be perfectly usable, though.*
+
+### Remove
+To remove the app keep the `Makefile` and run:
+    ```bash
+    $ make remove
+    ```
+
 ## BASIC FUNCTIONALITY
 
 ### In the editor 
 After have executed the program with the desired file name you will be into the program 
 
 ```
-Welcome in Texted - debug-version 1.3
+Welcome in Texted - debug-version 1.4.2
 your_file_name.txt > 
 ```
         

@@ -18,7 +18,6 @@ int main(int argc, char* argv[])
 	char* Buffer = NULL;					// Continuous buffer
 	char* Filename;							// Name of open file
 	LineBuffer_s* LineBuffer;				// Array of lines
-	LineBuffer_s* ExtraLineBuffer = NULL;	// Array of lines
 	size_t Line = 1;						// Selected row
 	commans_s Command;						// Command
 	size_t counter;							// Global counter
@@ -153,17 +152,11 @@ int main(int argc, char* argv[])
 				}
 
 				// Make LineBuffer from Buffer
-				if(!LineBuffer) {
+				if(!LineBuffer)
 					LineBuffer = getLineBuffer(Buffer);
-				} else {
-					ExtraLineBuffer = getLineBuffer(Buffer);
-
-					// If LineBuffer isn't void, concatenate the new text
-					LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
-					
-					freeLineBuffer(ExtraLineBuffer);
-					ExtraLineBuffer = NULL;
-				}
+				else
+					LineBuffer = concatenateBuffer(LineBuffer, Buffer);
+				
 			}
 			else if (streq(Command.args[0], "w\n", 2)) // Write directly to file
 			{
