@@ -27,7 +27,12 @@ char* insert()
 		}
 	}
 
-	return Buffer;
+	if(Buffer[0]) {
+		return Buffer;
+	} else {
+		free(Buffer);
+		return NULL;
+	}
 }
 
 LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
@@ -107,11 +112,23 @@ char* strins(char* out, char* in, char ch)
 }
 
 // Adds Newline in before Position (Line count starts from 1)
-int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position)
+int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position)
 {
     char** NewLineBuffer;
     size_t counter;
 	int NewLen = strlen(NewLine);
+
+	if(!NewLine)
+		return ED_NULL_PTR;
+	
+	if(!*LineBuffer) {
+		if(NewLine[0]) {
+			*LineBuffer = getLineBuffer(NewLine);
+			return ED_SUCCESS;
+		}
+		else
+			return ED_NULL_PTR;
+	}
 
 	// Heap Allocation 
 	NewLine = strdup(NewLine);
@@ -119,24 +136,24 @@ int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position)
     if(!NewLine || (NewLen && NewLine[NewLen - 1] != '\n'))
         return ED_BAD_LINE_FORMAT;
     
-    if(Position < 1 || Position > *Lines)
+    if(Position < 1 || Position > (*LineBuffer)->LB_Size)
         return ED_BUFFER_OVERFLOW;
     
 	// Initializing new LineBuffer
-    NewLineBuffer = (char**)malloc(++(*Lines) * sizeof(char*));
+    NewLineBuffer = (char**)malloc(++((*LineBuffer)->LB_Size) * sizeof(char*));
 
 	// Copy lines before Position
     for(counter = 0; counter < Position - 1; counter++)
-        NewLineBuffer[counter] = (*LineBuffer)[counter];
+        NewLineBuffer[counter] = ((*LineBuffer)->LineBuffer)[counter];
 	
 	// Add new line
     NewLineBuffer[counter] = NewLine;
 
 	// Copy lines after Position
-    for(; counter < *Lines - 1; counter++)
-        NewLineBuffer[counter+1] = (*LineBuffer)[counter];
+    for(; counter < ((*LineBuffer)->LB_Size) - 1; counter++)
+        NewLineBuffer[counter+1] = ((*LineBuffer)->LineBuffer)[counter];
     
-    *LineBuffer = NewLineBuffer;
+    (*LineBuffer)->LineBuffer = NewLineBuffer;
     return ED_SUCCESS;
 }
 
@@ -147,6 +164,9 @@ int delLine(LineBuffer_s* LineBuffer, size_t Del)
 	int Len = 0;
 	const size_t UNDERFLOW = (size_t)(-1);
 	char** NewLineBuffer;
+
+	if(!LineBuffer)
+		return ED_NULL_PTR;
 
     if(Del < 1 || Del > LineBuffer->LB_Size)
         return ED_BUFFER_OVERFLOW;

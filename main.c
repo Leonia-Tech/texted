@@ -137,9 +137,7 @@ int main(int argc, char* argv[])
 				fputs("--INSERT MODE--\n", stdout);
 				Buffer = insert();
 				if(!Buffer) {
-					fputs(RED "Not enough memory\n" RESET, stderr);
-					free(Command.args[0]);
-					break;
+					goto exit_insert;
 				}
 
 				// Make LineBuffer from Buffer
@@ -161,9 +159,7 @@ int main(int argc, char* argv[])
 				fputs("--INSERT MODE--\n", stdout);
 				Buffer = insert();
 				if(!Buffer) {
-					fputs(RED "Not enough memory\n" RESET, stderr);
-					free(Command.args[0]);
-					break;
+					goto exit_insert;
 				}
 
 				// Append to file
@@ -182,8 +178,8 @@ int main(int argc, char* argv[])
 				fputs(RED"Wrong syntax for the insert (i) command\n"RESET, stderr);
 			}
 
+		exit_insert:
 			PAUSE();
-			
 			if(Buffer) {
 				free(Buffer);
 				Buffer = NULL;
@@ -203,8 +199,13 @@ int main(int argc, char* argv[])
 
 			PAUSE();
 			Buffer = getBuffer(LineBuffer);
-			if(save(Filename, Buffer) == ED_NULL_FILE_PTR) {
-				perror(RED"Failed to write to the file"RESET);
+
+			status = save(Filename, Buffer);
+			if(status == ED_NULL_FILE_PTR || status == ED_NULL_PTR) {
+				if(errno)
+					perror(RED"Failed to write to the file"RESET);
+				else
+					fputs(RED"Failed to write to the file\n"RESET, stderr);
 				free(Buffer);
 				Buffer = NULL;
 				break;
@@ -280,7 +281,8 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			putstr(getLinePtr(LineBuffer, Line), ADD_MODE, Command.args[0]);
+			if(!putstr(getLinePtr(LineBuffer, Line), ADD_MODE, Command.args[0]))
+				fputs(RED "Failed to append string\n" RESET, stderr);
 			break;
 		
 		case 'l': // SET LINE
@@ -306,16 +308,17 @@ int main(int argc, char* argv[])
 			break;
 		
 		case 'b': // GET BACKUP
-			if(backup(Filename))
-				printf(ITALIC CYAN "Backup file generated: %s\n", genBackupName(Filename));
+			if(!backup(Filename))
+				printf(ITALIC CYAN "Backup file generated: %s\n" RESET, genBackupName(Filename));
 			else
 				fprintf(stderr, RED "Failed to create a backup of %s: No such file or directory\n", Filename);
-			getchar();
+			PAUSE();
 			break;
 		
 		case 'h': // PRINT HELP
+			//! Control non-sensical arguments
 			display_help();
-			getchar();
+			PAUSE();
 			break;
 		
 		case 'n': // NEW LINE
@@ -342,7 +345,7 @@ int main(int argc, char* argv[])
 			}
 
 			// Add new line
-			if((status = addLine(&(LineBuffer->LineBuffer), &(LineBuffer->LB_Size), Command.args[0], Line)))
+			if((status = addLine(&LineBuffer, Command.args[0], Line)))
 				fprintf(stderr, RED"An error occured while trying to add a new line\n"
 						ITALIC "Error code: %d\n"RESET, status);
 			break;
@@ -366,8 +369,9 @@ int main(int argc, char* argv[])
 					printf(CYAN ITALIC "New working line set to %lu\n" RESET, Line);
 				}
 				else
-					fputs(CYAN ITALIC "Line 2 became line 1\n" RESET, stdout);
+					fputs(CYAN ITALIC "Line 2 became was shifted to line 1\n" RESET, stdout);
 
+				//! Embed in delLine()
 				if(LineBuffer->LB_Size == 0) {
 					free(LineBuffer);
 					LineBuffer = NULL;

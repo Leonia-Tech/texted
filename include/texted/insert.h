@@ -20,7 +20,7 @@ int getInsertArgs(char* args);
 char* strins(char* out, char* in, char ch);
 
 // Adds a new line before "Position".
-int addLine(char*** LineBuffer, size_t* Lines, char* NewLine, size_t Position);
+int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position);
 
 // Delete the "Del" line
 int delLine(LineBuffer_s* LineBuffer, size_t Del);

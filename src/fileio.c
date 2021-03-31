@@ -68,6 +68,9 @@ int app_save(char* Filename, char* Buffer)
 {
 	FILE* File;
 
+	if(!Buffer)
+		return ED_NULL_PTR;
+
 	File = fopen(Filename, "a");
 	if (!File)
 		return ED_NULL_FILE_PTR;
@@ -82,6 +85,9 @@ int app_save(char* Filename, char* Buffer)
 int save(char* Filename, char* Buffer)
 {
 	FILE* File;
+
+	if(!Buffer)
+		return ED_NULL_PTR;
 
 	File = fopen(Filename, "w");
 	if (!File)

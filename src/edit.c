@@ -68,6 +68,8 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 
 char* getLine(LineBuffer_s* linebuff, size_t Line)
 {
+	if(!linebuff)
+		return "\n";
 	if(!linebuff->LineBuffer)
 		return "\n";
 	return linebuff->LineBuffer[Line - 1];
@@ -75,7 +77,9 @@ char* getLine(LineBuffer_s* linebuff, size_t Line)
 
 char** getLinePtr(LineBuffer_s* linebuff, size_t Line)
 {
-	if(!linebuff->LineBuffer)
+	if(!linebuff)
+		return NULL;
+	else if(!linebuff->LineBuffer)
 		return NULL;
 	return &(linebuff->LineBuffer[Line - 1]);
 }
@@ -96,7 +100,6 @@ int freeLineBuffer(LineBuffer_s* linebuff)
 
 char* substitute(char** row, const char* _old, const char* _new)
 {
-	
 	char* ptr;		// Pointer to _old in row
 	char* edit;		// Temporary string
 	size_t size;	// New size
@@ -188,7 +191,15 @@ char* putstr(char** row, const char* _before, const char* _new)
 
 size_t getLineBufferSize(LineBuffer_s* linebuff)
 {
-	size_t counter = linebuff->LB_Size; // Null-terminator characters
+	size_t counter;
+
+	if(!linebuff)
+		return 0;
+	else if(!linebuff->LineBuffer)
+		return 0;
+	
+	counter = linebuff->LB_Size; // Null-terminator characters
+
 	for (size_t i = 0; i < linebuff->LB_Size; i++)
 		counter += strlen((linebuff->LineBuffer)[i]);
 
@@ -197,8 +208,17 @@ size_t getLineBufferSize(LineBuffer_s* linebuff)
 
 char* getBuffer(LineBuffer_s* linebuff)
 {
-	size_t size = getLineBufferSize(linebuff) + 1;
-	char* Buffer = (char*)malloc(size * sizeof(char));
+	size_t size;
+	char* Buffer;
+
+	if(!linebuff)
+		return NULL;
+
+	size = getLineBufferSize(linebuff) + 1;
+	if(!size)
+		return NULL;
+	
+	Buffer = (char*)malloc(size * sizeof(char));
 
 	empty(Buffer, strlen(Buffer));
 	for (size_t i = 0; i < linebuff->LB_Size; i++)
