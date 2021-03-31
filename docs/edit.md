@@ -67,7 +67,7 @@ Subtitute "_old" with "_new"
 ## ----------------------------------------------------
 
 ``` C 
-char* putstr(char** row, const char* _before, const char* _new);
+int putstr(char** row, const char* _before, const char* _new);
 ``` 
 
 Add before "_before"If "_before" is null, then add at the end of the line

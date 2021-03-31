@@ -137,10 +137,10 @@ char* substitute(char** row, const char* _old, const char* _new)
 	return *row;
 }
 
-char* putstr(char** row, const char* _before, const char* _new)
+int putstr(char** row, const char* _before, const char* _new)
 {
 	if(!row || !_new || !_new[0])
-		return NULL;
+		return ED_NULL_PTR;
 	
 	char* ptr;
 	char* edit;
@@ -151,7 +151,7 @@ char* putstr(char** row, const char* _before, const char* _new)
 	if(_before) {
 		ptr = strstr(*row, _before);
 		if(!ptr)
-			return NULL;
+			return ED_NULL_PTR;
 	}
 	
 	// Allocation of new space
@@ -160,7 +160,7 @@ char* putstr(char** row, const char* _before, const char* _new)
 	size += new_size - 1;
 
 	if(!row)
-		return NULL;
+		return ED_NULL_PTR;
 
 	if (_before) {
 		// After realloc ptr points to a non-valid location
@@ -186,7 +186,7 @@ char* putstr(char** row, const char* _before, const char* _new)
 		strcat(*row, _new); // If before is NULL we use this function to concatenate
 		strcat(*row, "\n");
 	}
-	return *row;
+	return ED_SUCCESS;
 }
 
 size_t getLineBufferSize(LineBuffer_s* linebuff)

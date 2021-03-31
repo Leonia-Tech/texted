@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
 
-	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE "\n", stdout);
+	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE RESET"\n", stdout);
 
 	// MAIN LOOP
 	for(;;)
@@ -264,7 +264,7 @@ int main(int argc, char* argv[])
 				if(!substitute(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
 					fprintf(stderr, RED "Failed to substitute\n" RESET);
 			} else if (Command.command == 'm') {
-				if(!putstr(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
+				if(putstr(getLinePtr(LineBuffer, Line), Command.args[0], Command.args[1]))
 					fprintf(stderr, RED "Failed to embed new token\n" RESET);
 			}
 
@@ -293,7 +293,7 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			if(!putstr(getLinePtr(LineBuffer, Line), ADD_MODE, Command.args[0]))
+			if(putstr(getLinePtr(LineBuffer, Line), ADD_MODE, Command.args[0]))
 				fputs(RED "Failed to append string\n" RESET, stderr);
 			break;
 		

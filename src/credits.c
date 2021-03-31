@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <unistd.h>
+#include <fcntl.h>
 #include <ncurses.h>
 #include <signal.h>
 
 #include <pthread.h>
 
-#include <credits/unirun.h>
 #include <credits/credits.h>
 
 /* 
@@ -21,7 +23,9 @@ void* quit_routine()
 
     for(char c = 0; (c = getch()) && c != 'q';);
     endwin();
-    kill(pid, SIGKILL);
+
+    if(~pid)
+        kill(pid, SIGKILL);
     exit(0);
 }
 
@@ -71,11 +75,33 @@ int credits(){
 pid_t mplay(char* Filepath)
 {
 	pid_t status = 0;
-	int nullcf = open("/dev/null", O_WRONLY);
-	if(!~nullcf){
-		return -1;
-	}
-	status = launch("mpv", genargs(4, "/usr/bin/mpv", "--no-video", Filepath, NULL), nullcf);
-	close(nullcf);
+    int nullcf;
+    
+    status = fork();
+    switch(status)
+    {
+    case -1:
+        return -1;
+    
+    case 0: // CHILD PROCESS
+        nullcf = open("/dev/null", O_WRONLY);
+        if(!~nullcf){
+            return -1;
+        }
+
+        if(!~dup2(nullcf, STDOUT_FILENO))
+            return -1;
+        if(!~dup2(nullcf, STDERR_FILENO))
+            return -1;
+        
+        close(nullcf);
+
+        if(!~execlp("mpv", "/usr/bin/mpv", "--no-video", Filepath, NULL))
+            return -1;
+    
+    default:
+        break;
+    }
+
 	return status;
 }

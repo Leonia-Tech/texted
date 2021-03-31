@@ -49,6 +49,6 @@ char* substitute(char** row, const char* _old, const char* _new);
 
 // Add before "_before"
 // If "_before" is null, then add at the end of the line
-char* putstr(char** row, const char* _before, const char* _new);
+int putstr(char** row, const char* _before, const char* _new);
 
 #endif // TEXTED_EDIT_H
