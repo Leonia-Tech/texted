@@ -18,6 +18,12 @@ texted - ed-like CLI text editor
 **-h**, **--help**
 : Display help and exit
 
+**-v**, **--version**
+: Display version and exit
+
+**--credits**
+: Display credits and exit
+
 ## Exit status:
 **0**
 : Success,

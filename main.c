@@ -31,8 +31,20 @@ int main(int argc, char* argv[])
 	} else if(streq(argv[1], "--help", 7) || streq(argv[1], "-h", 3)) {
 		display_help();
 		return 0;
-	} else if(streq(argv[1], "--credits", 9)) {
-		return credits();
+	} else if(streq(argv[1], "-v", 3) || streq(argv[1], "--version", 10) ) {
+		fputs(BOLD RED " / \\--------------, \n"
+			  RED " \\_,|             | \t" BLUE "TextEd\n"
+			  RED "    |    TextEd   | \t" BLUE "Version: " VERSION "\n"
+			  RED "    |  ,------------\n"
+			  RED "    \\_/___________/\n" RESET, stdout);
+		return 0;
+	}
+	
+	#ifndef ANDROID
+		else if(streq(argv[1], "--credits", 10)) {
+			return credits();
+	#endif
+	
 	} else {
 		Filename = argv[1];
 	}
