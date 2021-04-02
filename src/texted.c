@@ -37,28 +37,28 @@ void display_help()
 {
 	fputs(BOLD BLUE "--HELP--\n\n"
 
-		   "p:\t\tprint\n"
-		   "pl\t\tprint current line\n"
+		   "p\t\tprint\n"
+		   "pl\t\tprint current line (see l for changing the current line)\n"
 		   "pn\t\tprint with line numbers\n"
 		   "pln\t\tpl + pn\n"
 		   "p -p\t\tprint permissions\n\n"
 
-		   "i:\t\tinsert mode\n"
-		   "+w\t\tsave after quitting insert mode\n"
-		   "esc:\t\texit insert mode\n\n"
+		   "i\t\tinsert mode\n"
+		   "iw\t\tsave after quitting insert mode\n"
+		   "esc\t\texit insert mode\n\n"
 
-		   "w:\t\tsave\n"
-		   "x:\t\tsave and exit\n"
-		   "b:\t\tgenerate backup file\n"
-		   "q:\t\tquit\n\n"
+		   "w\t\tsave\n"
+		   "x\t\tsave and exit\n"
+		   "b\t\tgenerate backup file\n"
+		   "q\t\tquit\n\n"
 
-		   "s:\t\tsubstitute word (ed syntax)\n"
-		   "m:\t\tadd word before ... (ed syntax)\n"
-		   "a:\t\tappend at the end of the edit line\n"
-		   "l:\t\tset edit line\n\n"
+		   "s\t\tsubstitute word (ed syntax)\n"
+		   "m\t\tadd word before ... (ed syntax)\n"
+		   "a\t\tappend at the end of the current line\n"
+		   "l\t\tset current line (e.g. l 56 sets the current line to line 56)\n\n"
 
-		   "n:\t\tadd a new line before the edit line\n"
-		   "d:\t\tremove the edit line\n"RESET, stdout);
+		   "n\t\tadd a new line before the current line\n"
+		   "d\t\tremove the current line\n"RESET, stdout);
 }
 
 int argumentParser(char* raw_arg, size_t args_number, char** argument[])

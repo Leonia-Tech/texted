@@ -66,10 +66,12 @@ List of commmnads releated to print functionality
 
 ```
 p:		print
-pl		print current line
-pn		print with line numbers 
-pln		pl + pn
+pl:		print current line
+pn:		print with line numbers 
+pln:	pl + pn
 ```
+
+Use the `l` command to change the current line. 
 
 ### Save commands
 List of command releated to save functionality  
@@ -86,9 +88,10 @@ List of commands releated to word modyfing functionality
 s:		replace word (ed syntax)
 m:		insert word before ... (ed syntax)
 a:		insert at the end of line 
-l:		set the modify line 
+l:		set the current line
 
-n:		add line before modify line 
-d:		delete modify line
+n:		add line before the current line 
+d:		delete the current line
 ```
 
+The `l` command must be followd by a valid line number. The space between the line number and the l command isn't necessary.
