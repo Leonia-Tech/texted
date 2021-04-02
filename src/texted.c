@@ -40,6 +40,7 @@ void display_help()
 		   "p\t\tprint\n"
 		   "pl\t\tprint current line (see l for changing the current line)\n"
 		   "pn\t\tprint with line numbers\n"
+		   "pn <num>\t\t print line <num> without changing the current line\n"
 		   "pln\t\tpl + pn\n"
 		   "p -p\t\tprint permissions\n\n"
 
@@ -55,7 +56,7 @@ void display_help()
 		   "s\t\tsubstitute word (ed syntax)\n"
 		   "m\t\tadd word before ... (ed syntax)\n"
 		   "a\t\tappend at the end of the current line\n"
-		   "l\t\tset current line (e.g. l 56 sets the current line to line 56)\n\n"
+		   "l <num>\t\tset current line to <num>\n\n"
 
 		   "n\t\tadd a new line before the current line\n"
 		   "d\t\tremove the current line\n"RESET, stdout);

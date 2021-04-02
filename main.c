@@ -110,6 +110,22 @@ int main(int argc, char* argv[])
 				ed_print(LineBuffer, 0);
 			} else if (streq(Command.args[0], "n", 2)) {
 				ed_print(LineBuffer, 1);
+			} else if(Command.args[0][0] == 'n') {
+				// Print a line without changing the current line
+				//! NEW FUNCTION --> find bugs
+				// "counter" as temporary variable
+				counter = strtoul(Command.args[0] + 1, NULL, 10);
+				if(!(counter != 0 && counter < ULONG_MAX && LineBuffer && counter <= LineBuffer->LB_Size)) {
+					fprintf(stderr, RED"Wrong line number\n"RESET);
+					goto exit_print;
+				}
+				
+				if(LineBuffer)
+					printf("%lu   %s", counter, getLine(LineBuffer, counter));
+
+				// Newline coherence
+				if(LineBuffer && counter != LineBuffer->LB_Size)
+					goto exit_print;
 			} else if (streq(Command.args[0], "l", 2)) {
 				fputs(getLine(LineBuffer, Line), stdout);
 
