@@ -6,7 +6,7 @@ def SyntaxParser(language, inFile):
     # Boolean init
     allowKeywords = True
     isComment = isPunctuation = isDirective = isDoubleStr = isMultiline = False
-    words = re.split(r'([({\t\s!"''%&,:;=?^|~!})])', inFile)
+    words = re.split(r'([({\t\s!"''%&,:;<=>?^|~!})])', inFile)
     for n in range(len(words)):
         if words[n] == '\n':
             # Reset booleans
@@ -39,20 +39,25 @@ def SyntaxParser(language, inFile):
         elif isMultiline:
             print(green + words[n] + reset, end='')
         elif "/" in words[n] or "*" in words[n]:
-            list1 = re.split(r'([/*])', words[n])
-            for i in range(len(list1)):
-                if list1[i] == '/' or list1[i] == '*':
-                    print(red + list1[i] + reset, end='')
+            listed = re.split(r'([/*])', words[n])
+            for i in range(len(listed)):
+                if listed[i] == '/' or listed[i] == '*':
+                    print(red + listed[i] + reset, end='')
                 else:
-                    print(list1[i], end='')
+                    if listed[i] in language.keyw and allowKeywords:
+                        print(bold_yellow + listed[i] + reset, end='')
+                    else:
+                        print(listed[i], end='')
         elif language.dir in words[n]:
             print(magenta + words[n] + reset, end='')
             isDirective = True
             allowKeywords = False
             isPunctuation = False
-        elif '<' in words[n] and isDirective and language.name == "C":
-            print(cyan + words[n] + reset, end='')
+        elif '<' in words[n] and isDirective:
+            print(cyan + words[n], end='')
             allowKeywords = False
+        elif '>' in words[n] and isDirective:
+            print(words[n] + reset, end='')
         elif language.string[0] in words[n]:
             if not isDoubleStr:
                 print(cyan + words[n], end='')
@@ -83,7 +88,7 @@ def main():
     try:
         if len(sys.argv) == 2:
             extension = (sys.argv[1]).split(".")
-            if extension[1] == "C" or extension[1] == 'c' or extension == 'cpp':
+            if extension[len(extension)-1] == "C" or extension[len(extension)-1] == 'c' or extension[len(extension)-1] == 'cpp':
                 with open(sys.argv[1], "r") as File:
                     from C import C_Keywords, C_Punctuation, C_Comment
                     lang = language(C_Keywords, C_Punctuation, "#", C_Comment, "C")
