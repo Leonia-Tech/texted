@@ -107,6 +107,7 @@ finfo_s* finfo(const char* Filename)
 		struct stat st;
 
 		if(!~stat(Filename, &st)) {
+			free(fi);
 			return NULL;
 		}
 	}while(0);
@@ -130,6 +131,10 @@ char* get_extension(const char* Filename)
 
 	if(strchr(Filename + 1, '.')) {
 		tmp = strtok(fname, ".");
+		if(!tmp) {
+			free(fname);
+			return NULL;
+		}
 		tmp = strtok(NULL, ".");
 		tmp = strdup(tmp);
 	} else {
@@ -200,8 +205,6 @@ int usr_info_free(usr_info_s* usr)
 	free(usr->usr_name);
 	free(usr->usr_group);
 
-	free(usr);
-
 	return ED_SUCCESS;
 }
 
@@ -215,8 +218,11 @@ mode_t get_caller_permissions_mask(char* Filename)
 
 	user = usr_info();
 	file = finfo(Filename);	//! MEMORY LEAK
-	if(!file)
+	if(!file) {
+		usr_info_free(user);
+		free(user);
 		return -1;
+	}
 
 	// Check if user is file user
 	if(streq(user->usr_name, file->fi_user, MIN(strlen(user->usr_name), strlen(file->fi_name))))
@@ -227,11 +233,15 @@ mode_t get_caller_permissions_mask(char* Filename)
 		user_mask |= 0007;
 	
 	file_mask = get_file_permissions(Filename);
-	if(!~file_mask)
-		return -1;
 
 	finfo_free(file);
 	free(file);
+	usr_info_free(user);
+	free(user);
+
+	if(!file_mask)
+		return -1;
+	
 	return user_mask & file_mask;
 }
 

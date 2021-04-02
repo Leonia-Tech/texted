@@ -421,6 +421,8 @@ int main(int argc, char* argv[])
 loop_exit:
 	remove(TMP_PATH);
 	free(Prompt);
+	rl_clear_history();
+	clear_history();
 	free(Command.args);
 	freeLineBuffer(LineBuffer);		// Free the elements of LineBuffer
 	free(LineBuffer);				// Free LineBuffer

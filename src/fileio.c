@@ -141,12 +141,17 @@ int backup(char* Filename)
 	BackupName = genBackupName(Filename);
 
 	From = fopen(Filename, "r");
-	if (!From)
+	if (!From) {
+		free(BackupName);
 		return ED_NULL_FILE_PTR;
+	}
 	
 	To = fopen(BackupName, "w");
-	if (!To)
+	if (!To) {
+		fclose(From);
+		free(BackupName);
 		return ED_NULL_FILE_PTR;
+	}
 
 	while (fgets(Buffer, LINE_SIZE, From))
 		fprintf(To, "%s", Buffer);

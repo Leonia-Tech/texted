@@ -62,7 +62,7 @@ char* run(char* program, char* args[], int* status)
 
 int launch(char* program, char* args[], int fd)
 {
-    int status;
+    int status = 0;
 
     switch (fork())
     {
@@ -103,7 +103,7 @@ int launch(char* program, char* args[], int fd)
 char** genargs(size_t size, ...)
 {
     va_list _arg_list;
-    char** args = (char**) calloc(size, sizeof(char**));
+    char** args = (char**) calloc(size, sizeof(char*));
 
     va_start(_arg_list, size);
     for(size_t i = 0; i < size; ++i)

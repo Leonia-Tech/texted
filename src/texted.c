@@ -60,6 +60,8 @@ void display_help()
 		   "a\t\tappend at the end of the current line\n"
 		   "l <num>\t\tset current line to <num>\n\n"
 
+		   "!\t\trun bash command\n\n"
+
 		   "n\t\tadd a new line before the current line\n"
 		   "d\t\tremove the current line\n"RESET, stdout);
 }
