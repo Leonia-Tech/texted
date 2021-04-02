@@ -232,6 +232,7 @@ mode_t get_caller_permissions_mask(char* Filename)
 	if(!~file_mask)
 		return -1;
 
+	finfo_free(file);
 	return user_mask & file_mask;
 }
 

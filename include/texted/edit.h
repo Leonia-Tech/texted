@@ -44,8 +44,8 @@ size_t getLineBufferSize(LineBuffer_s* linebuff);
 
 /* ------------------------------------------------- */
 
-// Substitute "_old" with "_new"
-int substitute(char** row, const char* _old, const char* _new);
+// Substitute "orig" with "rep"
+int substitute(char** str, char* orig, char* rep);
 
 // Add before "_before"
 // If "_before" is null, then add at the end of the line

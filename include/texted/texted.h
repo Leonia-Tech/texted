@@ -33,6 +33,7 @@
 #define ED_FUNCTION_ERROR	0x06
 #define ED_ERRNO			0x07
 #define ED_NULL_PTR			0x08
+#define ED_MEMORY_ERROR		0x09
 
 // Color definitions
 #define RED     	"\x1b[31m"

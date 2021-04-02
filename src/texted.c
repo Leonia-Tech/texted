@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <texted/edit.h>
 #include <texted/fileio.h>
@@ -67,10 +69,15 @@ int argumentParser(char* raw_arg, size_t args_number, char** argument[])
 	char* tmp;
 	
 	tmp = strdup(raw_arg);
+	if(!tmp) {
+		return ED_ERRNO;
+	}
 	
 	// Check syntax
-	if(tmp[0] != '/' || (args_number == 1 ? (strocc(tmp+1, '/') > args_number) : (strocc(tmp+1, '/') != args_number)))
+	if(tmp[0] != '/' || (args_number == 1 ? (strocc(tmp+1, '/') > args_number) : (strocc(tmp+1, '/') != args_number))) {
+		free(tmp);
 		return ED_WRONG_SYNTAX;
+	}
 	
 	// Extract token
 	(*argument)[0] = strtok(tmp+1, "/");

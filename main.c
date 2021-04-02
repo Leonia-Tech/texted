@@ -87,7 +87,10 @@ int main(int argc, char* argv[])
 			    Filename);
 		
 		Command.raw_command = readline(Prompt);
-		add_history(Command.raw_command);
+		if(Command.raw_command && *Command.raw_command)
+			add_history(Command.raw_command);
+		else
+			continue;
 		
 		Command.command = Command.raw_command[0];
 
@@ -395,13 +398,15 @@ int main(int argc, char* argv[])
 				fprintf(stderr, RED "Invalid command\n" RESET);
 			break;
 		}
+
+		free(Command.raw_command);
 	}
 
 loop_exit:
 	remove(TMP_PATH);
 	free(Prompt);
-	free(Command.raw_command);
 	free(Command.args);
-	freeLineBuffer(LineBuffer);
+	freeLineBuffer(LineBuffer);		// Free the elements of LineBuffer
+	free(LineBuffer);				// Free LineBuffer
 	return 0;
 }

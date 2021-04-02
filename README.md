@@ -28,7 +28,9 @@ To compile the program follow these instructions:
     ```
 *Note: If you don't have mpv installed some functionalities may not work as intended. The programm should still be perfectly usable, though.*
 
-*Note: You must have ncurses development library in order to compile this software*
+*Note: You must have ncurses development library (ncurses-devel) in order to compile this software*
+
+*Note: You must have readline development library (readline-devel) in order to compile this software*
 
 ### Remove
 To remove the app keep the `Makefile` and run:

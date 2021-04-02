@@ -92,55 +92,33 @@ int freeLineBuffer(LineBuffer_s* linebuff)
 		for (size_t i = 0; i < linebuff->LB_Size; i++)
 			free(linebuff->LineBuffer[i]);
 	}
-	
-	free(linebuff);
 	return ED_SUCCESS;
 }
 
-int substitute(char** row, const char* _old, const char* _new)
-{
-	char* ptr;		// Pointer to _old in row
-	char* edit;		// Temporary string
-	size_t size;	// New size
-	int status = 0;	// Return value
 
-	if(!row || !(ptr = strstr(*row, _old)))
+int substitute(char** str, char* orig, char* rep)
+{
+	char* buffer = NULL;
+	char *p;
+
+	// Is 'orig' even in 'str'?
+	if(!(p = strstr(*str, orig)))
 		return ED_WRONG_SYNTAX;
 	
-	if(_new == NULL)
-		_new = "";
+	char* temp = malloc(strlen(*str) + strlen(rep) - strlen(orig) + 1);
+	if(!temp)
+		return ED_MEMORY_ERROR;
+	buffer = temp;
 
-	size = strlen(*row) - strlen(_old) + strlen(_new);
-	edit = (char*)malloc(size * sizeof(char));
+	// Copy characters from 'str' start to 'orig' st$
+	strncpy(buffer, *str, p-(*str));
+	buffer[p-(*str)] = '\0';
 
-	if(!row)
-		return ED_NULL_PTR;
+	sprintf(buffer+(p-(*str)), "%s%s", rep, p+strlen(orig));
 
-	empty(edit, size);
-
-	// Copy untill old
-	strncpy(edit, *row, (int)(ptr - *row));
-
-	// Add new
-	strcat(edit, _new);
-
-	// Add after old
-	ptr += strlen(_old);
-	if(ptr[0])
-		strcat(edit, ptr);
-
-	// Move to *row and free temporary string
-	char* temp = realloc(*row, size);
-	if(!temp) {
-		free(edit);
-		return ED_NULL_FILE_PTR;
-	}
-	*row = temp;
-
-	strcpy(*row, edit);
-	free(edit);
-
-	return status;
+	free(str);
+	*str = buffer;
+	return ED_SUCCESS;
 }
 
 int putstr(char** row, const char* _before, const char* _new)
