@@ -19,7 +19,7 @@ int get_temp()  { return temp; }
 char* loadFile(char* Filename)
 {
 	FILE* File;
-	size_t FileSize = 0;
+	ssize_t FileSize = 0;
 	char* Buffer = NULL;
 
 	if(get_temp())
@@ -27,13 +27,15 @@ char* loadFile(char* Filename)
 
 	// Check file size
 	FileSize = getFileSize(Filename);
-	if(FileSize > 0) {
-		// Allocate FileSize space for the Buffer
-		Buffer = malloc(FileSize * sizeof(char));
-		empty(Buffer, FileSize);
-	} else {
-		if(errno != ENOENT)
-			return NULL;
+	if(FileSize == 0) return NULL;
+
+	// Allocate FileSize space for the Buffer
+	Buffer = malloc(FileSize * sizeof(char) + 1);
+
+	// Defensive
+	if(!Buffer) {
+		fputs(RED "DIE\n" RESET, stderr);
+		exit(1);
 	}
 
 	// Open file
@@ -41,6 +43,8 @@ char* loadFile(char* Filename)
 	if (!File) {
 		// If there is no file create it
 		if(createFile() == ED_NULL_FILE_PTR) {
+			if(Buffer)
+				free(Buffer);
 			return NULL;
 		}
 	}
@@ -52,14 +56,17 @@ char* loadFile(char* Filename)
 	}
 
 	// Read the whole file
-	if(!fread(Buffer, FileSize, sizeof(char), File))
-		fputs(RED "Failed to read the File\n" RESET, stderr);
+	ssize_t n;
+	if((n = fread(Buffer, sizeof(char), FileSize, File)) != FileSize) {
+		fprintf(stderr, RED "Error on read file(%ld): %s\n" RESET, n, strerror(errno));
+		exit(1);
+	}
 
 	fclose(File);
 	return Buffer;
 }
 
-size_t getFileSize(char* Filename)
+ssize_t getFileSize(char* Filename)
 {
 	struct stat st;
 	return st.st_size *= ((stat(Filename, &st) + 1) != 0);

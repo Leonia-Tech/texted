@@ -153,9 +153,6 @@ int main(int argc, char* argv[])
 				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
 				Buffer = insert();
-				if(!Buffer) {
-					goto exit_insert;
-				}
 
 				// Make LineBuffer from Buffer
 				if(!LineBuffer)
@@ -169,9 +166,6 @@ int main(int argc, char* argv[])
 				// Load Buffer
 				fputs("--INSERT MODE--\n", stdout);
 				Buffer = insert();
-				if(!Buffer) {
-					goto exit_insert;
-				}
 
 				// Append to file
 				app_save(Filename, Buffer);
@@ -191,7 +185,6 @@ int main(int argc, char* argv[])
 				fputs(RED"Wrong syntax for the insert (i) command\n"RESET, stderr);
 			}
 
-		exit_insert:
 			PAUSE();
 			if(Buffer) {
 				free(Buffer);

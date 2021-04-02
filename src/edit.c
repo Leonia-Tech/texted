@@ -130,11 +130,14 @@ int substitute(char** row, const char* _old, const char* _new)
 		strcat(edit, ptr);
 
 	// Move to *row and free temporary string
-	*row = realloc(*row, size);
-	if(!(*row))
-		status = ED_NULL_FILE_PTR;
-	else
-		strcpy(*row, edit);
+	char* temp = realloc(*row, size);
+	if(!temp) {
+		free(edit);
+		return ED_NULL_FILE_PTR;
+	}
+	*row = temp;
+
+	strcpy(*row, edit);
 	free(edit);
 
 	return status;
@@ -162,9 +165,12 @@ int putstr(char** row, const char* _before, const char* _new)
 	}
 	
 	// Allocation of new space
-	*row = realloc(*row, (size + new_size - 1) * sizeof(char));
-	if(!(*row))
+	char* temp = realloc(*row, (size + new_size - 1) * sizeof(char));
+	if(!temp)
 		return ED_NULL_PTR;
+	
+	*row = temp;
+	
 	empty(*row + size, new_size - 1);
 	size += new_size - 1;
 

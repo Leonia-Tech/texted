@@ -5,7 +5,7 @@
 ``` C
 char* insert();
 ``` 
-insert mode
+This function is used to read input into a dynamically expandible Buffer untill ESC or EOF is met.
 
 ## ------------------------------------------------------
 

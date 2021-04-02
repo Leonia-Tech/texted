@@ -38,10 +38,10 @@ void display_help()
 	fputs(BOLD BLUE "--HELP--\n\n"
 
 		   "p:\t\tprint\n"
-		   "+l\t\tcurrent line\n"
-		   "+n\t\twith line numbers\n"
-		   "+ln\t\t-l + -n\n"
-		   "+ -p\t\tprint permissions\n\n"
+		   "pl\t\tprint current line\n"
+		   "pn\t\tprint with line numbers\n"
+		   "pln\t\tpl + pn\n"
+		   "p -p\t\tprint permissions\n\n"
 
 		   "i:\t\tinsert mode\n"
 		   "+w\t\tsave after quitting insert mode\n"

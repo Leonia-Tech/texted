@@ -14,25 +14,26 @@ char* insert()
 	empty(Buffer, size);
 
 	// Ask for characters until ESC is pressed
-	for(char c = 0; (c = getchar()) != ESC; ++counter) {
-		Buffer[counter] = c;
+	char c;
+	while((c = getchar()) != ESC && c != EOF) {
+		Buffer[counter++] = c;
 
 		// If the buffer exceeds the size, expand the buffer by INC.
 		if (counter >= size - 1){
-			Buffer = realloc(Buffer, (size + INC) * sizeof(char));
-			if(!Buffer)
-				return NULL;
-			empty(&Buffer[size], INC);
+			char* temp = realloc(Buffer, (size + INC) * sizeof(char));
+			if(!temp) {
+				// It's better to always return a valid pointer
+				// In this case there is never an error and the handling on the caller's side is easier.
+				*Buffer = 0;
+				return Buffer;
+			}
+			Buffer = temp;
 			size += INC;
 		}
 	}
 
-	if(Buffer[0]) {
-		return Buffer;
-	} else {
-		free(Buffer);
-		return NULL;
-	}
+	Buffer[counter] = 0;
+	return Buffer;
 }
 
 LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
@@ -45,12 +46,14 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	--(lb1->LB_Size);
 
 	// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
-	lb1->LineBuffer = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
+	char** temp = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
 	(lb1->LineBuffer)[lb1->LB_Size] = realloc((lb1->LineBuffer)[lb1->LB_Size],
 												strlen((lb1->LineBuffer)[lb1->LB_Size])  + 
 												strlen((lb2->LineBuffer)[0]) + 1);
-	if(!(lb1->LineBuffer)[lb1->LB_Size])
+	if(!temp)
 		return NULL;
+	
+	lb1->LineBuffer = temp;
 	
 	strcat((lb1->LineBuffer)[lb1->LB_Size], (lb2->LineBuffer)[0]);
 
