@@ -116,7 +116,6 @@ int substitute(char** str, char* orig, char* rep)
 
 	sprintf(buffer+(p-(*str)), "%s%s", rep, p+strlen(orig));
 
-	free(str);
 	*str = buffer;
 	return ED_SUCCESS;
 }

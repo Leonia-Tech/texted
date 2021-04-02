@@ -155,8 +155,6 @@ int finfo_free(finfo_s* fi)
 	if(fi->fi_extension)
 		free(fi->fi_extension);
 
-	free(fi);
-
 	return ED_SUCCESS;
 }
 
@@ -216,7 +214,7 @@ mode_t get_caller_permissions_mask(char* Filename)
 	finfo_s* file;
 
 	user = usr_info();
-	file = finfo(Filename);
+	file = finfo(Filename);	//! MEMORY LEAK
 	if(!file)
 		return -1;
 
@@ -233,6 +231,7 @@ mode_t get_caller_permissions_mask(char* Filename)
 		return -1;
 
 	finfo_free(file);
+	free(file);
 	return user_mask & file_mask;
 }
 
