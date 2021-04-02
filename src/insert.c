@@ -189,6 +189,7 @@ int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position)
 
 // Delete Line number Del (Line count starts from 1)
 //! Bloated
+//! Huge memory leak
 int delLine(LineBuffer_s** LineBuffer, size_t Del)
 {
     int Last = 0;
@@ -208,6 +209,7 @@ int delLine(LineBuffer_s** LineBuffer, size_t Del)
 	{
 		// If only one line, deallocate the LineBuffer
 		if((*LineBuffer)->LB_Size == 1) {
+			freeLineBuffer(*LineBuffer);
 			free(*LineBuffer);
 			*LineBuffer = NULL;
 			return ED_SUCCESS;
@@ -230,13 +232,18 @@ int delLine(LineBuffer_s** LineBuffer, size_t Del)
 		(*LineBuffer)->LineBuffer[Del][Len - 1] = '\0';
 	}
 
-	NewLineBuffer = malloc((*LineBuffer)->LB_Size - 1 * sizeof(char*));
+	NewLineBuffer = malloc(((*LineBuffer)->LB_Size - 1) * sizeof(char*));
+	if(!NewLineBuffer) {
+		return ED_MEMORY_ERROR;
+	}
 
 	// Copy LineBuffer to NewLineBuffer
 	for(size_t i = 0, n = 0; i < (*LineBuffer)->LB_Size; i++)
 		if((*LineBuffer)->LineBuffer[i])
 			NewLineBuffer[n++] = (*LineBuffer)->LineBuffer[i];
 	
+
+	free((*LineBuffer)->LineBuffer);
 	(*LineBuffer)->LineBuffer = NewLineBuffer;
 	(*LineBuffer)->LB_Size--;
     

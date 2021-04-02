@@ -393,7 +393,6 @@ int main(int argc, char* argv[])
 				break;
 			}
 
-			PAUSE();
 			if(delLine(&LineBuffer, Line))
 				fprintf(stderr, RED"An error occured while trying to remove line no. %lu\n"
 						"Error code: %d\n"RESET, Line, status);
@@ -419,11 +418,12 @@ int main(int argc, char* argv[])
 	}
 
 loop_exit:
-	remove(TMP_PATH);
-	free(Prompt);
-	rl_clear_history();
-	clear_history();
-	free(Command.args);
+	remove(TMP_PATH);				// Remove the temporary file
+	free(Prompt);					// Free the prompt
+	rl_clear_history();				// Clean extra info written to the history by readline
+	clear_history();				// Clear the history of readline
+	caller_user_info_free();		// Free the informations about the user needed for permission checks
+	free(Command.args);				// Free the array of arguments
 	freeLineBuffer(LineBuffer);		// Free the elements of LineBuffer
 	free(LineBuffer);				// Free LineBuffer
 	return 0;

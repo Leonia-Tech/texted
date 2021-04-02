@@ -46,6 +46,10 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 	// Handle NULL buffer
 	if(Buffer && Buffer[0]) {
 		linebuff->LineBuffer = (char**)malloc(linebuff->LB_Size * sizeof(char*));
+		if(!linebuff->LineBuffer) {
+			free(linebuff);
+			return NULL;
+		}
 		empty(linebuff->LineBuffer, linebuff->LB_Size);
 	} else {
 		free(linebuff);
@@ -228,9 +232,9 @@ char* getBuffer(LineBuffer_s* linebuff)
 	if(!temp)
 		return NULL;
 	
+	empty(temp, size * sizeof(char));
 	Buffer = temp;
 
-	empty(Buffer, strlen(Buffer));
 	for (size_t i = 0; i < linebuff->LB_Size; i++)
 		strcat(Buffer, linebuff->LineBuffer[i]);
 

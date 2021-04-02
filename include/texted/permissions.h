@@ -30,12 +30,17 @@ typedef struct {
 } usr_info_s;
 
 // Initialize a usr_info_s structure
-usr_info_s* usr_info();
+// usr_info_s* usr_info();
 
 char* get_extension(const char* Filename);
 
 // Free a usr_info_s structure
-int usr_info_free(usr_info_s* usr);
+// int usr_info_free(usr_info_s* usr);
+
+// Free user info about the caller (always run if you run a function which uses usr_info())
+int caller_user_info_free();
+
+// Notice that the usr_info are taken once the program is run for the first time
 
 /* -------------------------------- */
 

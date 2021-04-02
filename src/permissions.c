@@ -12,6 +12,8 @@
 #include <texted/edit.h>
 #include <texted/texted.h>
 
+static usr_info_s* caller_user = NULL;
+
 mode_t get_file_permissions(const char* Filename)
 {
 	struct stat st;
@@ -208,26 +210,34 @@ int usr_info_free(usr_info_s* usr)
 	return ED_SUCCESS;
 }
 
+int caller_user_info_free()
+{
+	if(!caller_user)
+		return ED_NULL_PTR;
+	
+	usr_info_free(caller_user);
+	free(caller_user);
+	caller_user = NULL;
+	return ED_SUCCESS;
+}
+
 // Return caller permission mask
 mode_t get_caller_permissions_mask(char* Filename)
 {
 	mode_t user_mask = 0;
 	mode_t file_mask;
-	usr_info_s* user;
 	finfo_s* file;
 
-	user = usr_info();
-	file = finfo(Filename);	//! MEMORY LEAK
-	if(!file) {
-		usr_info_free(user);
-		free(user);
+	if(!caller_user)
+		caller_user = usr_info();
+	file = finfo(Filename);
+	if(!file)
 		return -1;
-	}
 
 	// Check if user is file user
-	if(streq(user->usr_name, file->fi_user, MIN(strlen(user->usr_name), strlen(file->fi_name))))
+	if(streq(caller_user->usr_name, file->fi_user, MIN(strlen(caller_user->usr_name), strlen(file->fi_name))))
 		user_mask |= 0700;
-	else if(streq(user->usr_group, file->fi_group, MIN(strlen(user->usr_group), strlen(file->fi_group))))
+	else if(streq(caller_user->usr_group, file->fi_group, MIN(strlen(caller_user->usr_group), strlen(file->fi_group))))
 		user_mask |= 0070;
 	else
 		user_mask |= 0007;
@@ -236,8 +246,6 @@ mode_t get_caller_permissions_mask(char* Filename)
 
 	finfo_free(file);
 	free(file);
-	usr_info_free(user);
-	free(user);
 
 	if(!file_mask)
 		return -1;
