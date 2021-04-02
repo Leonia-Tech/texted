@@ -61,19 +61,11 @@ void display_help()
 		   "d:\t\tremove the edit line\n"RESET, stdout);
 }
 
-int argumentParser(char* raw_arg, int del_new_line, size_t args_number, char** argument[])
+int argumentParser(char* raw_arg, size_t args_number, char** argument[])
 {
 	char* tmp;
-	char* nl;
 	
 	tmp = strdup(raw_arg);
-
-	// Delete newline if any (needed)
-	if(del_new_line) {
-		nl = strchr(tmp, '\n');
-		if(nl)
-			nl[0] = '\0';
-	}
 	
 	// Check syntax
 	if(tmp[0] != '/' || (args_number == 1 ? (strocc(tmp+1, '/') > args_number) : (strocc(tmp+1, '/') != args_number)))
@@ -81,11 +73,8 @@ int argumentParser(char* raw_arg, int del_new_line, size_t args_number, char** a
 	
 	// Extract token
 	(*argument)[0] = strtok(tmp+1, "/");
-	for(size_t i = 1; i < args_number; ++i) {
+	for(size_t i = 1; i < args_number; ++i)
 		(*argument)[i] = strtok(NULL, "/");
-		if((*argument)[i][0] == '\n')
-			(*argument)[i] = "";
-	}
 	
 	return ED_SUCCESS;
 }

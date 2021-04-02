@@ -19,7 +19,7 @@
 int main(int argc, char* argv[])
 {
 	char* Buffer = NULL;					// Continuous buffer
-	char* Prompt = NULL;
+	char* Prompt = NULL;					// Prompt
 	char* Filename;							// Name of open file
 	LineBuffer_s* LineBuffer;				// Array of lines
 	size_t Line = 1;						// Selected row
@@ -245,7 +245,7 @@ int main(int argc, char* argv[])
 			}
 			
 			// Read arguments
-			status = argumentParser(Command.raw_command + 1, 0, 2, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 2, &(Command.args));
 
 			// Error handling
 			if(status == ED_ERRNO) {
@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
 			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			status = argumentParser(Command.raw_command + 1, 1, 1, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {
@@ -336,7 +336,7 @@ int main(int argc, char* argv[])
 			Command.args[1] = NULL;
 
 			// Read and interpret argument
-			status = argumentParser(Command.raw_command + 1, 0, 1, &(Command.args));
+			status = argumentParser(Command.raw_command + 1, 1, &(Command.args));
 
 			// Error Handling
 			if(status == ED_ERRNO) {

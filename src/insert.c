@@ -132,8 +132,16 @@ int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position)
 	NewLine = strdup(NewLine);
 	NewLen = strlen(NewLine);
 
+	// Add newline
+	if(!realloc(NewLine, NewLen + 2)) {
+		free(NewLine);
+		return ED_NULL_PTR;
+	}
+	NewLine[NewLen] = '\n';
+	NewLine[NewLen+1] = '\0';
+
 	// Error handling
-    if(!NewLine || (NewLen && NewLine[NewLen - 1] != '\n'))
+    if(!NewLine || !NewLen)
         return ED_BAD_LINE_FORMAT;
     
     if(Position < 1 || Position > (*LineBuffer)->LB_Size) {
