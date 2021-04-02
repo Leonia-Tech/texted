@@ -34,7 +34,13 @@ LineBuffer_s* getLineBuffer(char* Buffer)
 	char* ptr;
 	size_t Length = 0;
 
+	if(!(Buffer && *Buffer))
+		return NULL;
+	
 	linebuff = malloc(sizeof(LineBuffer_s));
+	if(!linebuff)
+		return NULL;
+	
 	linebuff->LB_Size = strocc(Buffer, '\n') + 1;
 
 	// Handle NULL buffer
@@ -209,7 +215,7 @@ size_t getLineBufferSize(LineBuffer_s* linebuff)
 char* getBuffer(LineBuffer_s* linebuff)
 {
 	size_t size;
-	char* Buffer;
+	char* Buffer = NULL;
 
 	if(!linebuff)
 		return NULL;
@@ -218,7 +224,11 @@ char* getBuffer(LineBuffer_s* linebuff)
 	if(!size)
 		return NULL;
 	
-	Buffer = (char*)malloc(size * sizeof(char));
+	char* temp = (char*)malloc(size * sizeof(char));
+	if(!temp)
+		return NULL;
+	
+	Buffer = temp;
 
 	empty(Buffer, strlen(Buffer));
 	for (size_t i = 0; i < linebuff->LB_Size; i++)

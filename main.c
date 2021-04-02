@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
 
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
-	Command.raw_command = malloc(ED_ARG_SZ);
 
 	//Initialize Prompt
 	Prompt = malloc(strlen(Filename) + 30);

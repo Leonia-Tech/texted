@@ -46,14 +46,23 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	--(lb1->LB_Size);
 
 	// Concatenation of the first string of the temporary buffer with the last string of the LineBuffer
-	char** temp = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
-	(lb1->LineBuffer)[lb1->LB_Size] = realloc((lb1->LineBuffer)[lb1->LB_Size],
-												strlen((lb1->LineBuffer)[lb1->LB_Size])  + 
-												strlen((lb2->LineBuffer)[0]) + 1);
-	if(!temp)
-		return NULL;
-	
-	lb1->LineBuffer = temp;
+	do {
+		char** temp = realloc(lb1->LineBuffer, (lb1->LB_Size + lb2->LB_Size) * sizeof(char*));
+		if(!temp)
+			return NULL;
+		lb1->LineBuffer = temp;
+	}while(0);
+
+	do {
+		char* temp = realloc((lb1->LineBuffer)[lb1->LB_Size],
+													strlen((lb1->LineBuffer)[lb1->LB_Size])  + 
+													strlen((lb2->LineBuffer)[0]) + 1);
+		if(!temp) {
+			free(lb1->LineBuffer);
+			return NULL;
+		}
+		(lb1->LineBuffer)[lb1->LB_Size] = temp;
+	}while(0);
 	
 	strcat((lb1->LineBuffer)[lb1->LB_Size], (lb2->LineBuffer)[0]);
 
@@ -80,6 +89,7 @@ LineBuffer_s* concatenateBuffer(LineBuffer_s* LineBuffer, char* Buffer)
 	LineBuffer = concatenateLineBuffer(LineBuffer, ExtraLineBuffer);
 	
 	freeLineBuffer(ExtraLineBuffer);
+	free(ExtraLineBuffer);
 	return LineBuffer;
 }
 
@@ -109,6 +119,7 @@ char* strins(char* out, char* in, char ch)
 		// Adds the remaining
 		strcat(newStr, AfterPoint);
 	} else {
+		free(newStr);
 		return NULL;
 	}
 
@@ -139,18 +150,22 @@ int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position)
 	NewLen = strlen(NewLine);
 
 	// Add newline
-	if(!realloc(NewLine, NewLen + 2)) {
+	char* temp = realloc(NewLine, NewLen + 2);
+	if(!temp) {
 		free(NewLine);
 		return ED_NULL_PTR;
 	}
+	NewLine = temp;
+
 	NewLine[NewLen] = '\n';
 	NewLine[NewLen+1] = '\0';
 
 	// Error handling
-    if(!NewLine || !NewLen)
+    if(!NewLine)
         return ED_BAD_LINE_FORMAT;
     
     if(Position < 1 || Position > (*LineBuffer)->LB_Size) {
+		free(NewLine);
         return ED_BUFFER_OVERFLOW;
 	}
     

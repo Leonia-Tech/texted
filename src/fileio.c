@@ -31,6 +31,8 @@ char* loadFile(char* Filename)
 
 	// Allocate FileSize space for the Buffer
 	Buffer = malloc(FileSize * sizeof(char) + 1);
+	// Valgrind wants me to initialize the Buffer
+	empty(Buffer, FileSize * sizeof(char) + 1);
 
 	// Defensive
 	if(!Buffer) {
