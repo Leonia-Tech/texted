@@ -14,14 +14,12 @@ def SyntaxParser(language, inFile):
             allowKeywords = True
             if isComment:
                 isComment = False
-            if isDirective:
-                isDirective = False
             if isDoubleStr:
                 isDoubleStr = False
             if not isMultiline:
                 print(reset, end='')
             print()
-        elif words[n] == language.comments[0]:
+        elif language.comments[0] in words[n]:
             print(green + words[n], end='')
             isComment = True
             allowKeywords = False
@@ -38,16 +36,6 @@ def SyntaxParser(language, inFile):
             isMultiline = False
         elif isMultiline:
             print(green + words[n] + reset, end='')
-        elif "/" in words[n] or "*" in words[n]:
-            listed = re.split(r'([/*])', words[n])
-            for i in range(len(listed)):
-                if listed[i] == '/' or listed[i] == '*':
-                    print(red + listed[i] + reset, end='')
-                else:
-                    if listed[i] in language.keyw and allowKeywords:
-                        print(bold_yellow + listed[i] + reset, end='')
-                    else:
-                        print(listed[i], end='')
         elif language.dir in words[n]:
             print(magenta + words[n] + reset, end='')
             isDirective = True
@@ -58,7 +46,8 @@ def SyntaxParser(language, inFile):
             allowKeywords = False
         elif '>' in words[n] and isDirective:
             print(words[n] + reset, end='')
-        elif language.string[0] in words[n]:
+            isDirective = False
+        elif language.string[0] in words[n] and not isComment and not isDirective:
             if not isDoubleStr:
                 print(cyan + words[n], end='')
                 isDoubleStr = True
@@ -74,12 +63,22 @@ def SyntaxParser(language, inFile):
                 allowKeywords = False
             else:
                 print(words[n], end='')
-        elif words[n] in language.punc and isPunctuation:
+        elif words[n] in language.punc and isPunctuation and not isDoubleStr:
             print(red + words[n] + reset, end='')
             isPunctuation = True
         elif words[n] in language.keyw and allowKeywords:
             print(bold_yellow + words[n] + reset, end='')
-        elif words[n+1] == '(':
+        elif "/" in words[n] and not isDirective and not isDoubleStr or "*" in words[n] and not isDirective and not isDoubleStr:
+            listed = re.split(r'([/*])', words[n])
+            for i in range(len(listed)):
+                if listed[i] == '/' or listed[i] == '*':
+                    print(red + listed[i] + reset, end='')
+                else:
+                    if listed[i] in language.keyw and allowKeywords:
+                        print(bold_yellow + listed[i] + reset, end='')
+                    else:
+                        print(listed[i], end='')
+        elif words[n+1] == '(' and not isDoubleStr:
             print(bold + words[n] + reset, end='')
         else:
             print(words[n], end='')

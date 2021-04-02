@@ -16,7 +16,7 @@ endif
 CFLAGS += -lncurses -pthread -lreadline -lhistory
 
 TARGET=texted
-OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o src/credits.o main.o
+OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o src/credits.o src/unirun.o main.o
 
 all: $(TARGET)
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unirun/unirun.h>
 
 #include <texted/insert.h>
 #include <texted/fileio.h>
@@ -43,4 +44,12 @@ int ed_print_permissions(const char* Filename)
 	
 	finfo_free(fi);
 	return ED_SUCCESS;
+}
+
+int ed_print_highlight(char* Filename)
+{
+	if(get_temp())
+		Filename = TMP_PATH;
+	char* args[] = {"/usr/bin/python", "src/highlighter/parser.py", Filename, NULL};
+	return launch("python", args, 0);
 }

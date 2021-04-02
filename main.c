@@ -145,6 +145,23 @@ int main(int argc, char* argv[])
 			} else if(streq(Command.args[0], " -p", 4)) {
 				ed_print_permissions(Filename);
 				goto exit_print;
+			} else if(streq(Command.args[0], "s", 2)) {
+				if(!(LineBuffer && *(LineBuffer->LineBuffer)[0]))
+					goto exit_print;
+				
+				if(get_temp()) {
+					Buffer = getBuffer(LineBuffer);
+					if(!Buffer)
+						goto exit_print;
+					if(save(TMP_PATH, Buffer)) {
+						free(Buffer);
+						goto exit_print;
+					} else {
+						free(Buffer);
+					}
+				}
+				ed_print_highlight(Filename);
+				goto exit_print;
 			} else {
 				fprintf(stderr, RED "Wrong syntax for the print command\n" RESET);
 				goto exit_print;

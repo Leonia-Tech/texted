@@ -103,7 +103,7 @@ int save(char* Filename, char* Buffer)
 		fputs(Buffer, File);
 	fclose(File);
 
-	if(get_temp()) {
+	if(get_temp() && strcmp(Filename, TMP_PATH)) {
 		fputs(ITALIC CYAN "New file created: " RESET, stderr);
 		fputs(Filename, stderr);
 		fputc('\n', stderr);

@@ -7,4 +7,7 @@ void ed_print(LineBuffer_s* linebuff, int LineNum);
 // Print file permissions
 int ed_print_permissions(const char* Filename);
 
+// Print with syntax highlight
+int ed_print_highlight(char* Filename);
+
 #endif // TEXTED_PRINT_H
