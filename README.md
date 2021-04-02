@@ -68,7 +68,7 @@ List of commmnads releated to print functionality
 
 ```
 p:		print
-pl:		print current line
+pl:		print specified line (default = current line)
 pn:		print with line numbers 
 pln:	pl + pn
 ```

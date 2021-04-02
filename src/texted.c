@@ -42,7 +42,7 @@ void display_help()
 		   "p\t\tprint\n"
 		   "pl\t\tprint current line (see l for changing the current line)\n"
 		   "pn\t\tprint with line numbers\n"
-		   "pn <num>\t\t print line <num> without changing the current line\n"
+		   "pl <num>\t\t print line <num> without changing the current line\n"
 		   "pln\t\tpl + pn\n"
 		   "p -p\t\tprint permissions\n\n"
 
