@@ -6,8 +6,11 @@
 // Load a file into RAM
 char* loadFile(char* Filename);
 
+// Get the size of the File in bytes
+size_t getFileSize(char* Filename);
+
 // Load a File into a LineBuffer
-LineBuffer_s* LbLoadFile(char* Filename);
+LineBuffer_s* lbLoadFile(char* Filename);
 
 // Saves the Buffer in the File and frees the Buffer
 int app_save(char* Filename, char* Buffer);

@@ -66,7 +66,9 @@ int main(int argc, char* argv[])
 	}
 
 	// Load the file in the LineBuffer
-	LineBuffer = LbLoadFile(Filename);
+	LineBuffer = lbLoadFile(Filename);
+	if(errno)
+		perror( RED "Something went wrong when trying to read the file!" RESET );
 
 	// Initialize command handler
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
@@ -179,7 +181,9 @@ int main(int argc, char* argv[])
 				Buffer = NULL;
 
 				// Reload LineBuffer
-				LineBuffer = LbLoadFile(Filename);
+				LineBuffer = lbLoadFile(Filename);
+				if(errno)
+					perror( RED "Something went wrong when trying to read the file!" RESET );
 			}
 			else
 			{

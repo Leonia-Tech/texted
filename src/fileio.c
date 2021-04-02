@@ -14,39 +14,35 @@ int get_temp()  { return temp; }
 
 // If temp is set read from /tmp
 // Else read from filename
+// On error errno is set
 
 char* loadFile(char* Filename)
 {
 	FILE* File;
-	struct stat st;
-	char Temp[LINE_SIZE] = {0};
+	size_t FileSize = 0;
 	char* Buffer = NULL;
 
 	if(get_temp())
 		Filename = TMP_PATH;
 
-	if(!~stat(Filename, &st)) {
-		if(errno != ENOENT) {
-			perror(RED"Failed to read file infos"RESET);
-			return NULL;
-		}
+	// Check file size
+	FileSize = getFileSize(Filename);
+	if(FileSize > 0) {
+		// Allocate FileSize space for the Buffer
+		Buffer = malloc(FileSize * sizeof(char));
+		empty(Buffer, FileSize);
 	} else {
-		// Check file size
-		if(st.st_size > 0) {
-			Buffer = malloc(st.st_size * sizeof(char));
-			empty(Buffer, st.st_size);
-		}
+		if(errno != ENOENT)
+			return NULL;
 	}
 
-	// Open file or create it
+	// Open file
 	File = fopen(Filename, "r");
 	if (!File) {
-		File = fopen(TMP_PATH, "w");
-		if(!File) // Errno is set
+		// If there is no file create it
+		if(createFile() == ED_NULL_FILE_PTR) {
 			return NULL;
-		fclose(File);
-        errno = 0;
-		return NULL;
+		}
 	}
 
 	// If file is empty exit with null
@@ -56,11 +52,17 @@ char* loadFile(char* Filename)
 	}
 
 	// Read the whole file
-	while (fgets(Temp, LINE_SIZE, File))
-		strcat(Buffer, Temp);
+	if(!fread(Buffer, FileSize, sizeof(char), File))
+		fputs(RED "Failed to read the File\n" RESET, stderr);
 
 	fclose(File);
 	return Buffer;
+}
+
+size_t getFileSize(char* Filename)
+{
+	struct stat st;
+	return st.st_size *= ((stat(Filename, &st) + 1) != 0);
 }
 
 // Saves the Buffer in the File and frees the Buffer
@@ -146,7 +148,7 @@ int backup(char* Filename)
 	return ED_SUCCESS;
 }
 
-LineBuffer_s* LbLoadFile(char* Filename)
+LineBuffer_s* lbLoadFile(char* Filename)
 {
 	char* Buffer;
 	LineBuffer_s* LineBuffer;

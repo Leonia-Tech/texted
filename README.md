@@ -66,9 +66,9 @@ List of commmnads releated to print functionality
 
 ```
 p:		print
--l		current line
--n		with line numbers 
--ln		-l + -n
+pl		print current line
+pn		print with line numbers 
+pln		pl + pn
 ```
 
 ### Save commands

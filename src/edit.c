@@ -30,10 +30,11 @@ int streq(char* str1, char* str2, size_t size)
 
 LineBuffer_s* getLineBuffer(char* Buffer)
 {
-	LineBuffer_s* linebuff = malloc(sizeof(LineBuffer_s));
+	LineBuffer_s* linebuff;
 	char* ptr;
 	size_t Length = 0;
 
+	linebuff = malloc(sizeof(LineBuffer_s));
 	linebuff->LB_Size = strocc(Buffer, '\n') + 1;
 
 	// Handle NULL buffer
@@ -101,6 +102,7 @@ int substitute(char** row, const char* _old, const char* _new)
 	char* ptr;		// Pointer to _old in row
 	char* edit;		// Temporary string
 	size_t size;	// New size
+	int status = 0;	// Return value
 
 	if(!row || !(ptr = strstr(*row, _old)))
 		return ED_WRONG_SYNTAX;
@@ -129,10 +131,13 @@ int substitute(char** row, const char* _old, const char* _new)
 
 	// Move to *row and free temporary string
 	*row = realloc(*row, size);
-	strcpy(*row, edit);
+	if(!(*row))
+		status = ED_NULL_FILE_PTR;
+	else
+		strcpy(*row, edit);
 	free(edit);
 
-	return ED_SUCCESS;
+	return status;
 }
 
 int putstr(char** row, const char* _before, const char* _new)
@@ -158,6 +163,8 @@ int putstr(char** row, const char* _before, const char* _new)
 	
 	// Allocation of new space
 	*row = realloc(*row, (size + new_size - 1) * sizeof(char));
+	if(!(*row))
+		return ED_NULL_PTR;
 	empty(*row + size, new_size - 1);
 	size += new_size - 1;
 

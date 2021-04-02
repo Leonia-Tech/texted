@@ -49,6 +49,9 @@ LineBuffer_s* concatenateLineBuffer(LineBuffer_s* lb1, LineBuffer_s* lb2)
 	(lb1->LineBuffer)[lb1->LB_Size] = realloc((lb1->LineBuffer)[lb1->LB_Size],
 												strlen((lb1->LineBuffer)[lb1->LB_Size])  + 
 												strlen((lb2->LineBuffer)[0]) + 1);
+	if(!(lb1->LineBuffer)[lb1->LB_Size])
+		return NULL;
+	
 	strcat((lb1->LineBuffer)[lb1->LB_Size], (lb2->LineBuffer)[0]);
 
 	// Other strings
