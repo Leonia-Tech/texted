@@ -79,6 +79,8 @@ def SyntaxParser(language, inFile):
             isPunctuation = True
         elif words[n] in language.keyw and allowKeywords:
             print(bold_yellow + words[n] + reset, end='')
+        elif words[n+1] == '(':
+            print(bold + words[n] + reset, end='')
         else:
             print(words[n], end='')
     print()
