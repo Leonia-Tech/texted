@@ -2,11 +2,16 @@ CC=gcc
 VERSION=1.4.1
 CFLAGS=-I./include
 
-DEBUG=1
 ifeq ($(DEBUG),1)
 	CFLAGS+= -g -Wall -Wextra -Wpedantic -DDEBUG=1
 else
 	CFLAGS+= -O2
+	ifeq ($(ARCH_LINUX),1)
+		CFLAGS+= -DARCH_LINUX
+		SCRIPTS_FOLDER=/usr/local/bin/texted
+	else
+		SCRIPTS_FOLDER=/usr/libexec/texted
+	endif
 endif
 
 ifeq ($(ANDROID), 1)
@@ -31,8 +36,6 @@ clean:
 	rm *.o $(TARGET)
 
 install:
-	sudo install $(TARGET) /usr/bin
-
 	# Install man page
 	sudo mkdir /usr/local/man/man1
 	sudo cp docs/texted.1 /usr/local/man/man1
@@ -43,7 +46,14 @@ install:
 	sudo mkdir /usr/share/texted
 	sudo cp -r assets/ /usr/share/texted
 
+	# Install scripts
+	sudo mkdir -p $(SCRIPTS_FOLDER)
+	sudo cp -r src/highlighter $(SCRIPTS_FOLDER)
+
+	sudo install $(TARGET) /usr/bin
+
 remove:
-	sudo rm /usr/bin/$(TARGET)
 	sudo rm -rf /usr/local/man/man1
 	sudo rm -rf /usr/share/texted
+	sudo rm -rf $(SCRIPTS_FOLDER)
+	sudo rm /usr/bin/$(TARGET)

@@ -50,6 +50,6 @@ int ed_print_highlight(char* Filename)
 {
 	if(get_temp())
 		Filename = TMP_PATH;
-	char* args[] = {"/usr/bin/python", "src/highlighter/parser.py", Filename, NULL};
+	char* args[] = {"/usr/bin/python", HIGHLIGHTER_PATH, Filename, NULL};
 	return launch("python", args, 0);
 }

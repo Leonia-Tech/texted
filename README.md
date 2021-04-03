@@ -17,6 +17,8 @@ To compile the program follow these instructions:
     $ make DEBUG=0
     ```
 
+    *Note: On __Arch Linux__ you should always add `ARCH_LINUX=1` when using the make command*
+
 3. Install the program
     ```bash
     $ make install

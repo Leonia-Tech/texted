@@ -425,10 +425,11 @@ int main(int argc, char* argv[])
 			break;
 		}
 
-		free(Command.raw_command);
+		free(Command.raw_command);	// Jumped when exiting with q
 	}
 
 loop_exit:
+	free(Command.raw_command);		// Free the command
 	remove(TMP_PATH);				// Remove the temporary file
 	free(Prompt);					// Free the prompt
 	rl_clear_history();				// Clean extra info written to the history by readline

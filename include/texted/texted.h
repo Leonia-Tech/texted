@@ -17,11 +17,7 @@
 #define ED_ARG_SZ           50
 #define ADD_MODE            (NULL)
 
-#ifndef ANDROID
-	#define	TMP_PATH			"/tmp/xie6Bei3"
-#else
-	#define	TMP_PATH			"~/.tmp-xie6Bei3"
-#endif
+#include <texted/paths.h>
 
 // Error codes
 #define ED_SUCCESS          0x00
