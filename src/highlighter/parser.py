@@ -92,9 +92,11 @@ def main():
                     from C import C_Keywords, C_Punctuation, C_Comment
                     lang = language(C_Keywords, C_Punctuation, "#", C_Comment, "C")
                     SyntaxParser(lang, File.read())
+                File.close()
             else:
                 with open(sys.argv[1], "r") as File:
                     print(File.read())
+                File.close()
         else:
             print("No arguments passed!")
     except FileNotFoundError as error:
