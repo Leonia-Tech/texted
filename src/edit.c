@@ -102,6 +102,9 @@ int freeLineBuffer(LineBuffer_s* linebuff)
 		for (size_t i = 0; i < linebuff->LB_Size; i++)
 			free(linebuff->LineBuffer[i]);
 	}
+
+	if(linebuff->LineBuffer)
+		free(linebuff->LineBuffer);
 	return ED_SUCCESS;
 }
 
