@@ -9,7 +9,7 @@
 #else
     #define AUDIO_PATH              "/usr/share/texted/assets/Temple_os.mp3"
     #ifdef  ARCH_LINUX
-        #define HIGHLIGHTER_PATH    "/usr/local/bin/texted/highlighter/parser.py"
+        #define HIGHLIGHTER_PATH    "/usr/lib/texted/highlighter/parser.py"
     #else
         #define HIGHLIGHTER_PATH    "/usr/libexec/texted/highlighter/parser.py"
     #endif
