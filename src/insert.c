@@ -189,7 +189,6 @@ int addLine(LineBuffer_s** LineBuffer, char* NewLine, size_t Position)
 
 // Delete Line number Del (Line count starts from 1)
 //! Bloated
-//! Huge memory leak
 int delLine(LineBuffer_s** LineBuffer, size_t Del)
 {
     int Last = 0;

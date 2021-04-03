@@ -96,7 +96,7 @@ def main():
                 print("[Errno 3] Langage not recognized")
         elif len(sys.argv) == 2:
             with open(sys.argv[1], "r") as File:
-                    print(File.read())
+                print(File.read())
                 File.close()
         else:
             print("No arguments passed!")
