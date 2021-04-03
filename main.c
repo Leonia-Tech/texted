@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <limits.h>
+#include <linux/limits.h>
 
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -15,6 +16,15 @@
 #include <texted/texted.h>
 
 #include <credits/credits.h>
+
+// max digit for 64bit value
+#define DIGITS64 25
+
+// extra prompt size
+#define PROMPT_EXTRA 30
+
+// max size of prompt
+#define PROMPT_MAX (PATH_MAX + USER_PERMISSION_COLOR_SIZE + DIGITS64 + PROMPT_EXTRA)
 
 int main(int argc, char* argv[])
 {
@@ -74,16 +84,18 @@ int main(int argc, char* argv[])
 	Command.args = calloc(ARGS_NUM, sizeof(char*));
 
 	//Initialize Prompt
-	Prompt = malloc(strlen(Filename) + 30);
+	Prompt = malloc(PROMPT_MAX);
 
 	fputs(BOLD YELLOW"Welcome in Texted - " RELEASE RESET"\n", stdout);
 
 	// MAIN LOOP
 	for(;;)
 	{
-		sprintf(Prompt, BOLD "%s%s > "RESET,
+		snprintf(Prompt, PROMPT_MAX, BOLD "%s%s %lu> "RESET,
 			    get_temp() ? get_user_permission_color(TMP_PATH) : get_user_permission_color(Filename),
-			    Filename);
+			    Filename,
+				Line
+		);
 		
 		Command.raw_command = readline(Prompt);
 		if(Command.raw_command && *Command.raw_command)
