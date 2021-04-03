@@ -62,6 +62,9 @@ usr_perm_e get_user_permissions(char* Filename);
 // Get the color associated with the permissions
 char* get_user_permission_color(char* Filename);
 
+// max size of permission_color
+#define USER_PERMISSION_COLOR_SIZE 30
+
 /* -------------------------------- */
 
 // Retrieve octal file permissions
