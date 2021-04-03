@@ -7,12 +7,7 @@ ifeq ($(DEBUG),1)
 else
 	CFLAGS+= -O2
 	MAN_PAGE=/usr/share/man/man1
-	ifeq ($(ARCH_LINUX),1)
-		CFLAGS+= -DARCH_LINUX
-		SCRIPTS_FOLDER=/usr/lib/texted
-	else
-		SCRIPTS_FOLDER=/usr/libexec/texted
-	endif
+	SCRIPTS_FOLDER=/usr/lib/texted
 endif
 
 LIBS=-lncurses -pthread -lreadline -lhistory

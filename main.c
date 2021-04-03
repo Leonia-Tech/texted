@@ -403,7 +403,10 @@ int main(int argc, char* argv[])
 			break;
 		
 		case '!':
-			system(Command.raw_command + 1);
+			if((status = system(Command.raw_command + 1)))
+				fprintf(stderr, ITALIC CYAN "Returned %d\n" RESET, status);
+			
+			status = 0;
 			break;
 
 		default:
