@@ -100,14 +100,6 @@ int main(int argc, char* argv[])
 		
 		Command.command = Command.raw_command[0];
 
-		// Handle extended ASCII Table
-		if(Command.command < 0) {
-			PAUSE();
-			fprintf(stderr, RED "Invalid command\n" RESET);
-			Command.command = '\0';
-			continue;
-		}
-
 		switch (Command.command)
 		{
 		case 'p': // PRINT MODE

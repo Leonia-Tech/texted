@@ -44,6 +44,7 @@ void display_help()
 		   "pn\t\tprint with line numbers\n"
 		   "pl <num>\t\t print line <num> without changing the current line\n"
 		   "pln\t\tpl + pn\n"
+		   "ps\t\tprint with syntax highlight\n"
 		   "p -p\t\tprint permissions\n\n"
 
 		   "i\t\tinsert mode\n"
