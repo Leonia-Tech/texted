@@ -16,6 +16,8 @@ def SyntaxParser(language, inFile):
                 isComment = False
             if isDoubleStr:
                 isDoubleStr = False
+            if isDirective:
+                isDirective = False
             if not isMultiline:
                 print(reset, end='')
             print()
@@ -41,12 +43,8 @@ def SyntaxParser(language, inFile):
             isDirective = True
             allowKeywords = False
             isPunctuation = False
-        elif '<' in words[n] and isDirective:
+        elif isDirective:
             print(cyan + words[n], end='')
-            allowKeywords = False
-        elif '>' in words[n] and isDirective:
-            print(words[n] + reset, end='')
-            isDirective = False
         elif language.string[0] in words[n] and not isComment and not isDirective:
             if not isDoubleStr:
                 print(cyan + words[n], end='')
@@ -63,11 +61,6 @@ def SyntaxParser(language, inFile):
                 allowKeywords = False
             else:
                 print(words[n], end='')
-        elif words[n] in language.punc and isPunctuation and not isDoubleStr:
-            print(red + words[n] + reset, end='')
-            isPunctuation = True
-        elif words[n] in language.keyw and allowKeywords:
-            print(bold_yellow + words[n] + reset, end='')
         elif "/" in words[n] and not isDirective and not isDoubleStr or "*" in words[n] and not isDirective and not isDoubleStr:
             listed = re.split(r'([/*])', words[n])
             for i in range(len(listed)):
@@ -78,6 +71,11 @@ def SyntaxParser(language, inFile):
                         print(bold_yellow + listed[i] + reset, end='')
                     else:
                         print(listed[i], end='')
+        elif words[n] in language.punc and isPunctuation and not isDoubleStr:
+            print(red + words[n] + reset, end='')
+            isPunctuation = True
+        elif words[n] in language.keyw and allowKeywords:
+            print(bold_yellow + words[n] + reset, end='')
         elif words[n+1] == '(' and not isDoubleStr:
             print(bold + words[n] + reset, end='')
         else:
