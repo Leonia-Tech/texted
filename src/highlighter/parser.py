@@ -85,16 +85,17 @@ def SyntaxParser(language, inFile):
 
 def main():
     try:
-        if len(sys.argv) == 2:
-            extension = (sys.argv[1]).split(".")
-            if extension[len(extension)-1] == "C" or extension[len(extension)-1] == 'c' or extension[len(extension)-1] == 'cpp':
+        if len(sys.argv) == 3:
+            if sys.argv[2] == "C" or sys.argv[2] == 'c' or sys.argv[2] == 'cpp':
                 with open(sys.argv[1], "r") as File:
                     from C import C_Keywords, C_Punctuation, C_Comment
                     lang = language(C_Keywords, C_Punctuation, "#", C_Comment, "C")
                     SyntaxParser(lang, File.read())
                 File.close()
             else:
-                with open(sys.argv[1], "r") as File:
+                print("[Errno 3] Langage not recognized")
+        elif len(sys.argv) == 2:
+            with open(sys.argv[1], "r") as File:
                     print(File.read())
                 File.close()
         else:
