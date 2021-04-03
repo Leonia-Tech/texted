@@ -201,7 +201,7 @@ int delLine(LineBuffer_s** LineBuffer, size_t Del)
 		return ED_NULL_PTR;
 
 	// Wrong line number
-    if(Del < 1 || Del > (*LineBuffer)->LB_Size)
+    if(Del < 1 || !(*LineBuffer) || Del > (*LineBuffer)->LB_Size)
         return ED_BUFFER_OVERFLOW;
 
 	// Handling last line

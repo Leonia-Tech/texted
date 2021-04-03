@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 VERSION=1.4.1
 CFLAGS=-I./include
 
