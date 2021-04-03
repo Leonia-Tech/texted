@@ -1,4 +1,4 @@
-CC=gcc
+CC=clang
 VERSION=1.4.1
 CFLAGS=-I./include
 
@@ -19,8 +19,7 @@ ifeq ($(ANDROID), 1)
 	CFLAGS+= -DANDROID
 endif
 
-CFLAGS += -lncurses -pthread -lreadline -lhistory
-
+LIBS=-lncurses -pthread -lreadline -lhistory
 TARGET=texted
 OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o src/credits.o src/unirun.o main.o
 
@@ -30,7 +29,7 @@ all: $(TARGET)
 	$(CC) $(CFLAGS) -c $<
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 clean:
 	rm src/*.o
