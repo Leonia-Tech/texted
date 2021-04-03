@@ -5,11 +5,7 @@
     Here we put all the functions to manipulate buffers, LineBuffers and strings
 */
 
-#ifndef ANDROID
-    #include <aio.h>
-#else
-    #include <stdio.h>
-#endif
+#include <aio.h>
 
 // Find how many times the character "ch" appears in "str"
 unsigned int strocc(const char* str, char ch);

@@ -51,13 +51,8 @@ int main(int argc, char* argv[])
 			  RED "    |  ,------------\n"
 			  RED "    \\_/___________/\n" RESET, stdout);
 		return 0;
-	}
-	
-	#ifndef ANDROID
-		else if(streq(argv[1], "--credits", 10)) {
-			return credits();
-	#endif
-	
+	} else if(streq(argv[1], "--credits", 10)) {
+			return credits();	
 	} else {
 		Filename = argv[1];
 	}
