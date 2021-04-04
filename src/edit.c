@@ -113,12 +113,22 @@ int substitute(char** str, char* orig, char* rep)
 {
 	char* buffer = NULL;
 	char *p;
+	size_t rep_len = 0;
+
+	if(!(*str) || !(**str) || !orig || !(*orig)) {
+		return ED_NULL_PTR;
+	}
+
+	if(!rep || !(*rep))
+		rep_len = 0;
+	else
+		rep_len = strlen(rep);
 
 	// Is 'orig' even in 'str'?
 	if(!(p = strstr(*str, orig)))
 		return ED_WRONG_SYNTAX;
 	
-	char* temp = malloc(strlen(*str) + strlen(rep) - strlen(orig) + 1);
+	char* temp = malloc(strlen(*str) + rep_len - strlen(orig) + 1);
 	if(!temp)
 		return ED_MEMORY_ERROR;
 	buffer = temp;
@@ -127,6 +137,9 @@ int substitute(char** str, char* orig, char* rep)
 	strncpy(buffer, *str, p-(*str));
 	buffer[p-(*str)] = '\0';
 
+	if(!rep)
+		rep = "";
+	
 	sprintf(buffer+(p-(*str)), "%s%s", rep, p+strlen(orig));
 
 	*str = buffer;

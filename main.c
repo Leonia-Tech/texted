@@ -193,6 +193,7 @@ int main(int argc, char* argv[])
 				else
 					LineBuffer = concatenateBuffer(LineBuffer, Buffer);
 				
+				PAUSE();
 			}
 			else if (streq(Command.args[0], "w", 2)) // Write directly to file
 			{
@@ -211,6 +212,8 @@ int main(int argc, char* argv[])
 				LineBuffer = lbLoadFile(Filename);
 				if(errno)
 					perror( RED "Something went wrong when trying to read the file!" RESET );
+				
+				PAUSE();
 			}
 			else
 			{
@@ -218,7 +221,6 @@ int main(int argc, char* argv[])
 				fputs(RED"Wrong syntax for the insert (i) command\n"RESET, stderr);
 			}
 
-			PAUSE();
 			if(Buffer) {
 				free(Buffer);
 				Buffer = NULL;
