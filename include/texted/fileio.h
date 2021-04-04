@@ -29,4 +29,8 @@ void set_temp();
 void clr_temp();
 int get_temp();
 
+// resolving path, ./ ../ ~/ ../../, need to free path after use it
+char* path_resolve(const char* path);
+
+
 #endif

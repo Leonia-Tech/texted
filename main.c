@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 
 	// LOADING
 	if (argc <= 1) {
-		Filename = "a.txt";
+		Filename = strdup("a.txt");
 	} else if(streq(argv[1], "--help", 7) || streq(argv[1], "-h", 3)) {
 		display_help();
 		return 0;
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	} else if(streq(argv[1], "--credits", 10)) {
 			return credits();	
 	} else {
-		Filename = argv[1];
+		Filename = path_resolve(argv[1]);
 	}
 	
 	// Try to create file
@@ -419,6 +419,7 @@ int main(int argc, char* argv[])
 	}
 
 loop_exit:
+	free(Filename);
 	free(Command.raw_command);		// Free the command
 	remove(TMP_PATH);				// Remove the temporary file
 	free(Prompt);					// Free the prompt
