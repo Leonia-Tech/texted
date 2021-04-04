@@ -17,12 +17,12 @@ To compile the program follow these instructions. Please don't forget to read th
     $ make DEBUG=0
     ```
 
-    *Note: On __Arch Linux__ you should always add __`ARCH_LINUX=1`__ when using the make command*
-
 3. Install the program
     ```bash
-    $ make install
+    $ sudo make install
     ```
+
+    The install target supports the `DESTDIR` argument.
 
 3. Execute the program 
     ``` bash 
@@ -37,8 +37,10 @@ To compile the program follow these instructions. Please don't forget to read th
 ### Remove
 To remove the app keep the `Makefile` and run:
     ```bash
-    $ make remove
+    $ sudo make remove
     ```
+
+    The remove target supports the `DESTDIR` argument.
 
 ## BASIC FUNCTIONALITY
 

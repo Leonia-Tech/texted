@@ -8,9 +8,13 @@ char* insert()
 {
 	size_t size = 200;
 	const size_t INC = 100; // Increment
-	char* Buffer = malloc(size * sizeof(char));
+	char* Buffer;
 	size_t counter = 0;
 
+	Buffer = malloc(size * sizeof(char));
+	if(!Buffer)
+		return NULL;
+	
 	empty(Buffer, size);
 
 	// Ask for characters until ESC is pressed

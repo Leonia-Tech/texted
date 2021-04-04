@@ -12,6 +12,7 @@
 #include <texted/edit.h>
 #include <texted/texted.h>
 
+// Information about the caller user
 static usr_info_s* caller_user = NULL;
 
 mode_t get_file_permissions(const char* Filename)

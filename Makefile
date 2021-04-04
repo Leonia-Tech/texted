@@ -1,49 +1,59 @@
+SHELL=/bin/sh
+
 CC=gcc
 VERSION=1.4.1
 CFLAGS=-I./include
 
 ifeq ($(DEBUG),1)
-	CFLAGS+= -g -Wall -Wextra -Wpedantic -DDEBUG=1
+	CFLAGS+= -g -Wall -Wextra -Wpedantic -Wshadow -DDEBUG=1
 else
 	CFLAGS+= -O2
-	MAN_PAGE=/usr/share/man/man1
-	SCRIPTS_FOLDER=/usr/lib/texted
 endif
 
 LIBS=-lncurses -pthread -lreadline -lhistory
 TARGET=texted
-OBJ=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o src/credits.o src/unirun.o main.o
+OBJS=src/edit.o src/insert.o src/print.o src/permissions.o src/texted.o  src/fileio.o src/credits.o src/unirun.o main.o
 
+PREFIX=/usr
+MANDIR=$(PREFIX)/share/man/man1
+LIBDIR=$(PREFIX)/lib
+DATADIR=$(PREFIX)/share
+BINDIR=$(PREFIX)/bin
+
+.PHONY: all
 all: $(TARGET)
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
-$(TARGET): $(OBJ)
+$(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
+.PHONY: clean
 clean:
 	rm src/*.o
 	rm *.o $(TARGET)
 
-install:
-	# Install man page
-	sudo cp docs/texted.1 $(MAN_PAGE)
-	sudo gzip $(MAN_PAGE)/texted.1
-	sudo mandb
+.PHONY: install
+install: $(TARGET)
+	# Install documentation
+	install -Dm 644 ./docs/texted.1 -t $(DESTDIR)$(MANDIR)/
+	gzip $(DESTDIR)$(MANDIR)/texted.1
 
 	# Install assets
-	sudo mkdir /usr/share/texted
-	sudo cp -r assets/ /usr/share/texted
+	mkdir -p $(DESTDIR)$(DATADIR)/$(TARGET)
+	cp -r ./assets/ $(DESTDIR)$(DATADIR)/$(TARGET)
 
 	# Install scripts
-	sudo mkdir -p $(SCRIPTS_FOLDER)
-	sudo cp -r src/highlighter $(SCRIPTS_FOLDER)
+	mkdir -p $(DESTDIR)$(LIBDIR)/$(TARGET)
+	cp -r ./src/highlighter/ $(DESTDIR)$(LIBDIR)/$(TARGET)
 
-	sudo install $(TARGET) /usr/bin
+	# Install binary
+	install -Dm 755 $(TARGET) -t $(DESTDIR)$(BINDIR)/
 
-remove:
-	sudo rm $(MAN_PAGE)/texted.1.gz
-	sudo rm -rf /usr/share/texted
-	sudo rm -rf $(SCRIPTS_FOLDER)
-	sudo rm /usr/bin/$(TARGET)
+.PHONY: uninstall
+uninstall:
+	rm -f $(DESTDIR)$(MANDIR)/texted.1.gz		# Remove documentation
+	rm -rf $(DESTDIR)$(DATADIR)/$(TARGET)		# Remove assets
+	rm -rf $(DESTDIR)$(LIBDIR)/$(TARGET)		# Remove scripts
+	rm -f $(DESTDIR)$(BINDIR)/$(TARGET)			# Remove binary

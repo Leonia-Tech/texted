@@ -1,7 +1,8 @@
 #ifndef TEXTED_PATHS_H
 #define TEXTED_PATHS_H
 
-#define	TMP_PATH			"/tmp/xie6Bei3"
+#define TMPDIR              "/tmp"
+#define	TMP_PATH			TMPDIR "/xie6Bei3"
 
 #ifdef  DEBUG
     #define HIGHLIGHTER_PATH        "src/highlighter/parser.py"
