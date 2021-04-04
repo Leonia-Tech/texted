@@ -1,7 +1,7 @@
 SHELL=/bin/sh
 
 CC=gcc
-VERSION=1.4.1
+VERSION=1.5.1
 CFLAGS=-I./include
 
 ifeq ($(DEBUG),1)
