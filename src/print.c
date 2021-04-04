@@ -48,9 +48,17 @@ int ed_print_permissions(const char* Filename)
 
 int ed_print_highlight(char* Filename)
 {
-	char* extension = get_extension(Filename);
+	int status = 0;
+	char* extension;
+
+	extension = get_extension(Filename);
 	if(get_temp())
 		Filename = TMP_PATH;
 	char* args[] = {"/usr/bin/python", HIGHLIGHTER_PATH, Filename, extension, NULL};
-	return launch("python", args, 0);
+	status = launch("python", args, 0);
+
+	if(extension)
+		free(extension);
+
+	return status;
 }

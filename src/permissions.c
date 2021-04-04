@@ -129,8 +129,12 @@ finfo_s* finfo(const char* Filename)
 
 char* get_extension(const char* Filename)
 {
-	char* fname = strdup(Filename);
-	char* tmp;
+	char* fname;
+	char* tmp = NULL;
+
+	fname = strdup(Filename);
+	if(!fname)
+		return NULL;
 
 	if(strchr(Filename + 1, '.')) {
 		tmp = strtok(fname, ".");
@@ -146,10 +150,7 @@ char* get_extension(const char* Filename)
 
 	free(fname);
 
-	if(tmp)
-		return tmp;
-	else
-		return NULL;
+	return tmp;
 }
 
 int finfo_free(finfo_s* fi)
