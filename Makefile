@@ -7,7 +7,7 @@ CFLAGS=-I./include
 ifeq ($(DEBUG),1)
 	CFLAGS+= -g -Wall -Wextra -Wpedantic -Wshadow -DDEBUG=1
 else
-	CFLAGS+= -O2
+	CFLAGS+= -O2 -D_FORTIFY_SOURCE=2
 endif
 
 LIBS=-lncurses -pthread -lreadline -lhistory

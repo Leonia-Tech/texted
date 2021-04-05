@@ -219,14 +219,14 @@ char* path_resolve(const char* path){
 		}
 	}
 	else if( (lpath == 1 && !strncmp(path, ".", 1)) || !strncmp(path, "./", 2) ){
-		getcwd(cur, PATH_MAX);
+		if(!getcwd(cur, PATH_MAX)) return NULL;
 		if( lpath + strlen(cur) > PATH_MAX - 1) return NULL;
 		if( path[1] && path[2] ){
 			strcpy(&cur[strlen(cur)], &path[1]);
 		}
 	}
 	else if( (lpath ==  2 && !strncmp(path, "..", 2)) || !strncmp(path, "../", 3) ){
-		getcwd(cur, PATH_MAX);
+		if(!getcwd(cur, PATH_MAX)) return NULL;
 		path_kill_back(cur);
 		if( lpath + strlen(cur) > PATH_MAX - 1) return NULL;
 		if( path[2] && path[3] ){
