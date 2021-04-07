@@ -1,4 +1,4 @@
-from language import language
+from .language import language
 from string import punctuation
 
 C_Keywords = ["auto", "break", "case",

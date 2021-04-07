@@ -1,8 +1,8 @@
 import re, sys
 from string import punctuation
-from language import *
+from .language import *
 
-from C import C_Keywords, C_Punctuation, C_Comment
+from .C import C_Keywords, C_Punctuation, C_Comment
 
 def SyntaxParser(language, inFile):
     # Boolean init
