@@ -2,6 +2,8 @@ import re, sys
 from string import punctuation
 from language import *
 
+from C import C_Keywords, C_Punctuation, C_Comment
+
 def SyntaxParser(language, inFile):
     # Boolean init
     allowKeywords = True
@@ -88,7 +90,6 @@ def main():
         if len(sys.argv) == 3:
             if sys.argv[2] == "C" or sys.argv[2] == 'c' or sys.argv[2] == 'cpp':
                 with open(sys.argv[1], "r") as File:
-                    from C import C_Keywords, C_Punctuation, C_Comment
                     lang = language(C_Keywords, C_Punctuation, "#", C_Comment, "C")
                     SyntaxParser(lang, File.read())
                 File.close()
