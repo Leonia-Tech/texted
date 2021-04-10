@@ -88,13 +88,18 @@ def SyntaxParser(language, inFile):
 def main():
     try:
         if len(sys.argv) == 3:
-            if sys.argv[2] == "C" or sys.argv[2] == 'c' or sys.argv[2] == 'cpp':
+            ext = (sys.argv[2].lower())
+            if ext == "c" or ext == 'cpp':
                 with open(sys.argv[1], "r") as File:
                     lang = language(C_Keywords, C_Punctuation, "#", C_Comment, "C")
                     SyntaxParser(lang, File.read())
                 File.close()
+            elif ext == "txt":
+                with open(sys.argv[1], "r") as File:
+                    print(File.read())
+                    File.close()
             else:
-                print("[Errno 3] Langage not recognized")
+                print("[Errno 3] Langage not recognized: " + ext)
         elif len(sys.argv) == 2:
             with open(sys.argv[1], "r") as File:
                 print(File.read())
